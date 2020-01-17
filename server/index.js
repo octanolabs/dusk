@@ -1,13 +1,8 @@
 const express = require('express')
 const consola = require('consola')
 const { Nuxt, Builder } = require('nuxt')
-// const Web3 = require('web3')
 
 const app = express()
-// const net = require('net')
-
-// const Admin = require('web3-eth-admin').Admin
-// var web3 = new Admin('/home/xocel/.ubiq/gubiq.ipc', net)
 
 // Import and Set Nuxt.js options
 const config = require('../nuxt.config.js')
@@ -29,9 +24,6 @@ async function start() {
 
   // Give nuxt middleware to express
   app.use(nuxt.render)
-
-  //web3.getPeers().then(console.log)
-
 
   // Listen the server
   app.listen(port, host)

@@ -57,7 +57,7 @@
         <nuxt />
       </v-container>
     </v-content>
-    <v-footer :fixed="fixed" app>
+    <v-footer fixed app>
       <span>&copy; 2020</span>
     </v-footer>
   </v-app>
@@ -89,8 +89,11 @@ export default {
     }
   },
   computed: {
-    authed() {
-      return !!this.$store.state.authUser
+    authed: {
+      get() {
+        return !!this.$store.state.authUser
+      },
+      set() {}
     }
   },
   methods: {

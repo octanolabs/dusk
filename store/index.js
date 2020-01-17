@@ -1,12 +1,18 @@
 import axios from 'axios'
 
 export const state = () => ({
-  authUser: null
+  authUser: null,
+  peers: {
+    list: []
+  }
 })
 
 export const mutations = {
   SET_USER(state, user) {
     state.authUser = user
+  },
+  SET_PEERS(state, peers) {
+    state.peers = peers
   }
 }
 
@@ -32,5 +38,18 @@ export const actions = {
   async logout({ commit }) {
     await axios.post('/api/logout')
     commit('SET_USER', null)
+  },
+
+  async peers({ commit }) {
+    try {
+      const { data } = await axios.post('/api/peers')
+      commit('SET_PEERS', data)
+    } catch (error) {
+      // TODO
+      if (error.response && error.response.status === 401) {
+        throw new Error('Bad credentials')
+      }
+      throw error
+    }
   }
 }
