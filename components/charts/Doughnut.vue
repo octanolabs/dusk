@@ -32,9 +32,9 @@ export default {
       }
     },
     data: {
-      type: Array,
+      type: Object,
       default() {
-        return []
+        return {}
       }
     },
     left: {
