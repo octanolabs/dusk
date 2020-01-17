@@ -1,0 +1,36 @@
+html, body {
+  overflow-x: hidden !important;
+  overflow-y: hidden !important;
+}
+
+a {
+  text-decoration: none;
+}
+
+pre {
+  max-width: 100%;
+  overflow-x: auto;
+  background-color: $transparent;
+  padding: 6px 6px 0;
+}
+
+.v-application code {
+  font-size: 11px !important;
+  background-color: $transparent !important;
+  white-space: pre !important;
+}
+
+.v-application {
+  font-family: Ubuntu Mono !important;
+  font-style: normal;
+  font-variant: normal;
+}
+
+.w-100 {
+  width: 100% !important;
+}
+
+.v-content__wrap {
+  overflow:auto;
+  max-height: calc(100vh - 94px);
+}
