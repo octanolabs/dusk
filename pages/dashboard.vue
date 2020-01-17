@@ -53,7 +53,11 @@
               <v-icon v-else>mdi-windows</v-icon>
             </template>
             <template v-slot:expanded-item="{ item }">
-              <td :colspan="12">{{ item }}</td>
+              <td :colspan="12" class="pa-0">
+                <pre v-highlightjs="prettyJson(item.raw)">
+<code class="javascript w-100 elevation-0"></code>
+                </pre>
+              </td>
             </template>
           </v-data-table>
         </v-col>
@@ -63,6 +67,7 @@
 </template>
 
 <script>
+import stringifyObject from 'stringify-object'
 import WorldMap from 'vue-world-map'
 import DoughnutChart from '~/components/charts/Doughnut.vue'
 
@@ -105,23 +110,28 @@ export default {
   computed: {
     peers() {
       const peers = this.$store.state.peers.list
+      const info = []
       for (const i in peers) {
         // "Gubiq/v3.0.1-andromeda-834c1f86/linux-amd64/go1.13.5"
         // "Gubiq/UbiqMainnet/v3.0.1-andromeda-834c1f86/linux-amd64/go1.13.5" // which one of you assholes is this? <3
+        const peer = {}
+
         const name = peers[i].name
         let split = name.split('/')
-        peers[i].client = split[0]
+        peer.client = split[0]
         const version = split[1].substr(0, 1) === 'v' ? split[1] : split[2]
         const vsplit = version.split('-')
-        peers[i].version = vsplit[0]
-        peers[i].tag = vsplit[1]
-        peers[i].build = vsplit[2]
+        peer.version = vsplit[0]
+        peer.tag = vsplit[1]
+        peer.build = vsplit[2]
         const platform = split[1].substr(0, 1) === 'v' ? split[2] : split[3]
         split = platform.split('-')
-        peers[i].os = split[0]
-        peers[i].arch = split[1]
+        peer.os = split[0]
+        peer.arch = split[1]
+        peer.raw = peers[i]
+        info.push(peer)
       }
-      return peers
+      return info
     }
   },
   created() {
@@ -181,6 +191,13 @@ export default {
         }
       }
       return newArr
+    },
+    prettyJson(obj) {
+      return stringifyObject(obj, {
+        indent: '  ',
+        singleQuotes: false,
+        inlineCharacterLimit: 12
+      })
     }
   }
 }
