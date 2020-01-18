@@ -4,7 +4,8 @@ export const state = () => ({
   authUser: null,
   peers: {
     list: []
-  }
+  },
+  cache: {}
 })
 
 export const mutations = {
@@ -13,6 +14,9 @@ export const mutations = {
   },
   SET_PEERS(state, peers) {
     state.peers = peers
+  },
+  SET_COUNTRY(state, data) {
+    state.cache[data.ip] = data.code
   }
 }
 
@@ -44,6 +48,19 @@ export const actions = {
     try {
       const { data } = await axios.post('/api/peers')
       commit('SET_PEERS', data)
+    } catch (error) {
+      // TODO
+      if (error.response && error.response.status === 401) {
+        throw new Error('Bad credentials')
+      }
+      throw error
+    }
+  },
+  async country({ commit }, { ip }) {
+    try {
+      const { data } = await axios.post('/api/country', { ip })
+      console.log(data)
+      commit('SET_COUNTRY', { ip, code: data.code })
     } catch (error) {
       // TODO
       if (error.response && error.response.status === 401) {

@@ -3,10 +3,9 @@ import {Admin} from 'web3-eth-admin'
 import Web3IpcProvider from 'web3-providers-ipc'
 import net from 'net'
 import axios from 'axios'
-import NodeCache from 'node-cache'
 
 const web3 = new Admin('/home/xocel/.ubiq/gubiq.ipc', net)
-const peerCache = new NodeCache()
+const countryCache = {}
 // Create express router
 const router = express.Router()
 
@@ -19,6 +18,24 @@ router.use((req, res, next) => {
   req.res = res
   res.req = req
   next()
+})
+
+// Add POST - /api/login
+router.post('/country', (req, res) => {
+  const ip = req.body.ip
+  console.log(req.body.ip)
+  if (!countryCache[ip]) {
+    axios.get('https://ip2c.org/' + ip)
+      .then( function(response) {
+        countryCache[ip] = response.data
+        res.json({ code: response.data })
+      })
+      .catch( function(err) {
+        res.status(401).json({ message: err })
+      })
+  } else {
+    res.json({code: countryCache[ip]})
+  }
 })
 
 // Add POST - /api/login

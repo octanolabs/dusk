@@ -14,7 +14,7 @@
           <v-card style="background-color:rgba(0,0,0,0)" flat>
             <client-only placeholder="Loading...">
               <world-map
-                :countryData="countryCounts"
+                :countryData="countries"
                 low-color="#6fceb7"
                 high-color="#6fceb7"
                 default-country-fill-color="#333"
@@ -49,6 +49,13 @@
             single-expand
             show-expand
           >
+            <template v-slot:item.country="{ item }">
+              {{
+                countryCache[
+                  item.raw.network.remoteAddress.split(':')[0]
+                ].split(';')[3]
+              }}
+            </template>
             <template v-slot:item.os="{ item }">
               <v-icon v-if="item.os === 'linux'">mdi-linux</v-icon>
               <v-icon v-else-if="item.os === 'darwin'">mdi-apple</v-icon>
@@ -92,16 +99,7 @@ export default {
         { text: 'Arch', value: 'arch' },
         { text: '', value: 'data-table-expand' }
       ],
-      countryCounts: {
-        ES: 4,
-        RU: 10,
-        FR: 15,
-        US: 20,
-        DE: 5,
-        JP: 1,
-        AU: 1,
-        NZ: 1
-      },
+      countries: {},
       chartData: {
         version: {},
         arch: {},
@@ -134,6 +132,9 @@ export default {
         info.push(peer)
       }
       return info
+    },
+    countryCache() {
+      return this.$store.state.cache
     }
   },
   created() {
@@ -147,6 +148,17 @@ export default {
         await this.toChartData(this.peers, 'version')
         await this.toChartData(this.peers, 'os')
         await this.toChartData(this.peers, 'arch')
+        await this.setCountryCodes(this.peers)
+      } catch (e) {
+        // console.log(e)
+      }
+    },
+    async setCountryCodes(peers) {
+      try {
+        for (const i in peers) {
+          const ip = peers[i].raw.network.remoteAddress.split(':')[0]
+          await this.$store.dispatch('country', { ip })
+        }
       } catch (e) {
         // console.log(e)
       }
