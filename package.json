@@ -1,15 +1,15 @@
 {
   "name": "dusk",
   "version": "1.0.0",
+  "private": true,
   "description": "Admin dashboard for managing a node",
   "author": "Luke Williams",
-  "private": true,
   "scripts": {
-    "dev": "cross-env NODE_ENV=development nodemon server/index.js --watch server",
     "build": "nuxt build",
-    "start": "cross-env NODE_ENV=production node server/index.js",
-    "generate": "nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
+    "dev": "cross-env NODE_ENV=development nodemon server/index.js --watch server",
+    "generate": "nuxt generate",
+    "start": "cross-env NODE_ENV=production node server/index.js",
     "test": "jest"
   },
   "dependencies": {
@@ -19,6 +19,7 @@
     "cross-env": "^5.2.0",
     "express": "^4.16.4",
     "express-session": "^1.17.0",
+    "nanotimer": "^0.3.15",
     "node-cache": "^5.1.0",
     "nuxt": "^2.0.0",
     "stringify-object": "^3.3.0",

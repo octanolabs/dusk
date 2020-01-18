@@ -55,11 +55,7 @@
             show-expand
           >
             <template v-slot:item.country="{ item }">
-              {{
-                countryCache[
-                  item.raw.network.remoteAddress.split(':')[0]
-                ].split(';')[3]
-              }}
+              {{ country(item.raw.network.remoteAddress.split(':')[0]) }}
             </template>
             <template v-slot:item.os="{ item }">
               <v-icon v-if="item.os === 'linux'">mdi-linux</v-icon>
@@ -154,9 +150,6 @@ export default {
         info.push(peer)
       }
       return info
-    },
-    countryCache() {
-      return this.$store.state.cache
     }
   },
   created() {
@@ -184,6 +177,11 @@ export default {
       } catch (e) {
         // console.log(e)
       }
+    },
+    country(ip) {
+      return this.$store.state.cache[ip]
+        ? this.$store.state.cache[ip].split(';')[3]
+        : 'loading..'
     },
     toChartData(arr, key) {
       const newArr = this.strip(arr, key)

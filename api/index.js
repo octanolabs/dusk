@@ -1,11 +1,5 @@
 import express from 'express'
-import {Admin} from 'web3-eth-admin'
-import Web3IpcProvider from 'web3-providers-ipc'
-import net from 'net'
-import axios from 'axios'
-
-const web3 = new Admin('/home/xocel/.ubiq/gubiq.ipc', net)
-const countryCache = {}
+import provider from './provider.js'
 // Create express router
 const router = express.Router()
 
@@ -20,33 +14,19 @@ router.use((req, res, next) => {
   next()
 })
 
+// start polling
+provider.init('/home/xocel/.ubiq/gubiq.ipc')
+provider.startPolling('peers')
+
 // Add POST - /api/login
 router.post('/country', (req, res) => {
   const ip = req.body.ip
-  console.log(req.body.ip)
-  if (!countryCache[ip]) {
-    axios.get('https://ip2c.org/' + ip)
-      .then( function(response) {
-        countryCache[ip] = response.data
-        res.json({ code: response.data })
-      })
-      .catch( function(err) {
-        res.status(401).json({ message: err })
-      })
-  } else {
-    res.json({code: countryCache[ip]})
-  }
+  return res.json({ code: provider.getCountryCode(ip) })
 })
 
-// Add POST - /api/login
+// Add POST - /api/peers
 router.post('/peers', (req, res) => {
-  web3.getPeers(function(err, peers) {
-    if (err) {
-      res.status(401).json({ message: err })
-    } else {
-      res.json({ list: peers })
-    }
-  })
+  return res.json({ list: provider.getPeers() })
 })
 
 // Add POST - /api/login

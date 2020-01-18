@@ -59,7 +59,6 @@ export const actions = {
   async country({ commit }, { ip }) {
     try {
       const { data } = await axios.post('/api/country', { ip })
-      console.log(data)
       commit('SET_COUNTRY', { ip, code: data.code })
     } catch (error) {
       // TODO
