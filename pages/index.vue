@@ -8,7 +8,7 @@
         </h1>
       </div>
       <v-card>
-        <form v-if="!authUser" @submit.prevent="login">
+        <form v-if="!authenticated" @submit.prevent="login">
           <v-card-text>
             <p v-if="formError" class="error">
               {{ formError }}
@@ -55,8 +55,8 @@ export default {
     }
   },
   computed: {
-    authUser() {
-      return this.$store.state.authUser
+    authenticated() {
+      return this.$store.state.authenticated
     }
   },
   methods: {

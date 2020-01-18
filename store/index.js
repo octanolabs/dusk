@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export const state = () => ({
-  authUser: null,
+  authenticated: false,
   peers: {
     list: []
   },
@@ -9,8 +9,8 @@ export const state = () => ({
 })
 
 export const mutations = {
-  SET_USER(state, user) {
-    state.authUser = user
+  SET_USER(state, authed) {
+    state.authenticated = authed
   },
   SET_PEERS(state, peers) {
     state.peers = peers
@@ -23,8 +23,8 @@ export const mutations = {
 export const actions = {
   // nuxtServerInit is called by Nuxt.js before server-rendering every page
   nuxtServerInit({ commit }, { req }) {
-    if (req.session && req.session.authUser) {
-      commit('SET_USER', req.session.authUser)
+    if (req.session && req.session.authenticated) {
+      commit('SET_USER', req.session.authenticated)
     }
   },
   async login({ commit }, { password }) {
@@ -41,7 +41,7 @@ export const actions = {
 
   async logout({ commit }) {
     await axios.post('/api/logout')
-    commit('SET_USER', null)
+    commit('SET_USER', false)
   },
 
   async peers({ commit }) {

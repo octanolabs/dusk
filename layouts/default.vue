@@ -91,7 +91,7 @@ export default {
   computed: {
     authed: {
       get() {
-        return !!this.$store.state.authUser
+        return !!this.$store.state.authenticated
       },
       set() {}
     }

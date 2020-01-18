@@ -52,15 +52,15 @@ router.post('/peers', (req, res) => {
 // Add POST - /api/login
 router.post('/login', (req, res) => {
   if (req.body.password === 'octano') { // TODO: lol.
-    req.session.authUser = { username: 'dusk' }
-    return res.json({ username: 'dusk' })
+    req.session.authenticated = true
+    return res.json({ authenticated: true })
   }
   res.status(401).json({ message: 'Bad credentials' })
 })
 
 // Add POST - /api/logout
 router.post('/logout', (req, res) => {
-  delete req.session.authUser
+  delete req.session.authenticated
   res.json({ ok: true })
 })
 

@@ -37,6 +37,11 @@
         </v-col>
         <v-col :cols="4"></v-col>
       </v-row>
+      <!--<v-row no-gutters class="mt-2">
+        <v-col :cols="8">
+          <bar-chart :data="chartData.difficulty" title="Difficulty" />
+        </v-col>
+      </v-row>-->
       <v-row no-gutters class="mt-2">
         <v-col :cols="8">
           <v-data-table
@@ -78,12 +83,14 @@
 <script>
 import stringifyObject from 'stringify-object'
 import WorldMap from 'vue-world-map'
+// import BarChart from '~/components/charts/Bar.vue'
 import DoughnutChart from '~/components/charts/Doughnut.vue'
 
 export default {
   middleware: 'auth',
   components: {
     WorldMap,
+    // BarChart,
     DoughnutChart
   },
   data() {
@@ -104,7 +111,22 @@ export default {
         version: {},
         arch: {},
         os: {},
-        client: {}
+        client: {},
+        difficulty: {
+          datasets: [
+            {
+              label: 'Bar Dataset',
+              data: [10, 20, 30, 40]
+            },
+            {
+              label: 'Line Dataset',
+              data: [50, 50, 50, 50],
+              // Changes this dataset to become a line
+              type: 'line'
+            }
+          ],
+          labels: ['January', 'February', 'March', 'April']
+        }
       }
     }
   },
