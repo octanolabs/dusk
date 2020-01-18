@@ -37,14 +37,16 @@
         </v-col>
         <v-col :cols="4"></v-col>
       </v-row>
-      <v-row no-gutters>
+      <v-row no-gutters class="mt-2">
         <v-col :cols="8">
           <v-data-table
             :headers="headers"
             :items="peers"
             :items-per-page="5"
-            :expanded.sync="expanded"
+            :expanded.sync="expandedPeers"
+            item-key="raw.enode"
             flat
+            single-expand
             show-expand
           >
             <template v-slot:item.os="{ item }">
@@ -79,15 +81,16 @@ export default {
   },
   data() {
     return {
-      expanded: [],
+      expandedPeers: [],
       headers: [
+        { text: 'Country', value: 'country' },
         { text: 'Client', value: 'client' },
         { text: 'Version', value: 'version' },
         { text: 'Tag', value: 'tag' },
         { text: 'Build', value: 'build' },
         { text: 'OS', value: 'os' },
         { text: 'Arch', value: 'arch' },
-        { text: 'Country', value: 'country' }
+        { text: '', value: 'data-table-expand' }
       ],
       countryCounts: {
         ES: 4,
@@ -115,7 +118,6 @@ export default {
         // "Gubiq/v3.0.1-andromeda-834c1f86/linux-amd64/go1.13.5"
         // "Gubiq/UbiqMainnet/v3.0.1-andromeda-834c1f86/linux-amd64/go1.13.5" // which one of you assholes is this? <3
         const peer = {}
-
         const name = peers[i].name
         let split = name.split('/')
         peer.client = split[0]
@@ -151,15 +153,10 @@ export default {
     },
     toChartData(arr, key) {
       const newArr = this.strip(arr, key)
-      console.log(newArr)
-      // dedupe
       const counts = {}
-
       for (const i in newArr) {
         counts[newArr[i]] = counts[newArr[i]] ? counts[newArr[i]] + 1 : 1
       }
-
-      console.log(counts)
       const cdata = {
         labels: [],
         counts: []
@@ -170,8 +167,6 @@ export default {
           cdata.counts.push(counts[key])
         }
       }
-
-      console.log(cdata)
       this.chartData[key] = {
         labels: cdata.labels,
         datasets: [
