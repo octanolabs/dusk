@@ -1,10 +1,12 @@
 import axios from 'axios'
+import consola from 'consola'
 
 export const state = () => ({
   authenticated: false,
   peers: [],
   nodeInfo: {},
-  systemInfo: {}
+  systemInfo: {},
+  txpool: {}
 })
 
 export const mutations = {
@@ -19,6 +21,9 @@ export const mutations = {
   },
   SET_SYSTEMINFO(state, data) {
     state.systemInfo = data
+  },
+  SET_TXPOOL(state, data) {
+    state.txpool = data
   }
 }
 
@@ -35,9 +40,9 @@ export const actions = {
       commit('SET_USER', data)
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        throw new Error('Bad credentials')
+        consola.error(new Error('Bad credentials'))
       }
-      throw error
+      consola.error(new Error(error))
     }
   },
 
@@ -51,11 +56,10 @@ export const actions = {
       const { data } = await axios.post('/api/peers')
       commit('SET_PEERS', data.list)
     } catch (error) {
-      // TODO
       if (error.response && error.response.status === 401) {
-        throw new Error('Bad credentials')
+        consola.error(new Error('Bad credentials'))
       }
-      throw error
+      consola.error(new Error(error))
     }
   },
 
@@ -64,25 +68,35 @@ export const actions = {
       const { data } = await axios.post('/api/nodeinfo')
       commit('SET_NODEINFO', data.info)
     } catch (error) {
-      // TODO
       if (error.response && error.response.status === 401) {
-        throw new Error('Bad credentials')
+        consola.error(new Error('Bad credentials'))
       }
-      throw error
+      consola.error(new Error(error))
     }
   },
 
   async systemInfo({ commit }) {
     try {
       const { data } = await axios.post('/api/system')
-      console.log(data)
       commit('SET_SYSTEMINFO', data.info)
     } catch (error) {
-      // TODO
       if (error.response && error.response.status === 401) {
-        throw new Error('Bad credentials')
+        consola.error(new Error('Bad credentials'))
       }
-      throw error
+      consola.error(new Error(error))
+    }
+  },
+
+  async txpool({ commit }) {
+    try {
+      const { data } = await axios.post('/api/txpool')
+      console.log(data)
+      commit('SET_TXPOOL', data.info)
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        consola.error(new Error('Bad credentials'))
+      }
+      consola.error(new Error(error))
     }
   }
 }

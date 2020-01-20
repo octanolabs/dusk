@@ -21,6 +21,7 @@ provider.init('/home/xocel/.ubiq/gubiq.ipc', async function() {
   provider.startPolling('peers')
   provider.startPolling('chaindata')
   provider.startPolling('systemInfo')
+  provider.startPolling('txpool')
 })
 
 router.post('/country', (req, res) => {
@@ -38,6 +39,10 @@ router.post('/peers', (req, res) => {
 
 router.post('/system', (req, res) => {
   return res.json({ info: provider.getSystemInfo() })
+})
+
+router.post('/txpool', (req, res) => {
+  return res.json({ info: provider.getTxPool() })
 })
 
 // Add POST - /api/login

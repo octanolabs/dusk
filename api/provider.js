@@ -1,4 +1,5 @@
 import {Admin} from 'web3-eth-admin'
+import {TxPool} from 'web3-eth-txpool'
 import net from 'net'
 import os from 'os'
 import fs from 'fs'
@@ -12,6 +13,7 @@ import NodeCache from 'node-cache'
 const ONE_DAY = 86400
 
 let web3Admin = null
+let web3Pool = null
 
 const geo = new NodeCache({stdTTL: ONE_DAY})
 
@@ -74,13 +76,35 @@ const polling = {
         polling.chaindata.cache = size
       })
     }
+  },
+  txpool: {
+    cache: {},
+    timer: new NanoTimer(),
+    interval: '5s',
+    method: function () {
+      if (web3Pool) {
+        web3Pool.getContent(function(err, info) {
+          if (err) {
+            consola.error(new Error(err))
+          } else {
+            consola.info(info)
+            polling.txpool.cache = info
+          }
+        })
+      }
+    }
   }
 }
 
 export default {
   async init(ipcPath, cb) {
-    web3Admin = await new Admin(ipcPath, net)
-    return cb()
+    try {
+      web3Admin = await new Admin(ipcPath, net)
+      web3Pool = await new TxPool(ipcPath, net)
+      return cb()
+    } catch (err) {
+      consola.error(new Error(err))
+    }
   },
   startPolling(name) {
     polling[name].timer.setTimeout(polling[name].method, '', '5s')
@@ -98,6 +122,9 @@ export default {
   },
   getSystemInfo() {
     return polling.systemInfo.cache
+  },
+  getTxPool() {
+    return polling.txpool.cache
   }
 }
 

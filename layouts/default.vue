@@ -107,9 +107,11 @@ export default {
   created() {
     this.$store.dispatch('nodeInfo')
     this.$store.dispatch('systemInfo')
+    this.$store.dispatch('txpool')
     const t = this
     setInterval(function() {
       t.$store.dispatch('systemInfo')
+      t.$store.dispatch('txpool')
     }, 10000)
   },
   methods: {
