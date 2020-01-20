@@ -2,10 +2,9 @@ import axios from 'axios'
 
 export const state = () => ({
   authenticated: false,
-  peers: {
-    list: []
-  },
-  cache: {}
+  peers: [],
+  nodeInfo: {},
+  systemInfo: {}
 })
 
 export const mutations = {
@@ -15,8 +14,11 @@ export const mutations = {
   SET_PEERS(state, peers) {
     state.peers = peers
   },
-  SET_COUNTRY(state, data) {
-    state.cache[data.ip] = data.code
+  SET_NODEINFO(state, data) {
+    state.nodeInfo = data
+  },
+  SET_SYSTEMINFO(state, data) {
+    state.systemInfo = data
   }
 }
 
@@ -47,7 +49,7 @@ export const actions = {
   async peers({ commit }) {
     try {
       const { data } = await axios.post('/api/peers')
-      commit('SET_PEERS', data)
+      commit('SET_PEERS', data.list)
     } catch (error) {
       // TODO
       if (error.response && error.response.status === 401) {
@@ -56,10 +58,25 @@ export const actions = {
       throw error
     }
   },
-  async country({ commit }, { ip }) {
+
+  async nodeInfo({ commit }) {
     try {
-      const { data } = await axios.post('/api/country', { ip })
-      commit('SET_COUNTRY', { ip, code: data.code })
+      const { data } = await axios.post('/api/nodeinfo')
+      commit('SET_NODEINFO', data.info)
+    } catch (error) {
+      // TODO
+      if (error.response && error.response.status === 401) {
+        throw new Error('Bad credentials')
+      }
+      throw error
+    }
+  },
+
+  async systemInfo({ commit }) {
+    try {
+      const { data } = await axios.post('/api/system')
+      console.log(data)
+      commit('SET_SYSTEMINFO', data.info)
     } catch (error) {
       // TODO
       if (error.response && error.response.status === 401) {

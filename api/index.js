@@ -1,5 +1,7 @@
+import consola from 'consola'
 import express from 'express'
 import provider from './provider.js'
+
 // Create express router
 const router = express.Router()
 
@@ -15,18 +17,25 @@ router.use((req, res, next) => {
 })
 
 // start polling
-provider.init('/home/xocel/.ubiq/gubiq.ipc')
-provider.startPolling('peers')
+provider.init('/home/xocel/.ubiq/gubiq.ipc', async function() {
+  provider.startPolling('peers')
+})
 
-// Add POST - /api/login
 router.post('/country', (req, res) => {
   const ip = req.body.ip
   return res.json({ code: provider.getCountryCode(ip) })
 })
 
-// Add POST - /api/peers
+router.post('/nodeinfo', (req, res) => {
+  return res.json({ info: provider.getNodeInfo() })
+})
+
 router.post('/peers', (req, res) => {
   return res.json({ list: provider.getPeers() })
+})
+
+router.post('/system', (req, res) => {
+  return res.json({ info: provider.getSystemInfo() })
 })
 
 // Add POST - /api/login

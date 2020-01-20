@@ -1,13 +1,22 @@
 <template>
   <v-app dark>
-    <v-navigation-drawer
-      v-model="authed"
-      :mini-variant="miniVariant"
-      clipped
-      fixed
-      app
-    >
+    <v-navigation-drawer v-model="authed" :mini-variant="miniVariant" fixed app>
       <v-list>
+        <v-list-item>
+          <v-list-item-action>
+            <img
+              src="~/static/octano.svg"
+              height="48px"
+              style="height:48px;"
+              class="mr-2"
+            />
+          </v-list-item-action>
+          <v-list-item-content>
+            <h1 style="color:#6fceb7">
+              octano<span style="color:#e76754">dusk</span>
+            </h1>
+          </v-list-item-content>
+        </v-list-item>
         <v-list-item
           v-for="(item, i) in items"
           :key="i"
@@ -48,18 +57,11 @@
         </v-list>
       </template>
     </v-navigation-drawer>
-    <v-app-bar clipped-left fixed app>
-      <v-toolbar-title v-text="title" />
-      <v-spacer />
-    </v-app-bar>
     <v-content>
       <v-container>
         <nuxt />
       </v-container>
     </v-content>
-    <v-footer fixed app>
-      <span>&copy; 2020</span>
-    </v-footer>
   </v-app>
 </template>
 
@@ -94,7 +96,17 @@ export default {
         return !!this.$store.state.authenticated
       },
       set() {}
+    },
+    clientVer() {
+      return this.$store.state.nodeInfo.name
+    },
+    peerCount() {
+      return this.$store.state.peers.length
     }
+  },
+  created() {
+    this.$store.dispatch('nodeInfo')
+    this.$store.dispatch('systemInfo')
   },
   methods: {
     async logout() {

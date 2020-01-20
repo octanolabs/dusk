@@ -2,7 +2,6 @@
   <v-card
     class="mr-1"
     height="150"
-    width="300"
     style="background-color:rgba(0,0,0,0);"
     flat
   >
@@ -56,14 +55,14 @@ export default {
         responsive: true,
         maintainAspectRatio: false,
         title: {
-          display: true,
+          display: false,
           position: 'top',
           text: this.title
         },
         legend: {
           display: true,
-          position: !this.right ? 'left' : 'right',
-          align: 'start',
+          position: 'top',
+          align: 'center',
           labels: {
             fontFamily: "'Avenir', 'Helvetica', 'Arial', 'sans-serif'"
           }

@@ -1,77 +1,120 @@
 <template>
   <div>
-    <v-col :cols="12">
-      <v-row no-gutters>
-        <v-col :cols="2">
+    <v-col :cols="12" class="pa-0">
+      <v-col :cols="6">
+        <v-card class="mb-1 bg-transparent" flat>
           <v-row no-gutters>
-            <doughnut-chart :data="chartData.os" title="OS" left />
+            <v-chip class="mr-1" outlined label large text-color="white">
+              <v-avatar class="mr-2">
+                <img src="~/static/networks/ubiq.svg" />
+              </v-avatar>
+              Ubiq - mainnet
+            </v-chip>
+            <v-chip class="mr-1" outlined label large text-color="white">
+              <v-icon class="mr-2">mdi-account-group</v-icon>
+              {{ peers.length - 1 }}
+            </v-chip>
+            <v-spacer />
+            <v-chip class="mr-1" outlined label large text-color="white">
+              <v-icon class="mr-2">mdi-cpu-64-bit</v-icon>
+              {{ system.cpus.length }}
+            </v-chip>
+            <v-chip class="mr-1" outlined label large text-color="white">
+              <v-icon class="mr-2">mdi-memory</v-icon>
+              {{ toGB(system.freemem) }}/{{ toGB(system.totalmem) }} GB
+            </v-chip>
+            <v-chip
+              v-if="system.loadavg"
+              text-color="white"
+              outlined
+              label
+              large
+            >
+              <v-icon class="mr-2">mdi-worker</v-icon>
+              {{ system.loadavg[0].toFixed(2) }},
+              {{ system.loadavg[1].toFixed(2) }},
+              {{ system.loadavg[2].toFixed(2) }}
+            </v-chip>
+          </v-row>
+        </v-card>
+        <v-card class="mb-1 bg-transparent" outlined>
+          <v-row no-gutters>
+            <v-col :cols="6" class="pa-3">
+              <v-card style="background-color:rgba(0,0,0,0)" flat>
+                <client-only placeholder="Loading...">
+                  <world-map
+                    :countryData="countries"
+                    low-color="#6fceb7"
+                    high-color="#6fceb7"
+                    default-country-fill-color="#333"
+                    country-stroke-color="#6fceb7"
+                  />
+                </client-only>
+              </v-card>
+            </v-col>
+            <v-col :cols="6" class="pr-3 pl-3">
+              <bar-chart :data="chartData.country" title="" />
+            </v-col>
           </v-row>
           <v-row no-gutters>
-            <doughnut-chart :data="chartData.arch" title="Arch" left />
-          </v-row>
-        </v-col>
-        <v-col :cols="4">
-          <v-card style="background-color:rgba(0,0,0,0)" flat>
-            <client-only placeholder="Loading...">
-              <world-map
-                :countryData="countries"
-                low-color="#6fceb7"
-                high-color="#6fceb7"
-                default-country-fill-color="#333"
-                country-stroke-color="#6fceb7"
+            <v-col :cols="3">
+              <doughnut-chart :data="chartData.os" title="OS" right />
+            </v-col>
+            <v-col :cols="3">
+              <doughnut-chart :data="chartData.arch" title="Arch" right />
+            </v-col>
+            <v-col :cols="3">
+              <doughnut-chart :data="chartData.client" title="Clients" right />
+            </v-col>
+            <v-col :cols="3">
+              <doughnut-chart
+                :data="chartData.version"
+                title="Versions (Gubiq)"
+                right
               />
-            </client-only>
-          </v-card>
-        </v-col>
-        <v-col :cols="2">
-          <v-row no-gutters>
-            <doughnut-chart :data="chartData.client" title="Clients" right />
+            </v-col>
           </v-row>
+        </v-card>
+        <v-card flat>
           <v-row no-gutters>
-            <doughnut-chart
-              :data="chartData.version"
-              title="Versions (Gubiq)"
-              right
-            />
-          </v-row>
-        </v-col>
-        <v-col :cols="4"></v-col>
-      </v-row>
-      <!--<v-row no-gutters class="mt-2">
-        <v-col :cols="8">
-          <bar-chart :data="chartData.difficulty" title="Difficulty" />
-        </v-col>
-      </v-row>-->
-      <v-row no-gutters class="mt-2">
-        <v-col :cols="8">
-          <v-data-table
-            :headers="headers"
-            :items="peers"
-            :items-per-page="5"
-            :expanded.sync="expandedPeers"
-            item-key="raw.enode"
-            flat
-            single-expand
-            show-expand
-          >
-            <template v-slot:item.country="{ item }">
-              {{ country(item.raw.network.remoteAddress.split(':')[0]) }}
-            </template>
-            <template v-slot:item.os="{ item }">
-              <v-icon v-if="item.os === 'linux'">mdi-linux</v-icon>
-              <v-icon v-else-if="item.os === 'darwin'">mdi-apple</v-icon>
-              <v-icon v-else>mdi-windows</v-icon>
-            </template>
-            <template v-slot:expanded-item="{ item }">
-              <td :colspan="12" class="pa-0">
-                <pre v-highlightjs="prettyJson(item.raw)">
+            <v-col :cols="12">
+              <v-data-table
+                :headers="headers"
+                :items="peers"
+                :items-per-page="5"
+                :expanded.sync="expandedPeers"
+                item-key="raw.enode"
+                flat
+                single-expand
+                show-expand
+                dense
+              >
+                <template v-slot:item.localhost="{ item }">
+                  <v-icon v-if="item.localhost === true" small>mdi-star</v-icon>
+                </template>
+                <template v-slot:item.os="{ item }">
+                  <v-icon v-if="item.os === 'linux'" small>mdi-linux</v-icon>
+                  <v-icon v-else-if="item.os === 'darwin'" small>
+                    mdi-apple
+                  </v-icon>
+                  <v-icon v-else small>mdi-windows</v-icon>
+                </template>
+                <template v-slot:expanded-item="{ item }">
+                  <td
+                    :colspan="9"
+                    class="pa-0"
+                    style="width:100%;overflow-x:auto;"
+                  >
+                    <pre v-highlightjs="prettyJson(item.raw)">
 <code class="javascript w-100 elevation-0"></code>
-                </pre>
-              </td>
-            </template>
-          </v-data-table>
-        </v-col>
-      </v-row>
+                    </pre>
+                  </td>
+                </template>
+              </v-data-table>
+            </v-col>
+          </v-row>
+        </v-card>
+      </v-col>
     </v-col>
   </div>
 </template>
@@ -79,20 +122,22 @@
 <script>
 import stringifyObject from 'stringify-object'
 import WorldMap from 'vue-world-map'
-// import BarChart from '~/components/charts/Bar.vue'
+import BarChart from '~/components/charts/Bar.vue'
 import DoughnutChart from '~/components/charts/Doughnut.vue'
 
 export default {
   middleware: 'auth',
   components: {
     WorldMap,
-    // BarChart,
+    BarChart,
     DoughnutChart
   },
   data() {
     return {
       expandedPeers: [],
+      peerTabs: null,
       headers: [
+        { text: '', value: 'localhost' },
         { text: 'Country', value: 'country' },
         { text: 'Client', value: 'client' },
         { text: 'Version', value: 'version' },
@@ -108,48 +153,16 @@ export default {
         arch: {},
         os: {},
         client: {},
-        difficulty: {
-          datasets: [
-            {
-              label: 'Bar Dataset',
-              data: [10, 20, 30, 40]
-            },
-            {
-              label: 'Line Dataset',
-              data: [50, 50, 50, 50],
-              // Changes this dataset to become a line
-              type: 'line'
-            }
-          ],
-          labels: ['January', 'February', 'March', 'April']
-        }
+        country: {}
       }
     }
   },
   computed: {
     peers() {
-      const peers = this.$store.state.peers.list
-      const info = []
-      for (const i in peers) {
-        // "Gubiq/v3.0.1-andromeda-834c1f86/linux-amd64/go1.13.5"
-        // "Gubiq/UbiqMainnet/v3.0.1-andromeda-834c1f86/linux-amd64/go1.13.5" // which one of you assholes is this? <3
-        const peer = {}
-        const name = peers[i].name
-        let split = name.split('/')
-        peer.client = split[0]
-        const version = split[1].substr(0, 1) === 'v' ? split[1] : split[2]
-        const vsplit = version.split('-')
-        peer.version = vsplit[0]
-        peer.tag = vsplit[1]
-        peer.build = vsplit[2]
-        const platform = split[1].substr(0, 1) === 'v' ? split[2] : split[3]
-        split = platform.split('-')
-        peer.os = split[0]
-        peer.arch = split[1]
-        peer.raw = peers[i]
-        info.push(peer)
-      }
-      return info
+      return this.$store.state.peers
+    },
+    system() {
+      return this.$store.state.systemInfo
     }
   },
   created() {
@@ -159,32 +172,19 @@ export default {
     async getPeers() {
       try {
         await this.$store.dispatch('peers')
-        await this.toChartData(this.peers, 'client')
-        await this.toChartData(this.peers, 'version')
-        await this.toChartData(this.peers, 'os')
-        await this.toChartData(this.peers, 'arch')
-        await this.setCountryCodes(this.peers)
+        await this.toChartData(this.peers, 'client', 0)
+        await this.toChartData(this.peers, 'version', 0)
+        await this.toChartData(this.peers, 'os', 0)
+        await this.toChartData(this.peers, 'arch', 0)
+        await this.toChartData(this.peers, 'country', 1)
+        await this.toMapData(this.peers)
       } catch (e) {
         // console.log(e)
       }
     },
-    async setCountryCodes(peers) {
-      try {
-        for (const i in peers) {
-          const ip = peers[i].raw.network.remoteAddress.split(':')[0]
-          await this.$store.dispatch('country', { ip })
-        }
-      } catch (e) {
-        // console.log(e)
-      }
-    },
-    country(ip) {
-      return this.$store.state.cache[ip]
-        ? this.$store.state.cache[ip].split(';')[3]
-        : 'loading..'
-    },
-    toChartData(arr, key) {
-      const newArr = this.strip(arr, key)
+    // type 0 = doughnut, 1 = bar, 2 = hybrid
+    toChartData(peers, key, type) {
+      const newArr = this.strip(peers, key)
       const counts = {}
       for (const i in newArr) {
         counts[newArr[i]] = counts[newArr[i]] ? counts[newArr[i]] + 1 : 1
@@ -199,16 +199,26 @@ export default {
           cdata.counts.push(counts[key])
         }
       }
+
       this.chartData[key] = {
         labels: cdata.labels,
         datasets: [
           {
-            backgroundColor: ['#6fceb7', '#e76754'],
+            backgroundColor:
+              type === 0 ? ['#6fceb7', '#e76754', '#ff00ff'] : '#6fceb7',
             data: cdata.counts,
-            borderWidth: [0, 0]
+            borderWidth: [0, 0, 0]
           }
         ]
       }
+    },
+    toMapData(arr) {
+      const newArr = this.strip(arr, 'country')
+      const counts = {}
+      for (const i in newArr) {
+        counts[newArr[i]] = counts[newArr[i]] ? counts[newArr[i]] + 1 : 1
+      }
+      this.countries = counts
     },
     strip(arr, key) {
       const newArr = []
@@ -225,6 +235,9 @@ export default {
         singleQuotes: false,
         inlineCharacterLimit: 12
       })
+    },
+    toGB(bytes) {
+      return (bytes / 1024 / 1024 / 1024).toFixed(2)
     }
   }
 }
