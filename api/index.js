@@ -1,6 +1,7 @@
 import consola from 'consola'
 import express from 'express'
 import provider from './provider.js'
+import os from 'os'
 
 // Create express router
 const router = express.Router()
@@ -17,7 +18,7 @@ router.use((req, res, next) => {
 })
 
 // start polling
-provider.init('/home/xocel/.ubiq/gubiq.ipc', async function() {
+provider.init(os.homedir() + '/.ubiq/gubiq.ipc', async function() {
   provider.startPolling('peers')
   provider.startPolling('chaindata')
   provider.startPolling('systemInfo')
