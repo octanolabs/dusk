@@ -8,7 +8,7 @@
               <v-avatar class="mr-2">
                 <img src="~/static/networks/ubiq.svg" />
               </v-avatar>
-              Ubiq - mainnet
+              Ubiq
             </v-chip>
             <v-chip class="mr-1" outlined label large text-color="white">
               <v-icon class="mr-2">mdi-account-group</v-icon>
@@ -20,8 +20,16 @@
               {{ system.cpus.length }}
             </v-chip>
             <v-chip class="mr-1" outlined label large text-color="white">
+              <v-icon class="mr-2">mdi-link-box-variant-outline</v-icon>
+              {{ convertBytes(system.diskusage.chaindata, true) }}
+            </v-chip>
+            <v-chip class="mr-1" outlined label large text-color="white">
+              <v-icon class="mr-2">mdi-harddisk</v-icon>
+              {{ convertBytes(system.diskusage.available, true) }}
+            </v-chip>
+            <v-chip class="mr-1" outlined label large text-color="white">
               <v-icon class="mr-2">mdi-memory</v-icon>
-              {{ toGB(system.freemem) }}/{{ toGB(system.totalmem) }} GB
+              {{ convertBytes(system.freemem, true) }}
             </v-chip>
             <v-chip
               v-if="system.loadavg"
@@ -30,7 +38,7 @@
               label
               large
             >
-              <v-icon class="mr-2">mdi-worker</v-icon>
+              <v-icon class="mr-2" small>mdi-worker</v-icon>
               {{ system.loadavg[0].toFixed(2) }},
               {{ system.loadavg[1].toFixed(2) }},
               {{ system.loadavg[2].toFixed(2) }}
@@ -236,8 +244,20 @@ export default {
         inlineCharacterLimit: 12
       })
     },
-    toGB(bytes) {
-      return (bytes / 1024 / 1024 / 1024).toFixed(2)
+    convertBytes(bytes, showUnit) {
+      const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB']
+      if (bytes === 0) {
+        return 'n/a'
+      }
+      const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)))
+      if (i === 0) {
+        return bytes + ' ' + sizes[i]
+      }
+      let unit = ''
+      if (showUnit) {
+        unit = ' ' + sizes[i]
+      }
+      return (bytes / 1024 ** i).toFixed(1) + unit
     }
   }
 }

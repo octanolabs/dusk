@@ -1,6 +1,8 @@
 import {Admin} from 'web3-eth-admin'
 import net from 'net'
 import os from 'os'
+import fs from 'fs'
+import getSize from 'get-folder-size'
 import disk from 'diskusage'
 import axios from 'axios'
 import consola from 'consola'
@@ -49,6 +51,7 @@ const polling = {
       try {
         consola.info('checking system')
         const info = await disk.check(os.homedir())
+        info.chaindata = polling.chaindata.cache
         polling.systemInfo.cache = {
           totalmem: os.totalmem(),
           freemem: os.freemem(),
@@ -59,6 +62,17 @@ const polling = {
       } catch (err) {
         consola.error(new Error(err))
       }
+    }
+  },
+  chaindata: {
+    cache: 0,
+    timer: new NanoTimer(),
+    interval: '3600s',
+    method: function () {
+      getSize(os.homedir() + '/.ubiq/gubiq/chaindata', (err, size) => {
+        if (err) { throw err }
+        polling.chaindata.cache = size
+      })
     }
   }
 }
