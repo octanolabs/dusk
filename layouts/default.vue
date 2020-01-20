@@ -107,6 +107,10 @@ export default {
   created() {
     this.$store.dispatch('nodeInfo')
     this.$store.dispatch('systemInfo')
+    const t = this
+    setInterval(function() {
+      t.$store.dispatch('systemInfo')
+    }, 10000)
   },
   methods: {
     async logout() {

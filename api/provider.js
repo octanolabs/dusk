@@ -33,13 +33,6 @@ const polling = {
               } else {
                 polling.peers.cache = n(peers)
                 polling.peers.cache.unshift(polling.nodeInfo)
-                polling.systemInfo = {
-                  totalmem: os.totalmem(),
-                  freemem: os.freemem(),
-                  loadavg: os.loadavg(),
-                  cpus: os.cpus(),
-                  diskusage: disk.checkSync(os.homedir())
-                }
               }
             })
           }
@@ -48,7 +41,26 @@ const polling = {
     }
   },
   nodeInfo: {},
-  systemInfo: {}
+  systemInfo: {
+    cache: {},
+    timer: new NanoTimer(),
+    interval: '25s',
+    method: async function() {
+      try {
+        consola.info('checking system')
+        const info = await disk.check(os.homedir())
+        polling.systemInfo.cache = {
+          totalmem: os.totalmem(),
+          freemem: os.freemem(),
+          loadavg: os.loadavg(),
+          cpus: os.cpus(),
+          diskusage: info
+        }
+      } catch (err) {
+        consola.error(new Error(err))
+      }
+    }
+  }
 }
 
 export default {
@@ -71,7 +83,7 @@ export default {
     return polling.nodeInfo
   },
   getSystemInfo() {
-    return polling.systemInfo
+    return polling.systemInfo.cache
   }
 }
 

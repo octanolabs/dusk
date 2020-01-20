@@ -19,6 +19,7 @@ router.use((req, res, next) => {
 // start polling
 provider.init('/home/xocel/.ubiq/gubiq.ipc', async function() {
   provider.startPolling('peers')
+  provider.startPolling('systemInfo')
 })
 
 router.post('/country', (req, res) => {
