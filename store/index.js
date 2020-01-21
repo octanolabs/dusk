@@ -2,7 +2,6 @@ import axios from 'axios'
 import consola from 'consola'
 
 export const state = () => ({
-  authenticated: false,
   peers: [],
   nodeInfo: {},
   systemInfo: {},
@@ -29,31 +28,14 @@ export const mutations = {
 
 export const actions = {
   // nuxtServerInit is called by Nuxt.js before server-rendering every page
-  nuxtServerInit({ commit }, { req }) {
-    if (req.session && req.session.authenticated) {
+  /* nuxtServerInit({ commit }, { req }) {
+    if (req.session && req.session.user) {
       commit('SET_USER', req.session.authenticated)
     }
-  },
-  async login({ commit }, { password }) {
-    try {
-      const { data } = await axios.post('/api/login', { password })
-      commit('SET_USER', data)
-    } catch (error) {
-      if (error.response && error.response.status === 401) {
-        consola.error(new Error('Bad credentials'))
-      }
-      consola.error(new Error(error))
-    }
-  },
-
-  async logout({ commit }) {
-    await axios.post('/api/logout')
-    commit('SET_USER', false)
-  },
-
+  }, */
   async peers({ commit }) {
     try {
-      const { data } = await axios.post('/api/peers')
+      const { data } = await axios.get('/api/peers')
       commit('SET_PEERS', data.list)
     } catch (error) {
       if (error.response && error.response.status === 401) {
@@ -65,7 +47,7 @@ export const actions = {
 
   async nodeInfo({ commit }) {
     try {
-      const { data } = await axios.post('/api/nodeinfo')
+      const { data } = await axios.get('/api/nodeinfo')
       commit('SET_NODEINFO', data.info)
     } catch (error) {
       if (error.response && error.response.status === 401) {
@@ -77,7 +59,7 @@ export const actions = {
 
   async systemInfo({ commit }) {
     try {
-      const { data } = await axios.post('/api/system')
+      const { data } = await axios.get('/api/system')
       commit('SET_SYSTEMINFO', data.info)
     } catch (error) {
       if (error.response && error.response.status === 401) {
@@ -89,8 +71,7 @@ export const actions = {
 
   async txpool({ commit }) {
     try {
-      const { data } = await axios.post('/api/txpool')
-      console.log(data)
+      const { data } = await axios.get('/api/txpool')
       commit('SET_TXPOOL', data.info)
     } catch (error) {
       if (error.response && error.response.status === 401) {

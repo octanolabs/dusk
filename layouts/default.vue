@@ -1,6 +1,6 @@
 <template>
   <v-app dark>
-    <v-navigation-drawer v-model="authed" :mini-variant="miniVariant" fixed app>
+    <v-navigation-drawer mini-variant fixed app>
       <v-list>
         <v-list-item>
           <v-list-item-action>
@@ -18,7 +18,7 @@
           </v-list-item-content>
         </v-list-item>
         <v-list-item
-          v-for="(item, i) in items"
+          v-for="(item, i) in menu"
           :key="i"
           :to="item.to"
           router
@@ -34,21 +34,17 @@
       </v-list>
       <template v-slot:append>
         <v-list>
-          <v-list-item @click="miniVariant = !miniVariant">
+          <v-list-item v-if="$auth.loggedIn" @click="logout">
             <v-list-item-action>
-              <v-icon>
-                mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}
-              </v-icon>
+              <v-icon>mdi-lock-open</v-icon>
             </v-list-item-action>
             <v-list-item-content>
-              <v-list-item-title>
-                {{ miniVariant ? 'Expand' : 'Hide' }}
-              </v-list-item-title>
+              <v-list-item-title>Lock</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item @click="logout">
+          <v-list-item v-else to="/login" router exact>
             <v-list-item-action>
-              <v-icon>mdi-account-lock</v-icon>
+              <v-icon>mdi-lock</v-icon>
             </v-list-item-action>
             <v-list-item-content>
               <v-list-item-title>Lock</v-list-item-title>
@@ -73,7 +69,7 @@ export default {
         {
           icon: 'mdi-desktop-mac-dashboard',
           title: 'Dashboard',
-          to: '/dashboard'
+          to: '/'
         },
         {
           icon: 'mdi-settings',
@@ -86,26 +82,16 @@ export default {
           to: '/clients'
         }
       ],
-      miniVariant: true,
       title: 'Octano Dusk'
     }
   },
   computed: {
-    authed: {
-      get() {
-        return !!this.$store.state.authenticated
-      },
-      set() {}
-    },
-    clientVer() {
-      return this.$store.state.nodeInfo.name
-    },
-    peerCount() {
-      return this.$store.state.peers.length
+    menu() {
+      return this.$auth.loggedIn ? this.items : []
     }
   },
   created() {
-    this.$store.dispatch('nodeInfo')
+    this.$store.dispatch('peers')
     this.$store.dispatch('systemInfo')
     this.$store.dispatch('txpool')
     const t = this
@@ -117,8 +103,7 @@ export default {
   methods: {
     async logout() {
       try {
-        await this.$store.dispatch('logout')
-        this.$router.push({ path: '/' })
+        await this.$auth.logout()
       } catch (e) {
         this.formError = e.message
       }

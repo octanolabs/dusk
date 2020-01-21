@@ -25,40 +25,25 @@ provider.init(os.homedir() + '/.ubiq/gubiq.ipc', async function() {
   provider.startPolling('txpool')
 })
 
-router.post('/country', (req, res) => {
+router.get('/country', (req, res) => {
   const ip = req.body.ip
   return res.json({ code: provider.getCountryCode(ip) })
 })
 
-router.post('/nodeinfo', (req, res) => {
+router.get('/nodeinfo', (req, res) => {
   return res.json({ info: provider.getNodeInfo() })
 })
 
-router.post('/peers', (req, res) => {
+router.get('/peers', (req, res) => {
   return res.json({ list: provider.getPeers() })
 })
 
-router.post('/system', (req, res) => {
+router.get('/system', (req, res) => {
   return res.json({ info: provider.getSystemInfo() })
 })
 
-router.post('/txpool', (req, res) => {
+router.get('/txpool', (req, res) => {
   return res.json({ info: provider.getTxPool() })
-})
-
-// Add POST - /api/login
-router.post('/login', (req, res) => {
-  if (req.body.password === 'octano') { // TODO: lol.
-    req.session.authenticated = true
-    return res.json({ authenticated: true })
-  }
-  res.status(401).json({ message: 'Bad credentials' })
-})
-
-// Add POST - /api/logout
-router.post('/logout', (req, res) => {
-  delete req.session.authenticated
-  res.json({ ok: true })
 })
 
 // Export the server middleware

@@ -3,7 +3,7 @@ const bodyParser = require('body-parser')
 const session = require('express-session')
 
 module.exports = {
-  mode: 'universal',
+  mode: 'spa',
   /*
    ** Headers of the page
    */
@@ -38,7 +38,8 @@ module.exports = {
     }),
     // Api middleware
     // We add /api/login & /api/logout routes
-    '~/api'
+    '~/api',
+    '~/session'
   ],
   /*
    ** Customize the progress-bar color
@@ -54,7 +55,7 @@ module.exports = {
    ** Plugins to load before mounting the App
    */
   plugins: [
-    '~/plugins/highlightjs'
+    { src: '~/plugins/highlightjs', mode: 'client' }
   ],
   /*
    ** Nuxt.js dev-modules
@@ -69,13 +70,30 @@ module.exports = {
    */
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
-    '@nuxtjs/axios'
+    // Doc: https://auth.nuxtjs.org/#getting-started
+    '@nuxtjs/axios',
+    '@nuxtjs/auth'
   ],
   /*
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
    */
-  axios: {},
+  axios: {
+    baseURL: process.env.BASE_URL || 'http://127.0.0.1:3000'
+  },
+  auth: {
+    strategies: {
+      local: {
+        endpoints: {
+          login: { url: '/session/login', method: 'post', propertyName: 'token' },
+          logout: { url: '/session/logout', method: 'post' },
+          user: { url: '/session/user', method: 'get', propertyName: 'user' }
+        },
+        // tokenRequired: true,
+        // tokenType: 'bearer'
+      }
+    }
+  },
   /*
    ** vuetify module configuration
    ** https://github.com/nuxt-community/vuetify-module
