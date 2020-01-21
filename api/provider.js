@@ -30,7 +30,7 @@ const polling = {
           if (err) {
             consola.error(new Error(err))
           } else {
-            polling.nodeInfo = parseNode(info, true)
+            polling.nodeInfo = parseNode(info, 0, true)
             web3Admin.getPeers(function(err2, peers) {
               if (err2) {
                 consola.error(new Error(err2))
@@ -131,12 +131,12 @@ export default {
 const n = function(peers) {
   let info = []
   for (const i in peers) {
-    info.push(parseNode(peers[i], false))
+    info.push(parseNode(peers[i], i + 1, false))
   }
   return info
 }
 
-const parseNode = function(node, local) {
+const parseNode = function(node, id, local) {
   // "Gubiq/v3.0.1-andromeda-834c1f86/linux-amd64/go1.13.5"
   // "Gubiq/UbiqMainnet/v3.0.1-andromeda-834c1f86/linux-amd64/go1.13.5"
   const peer = {}
@@ -152,25 +152,37 @@ const parseNode = function(node, local) {
   split = platform.split('-')
   peer.os = split[0]
   peer.arch = split[1]
-  peer.raw = node
-  peer.localhost = local
+  peer.id = id
+
   const ip = local ? node.ip : node.network.remoteAddress.split(':')[0]
   let countryCode = geo.get(ip)
   if (countryCode == undefined) {
     axios.get('https://ip2c.org/' + ip)
       .then( function(response) {
         const set = geo.set(ip, response.data)
-        countryCode = response.data
-        peer.country = countryCode.split(';')[1]
+        const parsed = parseCountryCode(response.data)
+        peer.countryName = parsed.name
+        peer.countryCode = parsed.code
         return peer
       })
       .catch( function(err) {
         consola.error(new Error(err))
-        peer.country = ""
+        peer.countryName = ""
+        peer.countryCode = ""
         return peer
       })
   } else {
-    peer.country = countryCode.split(';')[1]
+    const parsed = parseCountryCode(countryCode)
+    peer.countryName = parsed.name
+    peer.countryCode = parsed.code
     return peer
+  }
+}
+
+const parseCountryCode = function(code) {
+  const split = code.split(';')
+  return {
+    name: split[3],
+    code: split[1]
   }
 }

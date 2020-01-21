@@ -137,14 +137,29 @@
                   :items="peers"
                   :items-per-page="5"
                   :expanded.sync="expandedPeers"
-                  item-key="raw.enode"
+                  item-key="id"
                   flat
-                  single-expand
-                  show-expand
                   dense
                 >
-                  <template v-slot:item.localhost="{ item }">
-                    <v-icon v-if="item.localhost === true" small>
+                  <template v-slot:body="{ items }">
+                    <tbody>
+                      <tr
+                        :class="item.id === 0 ? 'custom-highlight-row' : ''"
+                        v-for="item in items"
+                        :key="item.id"
+                      >
+                        <td class="text-left">{{ item.countryName }}</td>
+                        <td class="text-left">{{ item.client }}</td>
+                        <td class="text-left">{{ item.version }}</td>
+                        <td class="text-left">{{ item.tag }}</td>
+                        <td class="text-left">{{ item.build }}</td>
+                        <td class="text-left">{{ item.os }}</td>
+                        <td class="text-left">{{ item.arch }}</td>
+                      </tr>
+                    </tbody>
+                  </template>
+                  <template v-slot:item.id="{ item }">
+                    <v-icon v-if="item.id === 0" small>
                       mdi-star
                     </v-icon>
                   </template>
@@ -154,17 +169,6 @@
                       mdi-apple
                     </v-icon>
                     <v-icon v-else small>mdi-windows</v-icon>
-                  </template>
-                  <template v-slot:expanded-item="{ item }">
-                    <td
-                      :colspan="9"
-                      class="pa-0"
-                      style="width:100%;overflow-x:auto;"
-                    >
-                      <pre v-highlightjs="prettyJson(item.raw)">
-<code class="javascript w-100 elevation-0"></code>
-                      </pre>
-                    </td>
                   </template>
                 </v-data-table>
               </client-only>
@@ -193,15 +197,13 @@ export default {
     return {
       expandedPeers: [],
       headers: [
-        { text: '', value: 'localhost' },
-        { text: 'Country', value: 'country' },
+        { text: 'Country', value: 'countryName' },
         { text: 'Client', value: 'client' },
         { text: 'Version', value: 'version' },
         { text: 'Tag', value: 'tag' },
         { text: 'Build', value: 'build' },
         { text: 'OS', value: 'os' },
-        { text: 'Arch', value: 'arch' },
-        { text: '', value: 'data-table-expand' }
+        { text: 'Arch', value: 'arch' }
       ],
       countries: {},
       chartData: {
@@ -227,7 +229,7 @@ export default {
     },
     chartCountry() {
       return this.$store.state.peers.length > 0
-        ? this.toChartData(this.peers, 'country', 1)
+        ? this.toChartData(this.peers, 'countryCode', 1)
         : false
     },
     chartClient() {
@@ -283,7 +285,7 @@ export default {
       }
     },
     toMapData(arr) {
-      const newArr = this.strip(arr, 'country')
+      const newArr = this.strip(arr, 'countryCode')
       const counts = {}
       for (const i in newArr) {
         counts[newArr[i]] = counts[newArr[i]] ? counts[newArr[i]] + 1 : 1

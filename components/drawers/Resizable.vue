@@ -44,6 +44,10 @@ export default {
       return this.$store.state.drawers[this.side]
     }
   },
+  mounted() {
+    this.setBorderWidth()
+    this.setEvents()
+  },
   methods: {
     setBorderWidth() {
       const i = this.$refs.drawer.$el.querySelector(
@@ -92,10 +96,6 @@ export default {
         false
       )
     }
-  },
-  mounted() {
-    this.setBorderWidth()
-    this.setEvents()
   }
 }
 </script>

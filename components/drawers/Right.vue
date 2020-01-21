@@ -1,5 +1,5 @@
 <template>
-  <resizable-drawer side="right" :app="false" />
+  <resizable-drawer :app="false" side="right" />
 </template>
 
 <script>
