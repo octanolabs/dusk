@@ -77,15 +77,16 @@
           <v-row no-gutters>
             <v-col :cols="6" class="pa-3">
               <v-card style="background-color:rgba(0,0,0,0)" flat>
-                <no-ssr placeholder="Loading...">
+                <client-only placeholder="Loading...">
                   <world-map
+                    v-if="map"
                     :countryData="map"
                     low-color="#6fceb7"
                     high-color="#6fceb7"
                     default-country-fill-color="#333"
                     country-stroke-color="#6fceb7"
                   />
-                </no-ssr>
+                </client-only>
               </v-card>
             </v-col>
             <v-col :cols="6" class="pr-3 pl-3">
