@@ -5,7 +5,10 @@ export const state = () => ({
   peers: [],
   nodeInfo: {},
   systemInfo: {},
-  txpool: {}
+  txpool: {},
+  drawers: {
+    right: true
+  }
 })
 
 export const mutations = {

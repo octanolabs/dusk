@@ -53,6 +53,7 @@
         </v-list>
       </template>
     </v-navigation-drawer>
+    <right-drawer />
     <v-content>
       <v-container>
         <nuxt />
@@ -62,7 +63,12 @@
 </template>
 
 <script>
+import RightDrawer from '@/components/drawers/Right'
+
 export default {
+  components: {
+    RightDrawer
+  },
   data() {
     return {
       items: [
