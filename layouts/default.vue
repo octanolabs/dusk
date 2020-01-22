@@ -53,17 +53,15 @@
         </v-list>
       </template>
     </v-navigation-drawer>
-    <right-drawer />
+    <right-drawer side="right" :show="true" app />
     <v-content>
-      <v-container>
-        <nuxt />
-      </v-container>
+      <nuxt />
     </v-content>
   </v-app>
 </template>
 
 <script>
-import RightDrawer from '@/components/drawers/Right'
+import RightDrawer from '@/components/drawers/Resizable'
 
 export default {
   components: {
@@ -94,6 +92,9 @@ export default {
   computed: {
     menu() {
       return this.$auth.loggedIn ? this.items : []
+    },
+    authed() {
+      return this.$auth.loggedIn
     }
   },
   created() {

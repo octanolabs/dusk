@@ -1,15 +1,57 @@
 <template>
   <v-navigation-drawer
     ref="drawer"
+    :class="{
+      'resizable-drawer': true,
+      'resizable-drawer-right': side === 'right',
+      'resizable-drawer-left': side === 'left'
+    }"
     :left="side === 'left'"
     :right="side != 'left'"
     :clipped="side === 'left'"
     :width="width"
     :value="show"
-    :app="app"
+    :app="app && expanded"
     fixed
   >
-    <slot></slot>
+    <v-tooltip :left="left" :right="right">
+      <template v-slot:activator="{ on }">
+        <v-btn
+          v-on="on"
+          @click.stop="toggle()"
+          :class="{ 'drawer-handle': true, left: left, right: right }"
+          color="secondary"
+        >
+          <v-icon
+            v-if="expanded"
+            :class="{
+              'pl-0': left,
+              'pr-2': left,
+              'pl-2': right,
+              'pr-0': right
+            }"
+          >
+            {{ left ? 'mdi-chevron-left' : 'mdi-chevron-right' }}
+          </v-icon>
+          <v-icon
+            v-else
+            :class="{
+              'pl-0': left,
+              'pr-2': left,
+              'pl-2': right,
+              'pr-0': right
+            }"
+          >
+            {{ left ? 'mdi-chevron-right' : 'mdi-chevron-left' }}
+          </v-icon>
+        </v-btn>
+      </template>
+      <span v-if="expanded">Hide</span>
+      <span v-else>Expand</span>
+    </v-tooltip>
+    <v-sheet class="resizable-drawer-content">
+      <slot></slot>
+    </v-sheet>
   </v-navigation-drawer>
 </template>
 
@@ -19,10 +61,16 @@ export default {
     side: {
       type: String,
       default() {
-        return {}
+        return 'right'
       }
     },
     app: {
+      type: Boolean,
+      default() {
+        return true
+      }
+    },
+    show: {
       type: Boolean,
       default() {
         return true
@@ -32,16 +80,19 @@ export default {
   data: () => {
     return {
       shown: false,
-      width: 372,
-      borderSize: 3
+      width: '372px',
+      borderSize: 4
     }
   },
   computed: {
-    direction() {
-      return this.$store.state.drawers[this.side] === false ? 'Open' : 'Closed'
+    expanded() {
+      return this.width.slice(0, -2) > 20
     },
-    show() {
-      return this.$store.state.drawers[this.side]
+    left() {
+      return this.side === 'left'
+    },
+    right() {
+      return this.side === 'right'
     }
   },
   mounted() {
@@ -49,6 +100,16 @@ export default {
     this.setEvents()
   },
   methods: {
+    toggle(e) {
+      const el = this.$refs.drawer.$el
+      let w = 372
+      if (this.expanded) {
+        w = 20
+      }
+      el.style.width = w + 'px'
+      el.style.transition = 'initial'
+      this.width = el.style.width
+    },
     setBorderWidth() {
       const i = this.$refs.drawer.$el.querySelector(
         '.v-navigation-drawer__border'
@@ -99,3 +160,30 @@ export default {
   }
 }
 </script>
+<style>
+.resizable-drawer {
+  min-width: 20px;
+  background-color: rgba(0, 0, 0, 0) !important;
+}
+
+.resizable-drawer-left > .v-navigation-drawer__border {
+  margin-right: 20px;
+}
+
+.resizable-drawer-right > .v-navigation-drawer__border {
+  margin-left: 20px;
+}
+
+.resizable-drawer-left {
+  padding-right: 20px;
+}
+
+.resizable-drawer-right {
+  padding-left: 20px;
+}
+
+.resizable-drawer-content {
+  width: 100%;
+  height: 100%;
+}
+</style>

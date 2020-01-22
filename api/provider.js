@@ -11,6 +11,7 @@ import NanoTimer from 'nanotimer'
 import NodeCache from 'node-cache'
 
 const ONE_DAY = 86400
+const TWO_HOURS = 7200
 
 let web3Admin = null
 let web3Pool = null
@@ -93,6 +94,11 @@ const polling = {
         })
       }
     }
+  },
+  blocks: {
+    cache: [],
+    timer: new NanoTimer(),
+    interval: '1s',
   }
 }
 
@@ -167,8 +173,8 @@ const parseNode = function(node, id, local) {
       })
       .catch( function(err) {
         consola.error(new Error(err))
-        peer.countryName = ""
-        peer.countryCode = ""
+        peer.countryName = ''
+        peer.countryCode = ''
         return peer
       })
   } else {
