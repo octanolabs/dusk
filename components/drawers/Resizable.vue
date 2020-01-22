@@ -186,4 +186,36 @@ export default {
   width: 100%;
   height: 100%;
 }
+
+.drawer-handle {
+  position: absolute;
+  top: calc(50vh - 60px);
+  z-index: 10 !important;
+  height: 40px;
+  width: 20px !important;
+  min-width: 10px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  opacity: 0.5;
+  text-align: center;
+  overflow: hidden;
+}
+
+.drawer-handle:hover {
+  opacity: 1;
+}
+
+.drawer-handle .v-btn__content {
+  overflow: hidden;
+}
+
+.drawer-handle.left {
+  right: 0 !important;
+  border-radius: 0 20px 20px 0;
+}
+
+.drawer-handle.right {
+  left: 0 !important;
+  border-radius: 20px 0 0 20px;
+}
 </style>
