@@ -2,81 +2,19 @@
   <v-layout>
     <v-col :cols="12" class="pa-0">
       <v-col :cols="6">
-        <v-card class="mb-1 bg-transparent" flat>
-          <v-row no-gutters>
-            <v-chip class="mr-1" outlined label large text-color="white">
-              <v-avatar class="mr-2">
-                <img src="~/static/networks/ubiq.svg" />
-              </v-avatar>
-              Ubiq - mainnet
-            </v-chip>
-            <v-chip class="mr-1" outlined label large text-color="white">
-              <v-icon class="mr-2">mdi-account-group</v-icon>
-              {{ peers.length - 1 }}
-            </v-chip>
-            <v-spacer />
-            <v-chip
-              v-if="system.cpus"
-              class="mr-1"
-              outlined
-              label
-              large
-              text-color="white"
-            >
-              <v-icon class="mr-2">mdi-cpu-64-bit</v-icon>
-              {{ system.cpus.length }}
-            </v-chip>
-            <v-chip
-              v-if="system.diskusage"
-              class="mr-1"
-              outlined
-              label
-              large
-              text-color="white"
-            >
-              <v-icon class="mr-2">mdi-link-box-variant-outline</v-icon>
-              {{ convertBytes(system.diskusage.chaindata, true) }}
-            </v-chip>
-            <v-chip
-              v-if="system.diskusage"
-              class="mr-1"
-              outlined
-              label
-              large
-              text-color="white"
-            >
-              <v-icon class="mr-2">mdi-harddisk</v-icon>
-              {{ convertBytes(system.diskusage.available, true) }}
-            </v-chip>
-            <v-chip
-              v-if="system.freemem"
-              class="mr-1"
-              outlined
-              label
-              large
-              text-color="white"
-            >
-              <v-icon class="mr-2">mdi-memory</v-icon>
-              {{ convertBytes(system.freemem, true) }}
-            </v-chip>
-            <v-chip
-              v-if="system.loadavg"
-              text-color="white"
-              outlined
-              label
-              large
-            >
-              <v-icon class="mr-2" small>mdi-worker</v-icon>
-              {{ system.loadavg[0].toFixed(2) }},
-              {{ system.loadavg[1].toFixed(2) }},
-              {{ system.loadavg[2].toFixed(2) }}
-            </v-chip>
-          </v-row>
-        </v-card>
         <v-card class="mb-1 bg-transparent" outlined>
+          <v-card-title>
+            <v-avatar :size="28" class="mr-2">
+              <img src="~/static/networks/ubiq.svg" />
+            </v-avatar>
+            Ubiq - mainnet
+            <v-spacer />
+            <v-icon class="mr-2">mdi-account-group</v-icon>
+            {{ peers.length - 1 }}
+          </v-card-title>
           <v-row no-gutters>
             <v-col :cols="6" class="pa-3">
-              <v-card style="background-color:rgba(0,0,0,0)" flat>
+              <v-card class="bg-transparent" flat>
                 <client-only placeholder="Loading...">
                   <world-map
                     v-if="map"
@@ -93,12 +31,13 @@
               <bar-chart v-if="chartCountry" :data="chartCountry" />
             </v-col>
           </v-row>
-          <v-row no-gutters>
+          <v-row no-gutters class="mb-2">
             <v-col :cols="3">
               <doughnut-chart
                 v-if="chartOperatingSystem"
                 :data="chartOperatingSystem"
                 title="OS"
+                legend="top"
                 right
               />
             </v-col>
@@ -115,6 +54,7 @@
                 v-if="chartClient"
                 :data="chartClient"
                 title="Clients"
+                legend="top"
                 right
               />
             </v-col>
@@ -123,6 +63,7 @@
                 v-if="chartVersion"
                 :data="chartVersion"
                 title="Versions (Gubiq)"
+                legend="top"
                 right
               />
             </v-col>

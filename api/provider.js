@@ -9,6 +9,8 @@ import axios from 'axios'
 import consola from 'consola'
 import NanoTimer from 'nanotimer'
 import NodeCache from 'node-cache'
+import meminfo from './meminfo.js'
+import cpuinfo from './cpuinfo.js'
 
 const ONE_DAY = 86400
 const TWO_HOURS = 7200
@@ -17,7 +19,6 @@ let web3Admin = null
 let web3Pool = null
 
 const geo = new NodeCache({stdTTL: ONE_DAY})
-
 const polling = {
   peers: {
     cache: [],
@@ -25,7 +26,6 @@ const polling = {
     interval: '5s',
     method: function() {
       if (web3Admin) {
-        consola.info('checking peers')
         // get our nodes info first
         web3Admin.getNodeInfo(function(err, info) {
           if (err) {
@@ -58,8 +58,9 @@ const polling = {
         polling.systemInfo.cache = {
           totalmem: os.totalmem(),
           freemem: os.freemem(),
+          meminfo: await meminfo.async(),
           loadavg: os.loadavg(),
-          cpus: os.cpus(),
+          cpus: await cpuinfo.async(),
           diskusage: info
         }
       } catch (err) {
@@ -88,7 +89,7 @@ const polling = {
           if (err) {
             consola.error(new Error(err))
           } else {
-            consola.info(info)
+            // consola.info(info)
             polling.txpool.cache = info
           }
         })

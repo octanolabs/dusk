@@ -4,7 +4,7 @@
       :chart-data="data"
       :options="options"
       :height="120"
-      :styles="{ height: '120px' }"
+      :styles="{ width: '100%', height: '112px' }"
     />
   </client-only>
 </template>
@@ -59,7 +59,7 @@ export default {
           text: this.title
         },
         legend: {
-          display: true,
+          display: false,
           position: this.legend,
           align: this.legend === 'top' ? 'center' : this.legend,
           labels: {

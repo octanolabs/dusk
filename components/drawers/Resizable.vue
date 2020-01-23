@@ -80,7 +80,7 @@ export default {
   data: () => {
     return {
       shown: false,
-      width: '372px',
+      width: '285px',
       borderSize: 4
     }
   },
@@ -102,7 +102,7 @@ export default {
   methods: {
     toggle(e) {
       const el = this.$refs.drawer.$el
-      let w = 372
+      let w = 285
       if (this.expanded) {
         w = 20
       }
@@ -180,9 +180,11 @@ export default {
 
 .resizable-drawer-right {
   padding-left: 20px;
+  margin-left: -20px !important;
 }
 
 .resizable-drawer-content {
+  padding-left: 4px;
   width: 100%;
   height: 100%;
 }
