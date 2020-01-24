@@ -18,7 +18,7 @@
     <v-sheet class="px-4 bg-transparent">
       <v-sparkline
         :value="cpuinfo"
-        :gradient="['#e76754', '#6fceb7']"
+        :gradient="['#e76754', '#6fceb7', '#6fceb7']"
         gradient-direction="bottom"
         color="#e76754"
         padding="1"
