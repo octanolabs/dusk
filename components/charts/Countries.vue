@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import BarChart from './Bar.js'
+import BarChart from './HorizontalBar.js'
 
 export default {
   components: {

@@ -124,7 +124,7 @@
 <script>
 import stringifyObject from 'stringify-object'
 import WorldMap from 'vue-world-map'
-import BarChart from '~/components/charts/Bar.vue'
+import BarChart from '~/components/charts/Countries.vue'
 import DoughnutChart from '~/components/charts/Doughnut.vue'
 
 export default {
