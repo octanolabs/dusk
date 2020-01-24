@@ -23,6 +23,7 @@ provider.init(os.homedir() + '/.ubiq/gubiq.ipc', async function() {
   provider.startPolling('chaindata')
   provider.startPolling('systemInfo')
   provider.startPolling('txpool')
+  // provider.startPolling('blocks')
 })
 
 router.get('/country', (req, res) => {
@@ -44,6 +45,10 @@ router.get('/system', (req, res) => {
 
 router.get('/txpool', (req, res) => {
   return res.json({ info: provider.getTxPool() })
+})
+
+router.get('/blocks', (req, res) => {
+  return res.json({ list: provider.getBlocks() })
 })
 
 // Export the server middleware

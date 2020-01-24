@@ -2,6 +2,7 @@ import axios from 'axios'
 import consola from 'consola'
 
 export const state = () => ({
+  blocks: [],
   peers: [],
   nodeInfo: {},
   systemInfo: {},
@@ -26,6 +27,9 @@ export const mutations = {
   },
   SET_TXPOOL(state, data) {
     state.txpool = data
+  },
+  SET_BLOCKS(state, data) {
+    state.blocks = data
   }
 }
 
@@ -76,6 +80,18 @@ export const actions = {
     try {
       const { data } = await axios.get('/api/txpool')
       commit('SET_TXPOOL', data.info)
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        consola.error(new Error('Bad credentials'))
+      }
+      consola.error(new Error(error))
+    }
+  },
+
+  async blocks({ commit }) {
+    try {
+      const { data } = await axios.get('/api/blocks')
+      commit('SET_BLOCKS', data.list)
     } catch (error) {
       if (error.response && error.response.status === 401) {
         consola.error(new Error('Bad credentials'))

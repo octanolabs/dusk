@@ -1,5 +1,6 @@
 import {Admin} from 'web3-eth-admin'
 import {TxPool} from 'web3-eth-txpool'
+import Web3 from 'web3'
 import net from 'net'
 import os from 'os'
 import fs from 'fs'
@@ -9,14 +10,14 @@ import axios from 'axios'
 import consola from 'consola'
 import NanoTimer from 'nanotimer'
 import NodeCache from 'node-cache'
-import meminfo from './meminfo.js'
-import cpuinfo from './cpuinfo.js'
+import lib from './lib.js'
 
 const ONE_DAY = 86400
 const TWO_HOURS = 7200
 
 let web3Admin = null
 let web3Pool = null
+let web3 = null
 
 const geo = new NodeCache({stdTTL: ONE_DAY})
 const polling = {
@@ -58,9 +59,9 @@ const polling = {
         polling.systemInfo.cache = {
           totalmem: os.totalmem(),
           freemem: os.freemem(),
-          meminfo: await meminfo.async(),
+          meminfo: await lib.meminfo(),
           loadavg: os.loadavg(),
-          cpus: await cpuinfo.async(),
+          cpus: await lib.cpuinfo(),
           diskusage: info
         }
       } catch (err) {
@@ -100,7 +101,46 @@ const polling = {
     cache: [],
     timer: new NanoTimer(),
     interval: '1s',
+    method: async function () {}
   }
+}
+
+// seed the block cache with latest 88 blocks
+const populateBlockCache = function(cb) {
+  let cache = []
+  web3.eth.getBlock('latest', false, function(err, block) {
+    const head = block.number
+    let blocknumber = head - 89
+    lib.syncLoop(89, function(loop){
+      blocknumber++
+      web3.eth.getBlock(blocknumber, true, async function(err, b) {
+        if (err) {
+          consola.error(new Error(err))
+          loop.break(true)
+        } else {
+          // we use unshift so the latest block is always position 0
+          cache.push({
+            number: b.number,
+            hash: b.hash,
+            parent: b.parent,
+            blocktime: cache.length > 0 ? b.timestamp - cache[cache.length-1].timestamp : 0,
+            timestamp: b.timestamp,
+            txns: b.transactions.length,
+            gasLimit: b.gasLimit,
+            gasUsed: b.gasUsed,
+            size: b.size,
+            miner: b.miner,
+            difficulty: b.difficulty
+          })
+          loop.next()
+        }
+      })
+    }, function() {
+      cache.shift() // pop first item, only its timestamp was required.
+      polling.blocks.cache = cache
+      return cb()
+    })
+  })
 }
 
 export default {
@@ -108,7 +148,10 @@ export default {
     try {
       web3Admin = await new Admin(ipcPath, net)
       web3Pool = await new TxPool(ipcPath, net)
-      return cb()
+      web3 = await new Web3(ipcPath, net)
+      populateBlockCache(function() {
+        return cb()
+      })
     } catch (err) {
       consola.error(new Error(err))
     }
@@ -132,6 +175,9 @@ export default {
   },
   getTxPool() {
     return polling.txpool.cache
+  },
+  getBlocks() {
+    return polling.blocks.cache
   }
 }
 
