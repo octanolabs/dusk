@@ -164,6 +164,7 @@ export default {
 .resizable-drawer {
   min-width: 20px;
   background-color: rgba(0, 0, 0, 0) !important;
+  pointer-events: none;
 }
 
 .resizable-drawer-left > .v-navigation-drawer__border {
@@ -184,12 +185,14 @@ export default {
 }
 
 .resizable-drawer-content {
+  pointer-events: auto;
   padding-left: 4px;
   width: 100%;
   height: 100%;
 }
 
 .drawer-handle {
+  pointer-events: auto;
   position: absolute;
   top: calc(50vh - 60px);
   z-index: 10 !important;

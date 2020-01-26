@@ -1,18 +1,14 @@
 <template>
-  <v-card class="mr-1" style="background-color:rgba(0,0,0,0);" flat>
-    <client-only placeholder="Loading...">
-      <bar-chart
-        :chart-data="data"
-        :options="options"
-        :height="310"
-        :styles="{ height: '310px' }"
-      />
-    </client-only>
-  </v-card>
+  <bar-chart
+    :chart-data="data"
+    :options="options"
+    :height="150"
+    :styles="{ height: '150px' }"
+  />
 </template>
 
 <script>
-import BarChart from './HorizontalBar.js'
+import BarChart from './Bar.js'
 
 export default {
   components: {
@@ -50,7 +46,7 @@ export default {
         responsive: true,
         maintainAspectRatio: false,
         title: {
-          display: false,
+          display: true,
           position: 'top',
           text: this.title
         },
@@ -65,7 +61,7 @@ export default {
           ],
           yAxes: [
             {
-              display: true
+              display: false
             }
           ]
         },

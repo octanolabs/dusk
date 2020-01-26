@@ -3,8 +3,8 @@
     <doughnut-chart
       :chart-data="data"
       :options="options"
-      :height="120"
-      :styles="{ height: '120px' }"
+      :height="130"
+      :styles="{ height: '130px' }"
     />
   </client-only>
 </template>

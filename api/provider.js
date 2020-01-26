@@ -110,34 +110,40 @@ const populateBlockCache = function(cb) {
   let cache = []
   web3.eth.getBlock('latest', false, function(err, block) {
     const head = block.number
-    let blocknumber = head - 89
-    lib.syncLoop(89, function(loop){
+    let blocknumber = head - 200
+    lib.syncLoop(200, function(loop){
+      const i = loop.iteration()
       blocknumber++
       web3.eth.getBlock(blocknumber, true, async function(err, b) {
         if (err) {
           consola.error(new Error(err))
           loop.break(true)
         } else {
-          // we use unshift so the latest block is always position 0
+          const blocktime = cache.length > 0
+            ? b.timestamp - cache[cache.length-1].timestamp
+            : 0
+          const avgblocktime = cache.length > 0
+            ? (((cache[i-1].avgblocktime * i) + blocktime) / (i+1))
+            : blocktime
           cache.push({
             number: b.number,
-            hash: b.hash,
-            parent: b.parent,
-            blocktime: cache.length > 0 ? b.timestamp - cache[cache.length-1].timestamp : 0,
+            blocktime: blocktime,
+            avgblocktime: avgblocktime,
             timestamp: b.timestamp,
             txns: b.transactions.length,
             gasLimit: b.gasLimit,
             gasUsed: b.gasUsed,
             size: b.size,
             miner: b.miner,
-            difficulty: b.difficulty
+            difficulty: b.difficulty,
+            hash: b.hash,
+            parent: b.parent
           })
           loop.next()
         }
       })
     }, function() {
-      cache.shift() // pop first item, only its timestamp was required.
-      polling.blocks.cache = cache
+      polling.blocks.cache = cache.splice(cache.length-88)
       return cb()
     })
   })
