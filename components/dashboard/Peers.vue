@@ -17,14 +17,14 @@
           </v-card>
         </v-col>
         <v-col :cols="6" class="pr-3 pl-3">
-          <bar-chart v-if="chartCountry" :data="chartCountry" />
+          <countries v-if="chartCountry" :data="chartCountry" />
         </v-col>
       </v-row>
     </v-card>
     <v-card class="mb-2 bg-transparent" outlined>
       <v-row no-gutters style="height:150px;">
         <v-col :cols="3">
-          <doughnut-chart
+          <doughnut
             v-if="chartOperatingSystem"
             :data="chartOperatingSystem"
             title="OS"
@@ -33,15 +33,10 @@
           />
         </v-col>
         <v-col :cols="3">
-          <doughnut-chart
-            v-if="chartArch"
-            :data="chartArch"
-            title="Arch"
-            right
-          />
+          <doughnut v-if="chartArch" :data="chartArch" title="Arch" right />
         </v-col>
         <v-col :cols="3">
-          <doughnut-chart
+          <doughnut
             v-if="chartClient"
             :data="chartClient"
             title="Clients"
@@ -50,7 +45,7 @@
           />
         </v-col>
         <v-col :cols="3">
-          <doughnut-chart
+          <doughnut
             v-if="chartVersion"
             :data="chartVersion"
             title="Versions (Gubiq)"
@@ -115,14 +110,13 @@
 <script>
 import stringifyObject from 'stringify-object'
 import WorldMap from 'vue-world-map'
-import BarChart from '~/components/charts/Countries.vue'
-import DoughnutChart from '~/components/charts/Doughnut.vue'
+import Countries from '~/components/charts/Countries.vue'
+import Doughnut from '~/components/charts/Doughnut.vue'
 
 export default {
-  // middleware: 'auth',
   components: {
-    BarChart,
-    DoughnutChart,
+    Countries,
+    Doughnut,
     WorldMap
   },
   data() {
@@ -136,15 +130,7 @@ export default {
         { text: 'Build', value: 'build' },
         { text: 'OS', value: 'os' },
         { text: 'Arch', value: 'arch' }
-      ],
-      countries: {},
-      chartData: {
-        version: {},
-        arch: {},
-        os: {},
-        client: {},
-        country: false
-      }
+      ]
     }
   },
   computed: {
