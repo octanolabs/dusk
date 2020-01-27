@@ -27,13 +27,14 @@ export default {
   created() {
     this.$store.dispatch('peers')
     this.$store.dispatch('systemInfo')
-    this.$store.dispatch('txpool')
+    this.$store.dispatch('pending')
     this.$store.dispatch('blocks')
     const t = this
     setInterval(function() {
       t.$store.dispatch('systemInfo')
-      t.$store.dispatch('txpool')
+      t.$store.dispatch('pending')
       t.$store.dispatch('blocks')
+      t.$store.dispatch('peers')
     }, 10000)
   },
   methods: {

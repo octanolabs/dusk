@@ -22,7 +22,7 @@ provider.init(os.homedir() + '/.ubiq/gubiq.ipc', async function() {
   await provider.startPolling('peers')
   await provider.startPolling('chaindata')
   await provider.startPolling('systemInfo')
-  await provider.startPolling('txpool')
+  await provider.startPolling('pending')
   await provider.startPolling('blocks')
 })
 
@@ -43,8 +43,8 @@ router.get('/system', (req, res) => {
   return res.json({ info: provider.getSystemInfo() })
 })
 
-router.get('/txpool', (req, res) => {
-  return res.json({ info: provider.getTxPool() })
+router.get('/pending', (req, res) => {
+  return res.json({ info: provider.getPendingTxns() })
 })
 
 router.get('/blocks', (req, res) => {

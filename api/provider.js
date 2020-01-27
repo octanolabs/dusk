@@ -1,5 +1,5 @@
 import {Admin} from 'web3-eth-admin'
-import {TxPool} from 'web3-eth-txpool'
+// import {TxPool} from 'web3-eth-txpool'
 import Web3 from 'web3'
 import net from 'net'
 import os from 'os'
@@ -16,7 +16,7 @@ const ONE_DAY = 86400
 const TWO_HOURS = 7200
 
 let web3Admin = null
-let web3Pool = null
+// let web3Pool = null
 let web3 = null
 
 const geo = new NodeCache({stdTTL: ONE_DAY})
@@ -53,7 +53,6 @@ const polling = {
     interval: '25s',
     method: async function() {
       try {
-        consola.info('checking system')
         const info = await disk.check(os.homedir())
         info.chaindata = polling.chaindata.cache
         polling.systemInfo.cache = {
@@ -80,18 +79,17 @@ const polling = {
       })
     }
   },
-  txpool: {
+  pending: {
     cache: {},
     timer: new NanoTimer(),
     interval: '5s',
     method: function () {
-      if (web3Pool) {
-        web3Pool.getContent(function(err, info) {
+      if (web3) {
+        web3.eth.getBlock('pending', true, function(err, pending) {
           if (err) {
             consola.error(new Error(err))
           } else {
-            // consola.info(info)
-            polling.txpool.cache = info
+            polling.pending.cache = pending
           }
         })
       }
@@ -184,7 +182,7 @@ export default {
   async init(ipcPath, cb) {
     try {
       web3Admin = await new Admin(ipcPath, net)
-      web3Pool = await new TxPool(ipcPath, net)
+      // web3Pool = await new TxPool(ipcPath, net)
       web3 = await new Web3(ipcPath, net)
       populateBlockCache(function() {
         return cb()
@@ -210,8 +208,8 @@ export default {
   getSystemInfo() {
     return polling.systemInfo.cache
   },
-  getTxPool() {
-    return polling.txpool.cache
+  getPendingTxns() {
+    return polling.pending.cache
   },
   getBlocks() {
     return polling.blocks.cache

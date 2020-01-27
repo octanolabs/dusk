@@ -6,7 +6,7 @@ export const state = () => ({
   peers: [],
   nodeInfo: {},
   systemInfo: {},
-  txpool: {},
+  pending: {},
   drawers: {
     right: true
   }
@@ -25,8 +25,8 @@ export const mutations = {
   SET_SYSTEMINFO(state, data) {
     state.systemInfo = data
   },
-  SET_TXPOOL(state, data) {
-    state.txpool = data
+  SET_PENDING(state, data) {
+    state.pending = data
   },
   SET_BLOCKS(state, data) {
     state.blocks = data
@@ -76,10 +76,10 @@ export const actions = {
     }
   },
 
-  async txpool({ commit }) {
+  async pending({ commit }) {
     try {
-      const { data } = await axios.get('/api/txpool')
-      commit('SET_TXPOOL', data.info)
+      const { data } = await axios.get('/api/pending')
+      commit('SET_PENDING', data.info)
     } catch (error) {
       if (error.response && error.response.status === 401) {
         consola.error(new Error('Bad credentials'))

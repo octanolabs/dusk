@@ -7,6 +7,7 @@
         </v-col>
         <v-col :cols="6" class="pl-2">
           <dashboard-blocks />
+          <dashboard-pending />
         </v-col>
       </v-row>
     </v-col>
@@ -16,12 +17,14 @@
 <script>
 import DashboardBlocks from '~/components/dashboard/Blocks.vue'
 import DashboardPeers from '~/components/dashboard/Peers.vue'
+import DashboardPending from '~/components/dashboard/Pending.vue'
 
 export default {
   // middleware: 'auth',
   components: {
     DashboardBlocks,
-    DashboardPeers
+    DashboardPeers,
+    DashboardPending
   }
 }
 </script>
