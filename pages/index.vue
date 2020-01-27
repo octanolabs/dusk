@@ -3,115 +3,7 @@
     <v-col :cols="12" class="pa-2">
       <v-row no-gutters>
         <v-col :cols="6">
-          <v-card class="mb-2 bg-transparent" outlined>
-            <v-row no-gutters>
-              <v-col :cols="6" class="pa-3">
-                <v-card class="bg-transparent" flat style="height:280px;">
-                  <client-only placeholder="Loading...">
-                    <world-map
-                      v-if="map"
-                      :countryData="map"
-                      low-color="#6fceb7"
-                      high-color="#6fceb7"
-                      default-country-fill-color="#333"
-                      country-stroke-color="#6fceb7"
-                    />
-                  </client-only>
-                </v-card>
-              </v-col>
-              <v-col :cols="6" class="pr-3 pl-3">
-                <bar-chart v-if="chartCountry" :data="chartCountry" />
-              </v-col>
-            </v-row>
-          </v-card>
-          <v-card class="mb-2 bg-transparent" outlined>
-            <v-row no-gutters style="height:150px;">
-              <v-col :cols="3">
-                <doughnut-chart
-                  v-if="chartOperatingSystem"
-                  :data="chartOperatingSystem"
-                  title="OS"
-                  legend="top"
-                  right
-                />
-              </v-col>
-              <v-col :cols="3">
-                <doughnut-chart
-                  v-if="chartArch"
-                  :data="chartArch"
-                  title="Arch"
-                  right
-                />
-              </v-col>
-              <v-col :cols="3">
-                <doughnut-chart
-                  v-if="chartClient"
-                  :data="chartClient"
-                  title="Clients"
-                  legend="top"
-                  right
-                />
-              </v-col>
-              <v-col :cols="3">
-                <doughnut-chart
-                  v-if="chartVersion"
-                  :data="chartVersion"
-                  title="Versions (Gubiq)"
-                  legend="top"
-                  right
-                />
-              </v-col>
-            </v-row>
-          </v-card>
-          <v-card flat>
-            <v-row no-gutters>
-              <v-col :cols="12">
-                <client-only>
-                  <v-data-table
-                    :headers="headers"
-                    :items="peers"
-                    :items-per-page="5"
-                    :expanded.sync="expandedPeers"
-                    item-key="id"
-                    flat
-                    dense
-                  >
-                    <template v-slot:body="{ items }">
-                      <tbody>
-                        <tr
-                          :class="item.id === 0 ? 'custom-highlight-row' : ''"
-                          v-for="item in items"
-                          :key="item.id"
-                        >
-                          <td class="text-left">{{ item.countryName }}</td>
-                          <td class="text-left">{{ item.client }}</td>
-                          <td class="text-left">{{ item.version }}</td>
-                          <td class="text-left">{{ item.tag }}</td>
-                          <td class="text-left">{{ item.build }}</td>
-                          <td class="text-left">{{ item.os }}</td>
-                          <td class="text-left">{{ item.arch }}</td>
-                        </tr>
-                      </tbody>
-                    </template>
-                    <template v-slot:item.id="{ item }">
-                      <v-icon v-if="item.id === 0" small>
-                        mdi-star
-                      </v-icon>
-                    </template>
-                    <template v-slot:item.os="{ item }">
-                      <v-icon v-if="item.os === 'linux'" small>
-                        mdi-linux
-                      </v-icon>
-                      <v-icon v-else-if="item.os === 'darwin'" small>
-                        mdi-apple
-                      </v-icon>
-                      <v-icon v-else small>mdi-windows</v-icon>
-                    </template>
-                  </v-data-table>
-                </client-only>
-              </v-col>
-            </v-row>
-          </v-card>
+          <dashboard-peers />
         </v-col>
         <v-col :cols="6" class="pl-2">
           <v-row no-gutters class="pb-2">
@@ -151,19 +43,15 @@
 
 <script>
 import stringifyObject from 'stringify-object'
-import WorldMap from 'vue-world-map'
-import BarChart from '~/components/charts/Countries.vue'
 import Blocktimes from '~/components/charts/Blocktimes.vue'
 import Difficulty from '~/components/charts/Difficulty.vue'
-import DoughnutChart from '~/components/charts/Doughnut.vue'
 import GasChart from '~/components/charts/Gas.vue'
+import DashboardPeers from '~/components/dashboard/Peers.vue'
 
 export default {
   // middleware: 'auth',
   components: {
-    BarChart,
-    DoughnutChart,
-    WorldMap,
+    DashboardPeers,
     Blocktimes,
     Difficulty,
     GasChart
@@ -191,9 +79,6 @@ export default {
     }
   },
   computed: {
-    peers() {
-      return this.$store.state.peers
-    },
     system() {
       return this.$store.state.systemInfo
     },
@@ -204,31 +89,6 @@ export default {
       return this.$store.state.blocks.length > 0
         ? this.$store.state.blocks[this.$store.state.blocks.length - 1].number
         : 0
-    },
-    chartArch() {
-      return this.$store.state.peers.length > 0
-        ? this.toChartData(this.peers, 'arch', 0)
-        : false
-    },
-    chartCountry() {
-      return this.$store.state.peers.length > 0
-        ? this.toChartData(this.peers, 'countryCode', 1)
-        : false
-    },
-    chartClient() {
-      return this.$store.state.peers.length > 0
-        ? this.toChartData(this.peers, 'client', 0)
-        : false
-    },
-    chartOperatingSystem() {
-      return this.$store.state.peers.length > 0
-        ? this.toChartData(this.peers, 'os', 0)
-        : false
-    },
-    chartVersion() {
-      return this.$store.state.peers.length > 0
-        ? this.toChartData(this.peers, 'version', 0)
-        : false
     },
     chartBlocktimes() {
       const number = this.strip(this.blocks, 'number')
