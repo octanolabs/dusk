@@ -21,7 +21,7 @@
     <v-row no-gutters class="pb-2">
       <v-col :cols="12">
         <v-card class="bg-transparent" outlined>
-          <usage v-if="blocks" :data="chartUsage" title="Usage" />
+          <usage v-if="blocks" :data="chartUsage" title="Activity" />
         </v-card>
       </v-col>
     </v-row>
