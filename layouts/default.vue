@@ -33,6 +33,7 @@ export default {
     setInterval(function() {
       t.$store.dispatch('systemInfo')
       t.$store.dispatch('txpool')
+      t.$store.dispatch('blocks')
     }, 10000)
   },
   methods: {

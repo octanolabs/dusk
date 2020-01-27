@@ -19,11 +19,11 @@ router.use((req, res, next) => {
 
 // start polling
 provider.init(os.homedir() + '/.ubiq/gubiq.ipc', async function() {
-  provider.startPolling('peers')
-  provider.startPolling('chaindata')
-  provider.startPolling('systemInfo')
-  provider.startPolling('txpool')
-  // provider.startPolling('blocks')
+  await provider.startPolling('peers')
+  await provider.startPolling('chaindata')
+  await provider.startPolling('systemInfo')
+  await provider.startPolling('txpool')
+  await provider.startPolling('blocks')
 })
 
 router.get('/country', (req, res) => {

@@ -100,8 +100,39 @@ const polling = {
   blocks: {
     cache: [],
     timer: new NanoTimer(),
-    interval: '1s',
-    method: async function () {}
+    interval: '5s',
+    method: function () {
+      const cache = polling.blocks.cache
+      if (cache.length > 0) {
+        const i = cache.length-1
+        web3.eth.getBlock(cache[i].number + 1, true, function(err, b) {
+          if (!err && b) {
+            const blocktime = cache.length > 0
+              ? b.timestamp - cache[i].timestamp
+              : 0
+            const avgblocktime = cache.length > 0
+              ? (((cache[i-1].avgblocktime * i) + blocktime) / (i+1))
+              : blocktime
+            cache.push({
+              number: b.number,
+              blocktime: blocktime,
+              avgblocktime: avgblocktime,
+              timestamp: b.timestamp,
+              txns: b.transactions.length,
+              gasLimit: b.gasLimit,
+              gasUsed: b.gasUsed,
+              size: b.size,
+              miner: b.miner,
+              difficulty: b.difficulty,
+              hash: b.hash,
+              parent: b.parent
+            })
+            cache.shift()
+            polling.blocks.cache = cache
+          }
+        })
+      }
+    }
   }
 }
 
