@@ -3,7 +3,7 @@
     <v-row no-gutters class="pb-2">
       <v-col :cols="12">
         <v-card class="bg-transparent" outlined>
-          <blocktimes v-if="blocks" :data="chartBlocktimes" title="Blocktime" />
+          <blocktime v-if="blocks" :data="chartBlocktime" title="Blocktime" />
         </v-card>
       </v-col>
     </v-row>
@@ -21,7 +21,7 @@
     <v-row no-gutters class="pb-2">
       <v-col :cols="12">
         <v-card class="bg-transparent" outlined>
-          <gas-chart v-if="blocks" :data="chartGas" title="Usage" />
+          <usage v-if="blocks" :data="chartUsage" title="Usage" />
         </v-card>
       </v-col>
     </v-row>
@@ -29,32 +29,56 @@
 </template>
 
 <script>
-import Blocktimes from '~/components/charts/Blocktimes.vue'
+import Blocktime from '~/components/charts/Blocktime.vue'
 import Difficulty from '~/components/charts/Difficulty.vue'
-import GasChart from '~/components/charts/Gas.vue'
+import Usage from '~/components/charts/Usage.vue'
 
 export default {
   // middleware: 'auth',
   components: {
-    Blocktimes,
+    Blocktime,
     Difficulty,
-    GasChart
+    Usage
   },
   computed: {
     blocks() {
       return this.$store.state.blocks
     },
-    chartBlocktimes() {
-      const number = this.strip(this.blocks, 'number')
-      const blocktime = this.strip(this.blocks, 'blocktime')
-      const avgblocktime = this.strip(this.blocks, 'avgblocktime')
+    chartData() {
+      const data = {
+        labels: [],
+        blocktime: [],
+        avgblocktime: [],
+        difficulty: [],
+        limit: [],
+        used: [],
+        size: [],
+        txns: []
+      }
+
+      for (const i in this.blocks) {
+        if (this.blocks[i]) {
+          data.labels.push(this.blocks[i].number)
+          data.blocktime.push(this.blocks[i].blocktime)
+          data.avgblocktime.push(this.blocks[i].avgblocktime)
+          data.difficulty.push(this.blocks[i].difficulty)
+          data.limit.push(this.blocks[i].gasLimit)
+          data.used.push(this.blocks[i].gasUsed)
+          data.size.push(this.blocks[i].size)
+          data.txns.push(this.blocks[i].txns)
+        }
+      }
+
+      return data
+    },
+    chartBlocktime() {
       return this.$store.state.blocks.length > 0
         ? {
-            labels: number,
+            labels: this.chartData.labels,
             datasets: [
               {
                 backgroundColor: 'rgba(111, 206, 183, 1)',
-                data: blocktime,
+                data: this.chartData.blocktime,
                 borderWidth: [0, 0, 0],
                 order: 1
               },
@@ -62,7 +86,7 @@ export default {
                 borderColor: 'rgba(231, 103, 84, 0.9)', // orange
                 backgroundColor: '#e76754',
                 pointRadius: 0,
-                data: avgblocktime,
+                data: this.chartData.avgblocktime,
                 borderWidth: 2,
                 type: 'line',
                 fill: false,
@@ -74,11 +98,9 @@ export default {
         : {}
     },
     chartDifficulty() {
-      const number = this.strip(this.blocks, 'number')
-      const stripped = this.strip(this.blocks, 'difficulty')
       return this.$store.state.blocks.length > 0
         ? {
-            labels: number,
+            labels: this.chartData.labels,
             datasets: [
               {
                 backgroundColor(context) {
@@ -87,25 +109,23 @@ export default {
                   const prev = context.dataset.data[index - 1] || 0
                   return value > prev ? '#6fceb7' : '#e76754'
                 },
-                data: stripped,
+                data: this.chartData.difficulty,
                 borderWidth: [0, 0, 0]
               }
             ]
           }
         : {}
     },
-    chartGas() {
-      const usage = this.stripUsage(this.blocks)
-
+    chartUsage() {
       return this.$store.state.blocks.length > 0
         ? {
-            labels: usage.labels,
+            labels: this.chartData.labels,
             datasets: [
               {
                 yAxisID: 'txns',
                 backgroundColor: '#6fceb7',
                 borderColor: '#6fceb7',
-                data: usage.txns,
+                data: this.chartData.txns,
                 borderWidth: 2,
                 type: 'line',
                 fill: false,
@@ -117,7 +137,7 @@ export default {
                 yAxisID: 'gas',
                 backgroundColor: '#e76754',
                 borderColor: '#e76754',
-                data: usage.used,
+                data: this.chartData.used,
                 borderWidth: 2,
                 type: 'line',
                 fill: false,
@@ -129,7 +149,7 @@ export default {
                 yAxisID: 'gas',
                 backgroundColor: '#222',
                 borderColor: '#444',
-                data: usage.limit,
+                data: this.chartData.limit,
                 borderWidth: 2,
                 type: 'line',
                 fill: false,
@@ -141,7 +161,7 @@ export default {
                 yAxisID: 'size',
                 backgroundColor: 'rgba(255, 0, 255, 1)',
                 borderColor: 'rgba(255, 0, 255, 0.5)',
-                data: usage.size,
+                data: this.chartData.size,
                 borderWidth: 2,
                 type: 'line',
                 fill: false,
@@ -155,35 +175,6 @@ export default {
     }
   },
   methods: {
-    strip(arr, key) {
-      const newArr = []
-      for (const i in arr) {
-        if (arr[i][key]) {
-          newArr.push(arr[i][key])
-        }
-      }
-      return newArr
-    },
-    stripUsage(arr) {
-      const usage = {
-        limit: [],
-        used: [],
-        size: [],
-        txns: [],
-        labels: []
-      }
-
-      for (const i in arr) {
-        if (arr[i]) {
-          usage.limit.push(arr[i].gasLimit)
-          usage.used.push(arr[i].gasUsed)
-          usage.size.push(arr[i].size)
-          usage.txns.push(arr[i].txns)
-          usage.labels.push(arr[i].number)
-        }
-      }
-      return usage
-    },
     convertBytes(bytes, showUnit) {
       const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB']
       if (bytes === 0) {
