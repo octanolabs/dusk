@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-row no-gutters class="pb-2">
+    <v-row no-gutters>
       <v-col :cols="12">
         <v-data-table
           :headers="headers"

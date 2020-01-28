@@ -1,5 +1,48 @@
 <template>
   <div no-gutters>
+    <v-col :cols="12" class="pa-0">
+      <v-row no-gutters class="pb-2">
+        <v-col :cols="4" class="pr-1">
+          <v-card>
+            <v-list-item three-line>
+              <v-list-item-content>
+                <div class="overline mb-4">Network</div>
+                <v-list-item-title class="headline mb-1">
+                  Ubiq
+                </v-list-item-title>
+                <v-list-item-subtitle>
+                  <v-avatar tile size="16">
+                    <img src="~/static/networks/ubiq.svg" />
+                  </v-avatar>
+                  mainnet
+                </v-list-item-subtitle>
+              </v-list-item-content>
+              <v-list-item-avatar tile size="80">
+                <v-icon x-large>mdi-earth</v-icon>
+              </v-list-item-avatar>
+            </v-list-item>
+          </v-card>
+        </v-col>
+        <v-col :cols="4" class="px-1">
+          <v-card>
+            <v-list-item three-line>
+              <v-list-item-content>
+                <div class="overline mb-4">Connections</div>
+                <v-list-item-title class="headline mb-1">
+                  {{ peers.length - 1 }} peers
+                </v-list-item-title>
+                <v-list-item-subtitle>
+                  in {{ countryCount }} countries
+                </v-list-item-subtitle>
+              </v-list-item-content>
+              <v-list-item-avatar tile size="80">
+                <v-icon x-large>mdi-account-group</v-icon>
+              </v-list-item-avatar>
+            </v-list-item>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-col>
     <v-card class="mb-2 bg-transparent" outlined>
       <v-row no-gutters>
         <v-col :cols="6" class="pa-3">
@@ -141,6 +184,9 @@ export default {
       return this.$store.state.peers.length > 0
         ? this.toChartData(this.peers, 'arch', 0)
         : false
+    },
+    countryCount() {
+      return this.chartCountry ? this.chartCountry.datasets[0].data.length : 0
     },
     chartCountry() {
       return this.$store.state.peers.length > 0

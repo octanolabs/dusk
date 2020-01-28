@@ -61,7 +61,15 @@ export default {
           ],
           yAxes: [
             {
+              id: 'diff',
               display: false
+            },
+            {
+              id: 'hash',
+              display: false,
+              ticks: {
+                beginAtZero: true
+              }
             }
           ]
         },

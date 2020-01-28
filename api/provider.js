@@ -1,5 +1,4 @@
 import {Admin} from 'web3-eth-admin'
-// import {TxPool} from 'web3-eth-txpool'
 import Web3 from 'web3'
 import net from 'net'
 import os from 'os'
@@ -16,7 +15,6 @@ const ONE_DAY = 86400
 const TWO_HOURS = 7200
 
 let web3Admin = null
-// let web3Pool = null
 let web3 = null
 
 const geo = new NodeCache({stdTTL: ONE_DAY})
@@ -103,18 +101,29 @@ const polling = {
       const cache = polling.blocks.cache
       if (cache.length > 0) {
         const i = cache.length-1
-        web3.eth.getBlock(cache[i].number + 1, true, function(err, b) {
+        web3.eth.getBlock(cache[i].number + 1, true, async function(err, b) {
           if (!err && b) {
             const blocktime = cache.length > 0
               ? b.timestamp - cache[i].timestamp
               : 0
-            const avgblocktime = cache.length > 0
-              ? (((cache[i-1].avgblocktime * i) + blocktime) / (i+1))
-              : blocktime
+            const avgblocktime10 = cache.length >= 10
+              ? (b.timestamp - cache[cache.length - 10].timestamp) / 10
+              : 0
+            const avgblocktime25 = cache.length >= 25
+              ? (b.timestamp - cache[cache.length - 25].timestamp) / 25
+              : 0
+            const avgblocktime88 = cache.length >= 88
+              ? (b.timestamp - cache[cache.length - 88].timestamp) / 88
+              : 0
+            const hashrate = b.difficulty / avgblocktime10
+
             cache.push({
               number: b.number,
               blocktime: blocktime,
-              avgblocktime: avgblocktime,
+              avgblocktime10: avgblocktime10,
+              avgblocktime25: avgblocktime25,
+              avgblocktime88: avgblocktime88,
+              hashrate: hashrate,
               timestamp: b.timestamp,
               txns: b.transactions.length,
               gasLimit: b.gasLimit,
@@ -134,13 +143,23 @@ const polling = {
   }
 }
 
+const avgBlockTime = function(cache) {
+  this.avgblocktime =
+    (this.blocks[this.blocks.length - 1].timestamp -
+      this.blocks[0].timestamp) /
+    this.blocks.length
+  // estimate hashrate based on avg blocktime
+  this.hashrate =
+    this.blocks[this.blocks.length - 1].difficulty / this.avgblocktime
+}
+
 // seed the block cache with latest 88 blocks
 const populateBlockCache = function(cb) {
   let cache = []
   web3.eth.getBlock('latest', false, function(err, block) {
     const head = block.number
-    let blocknumber = head - 200
-    lib.syncLoop(200, function(loop){
+    let blocknumber = head - 177
+    lib.syncLoop(177, function(loop){
       const i = loop.iteration()
       blocknumber++
       web3.eth.getBlock(blocknumber, true, async function(err, b) {
@@ -151,14 +170,24 @@ const populateBlockCache = function(cb) {
           const blocktime = cache.length > 0
             ? b.timestamp - cache[cache.length-1].timestamp
             : 0
-          const avgblocktime = cache.length > 0
-            ? (((cache[i-1].avgblocktime * i) + blocktime) / (i+1))
-            : blocktime
+          const avgblocktime10 = cache.length >= 10
+            ? (b.timestamp - cache[cache.length - 10].timestamp) / 10
+            : 0
+          const avgblocktime25 = cache.length >= 25
+            ? (b.timestamp - cache[cache.length - 25].timestamp) / 25
+            : 0
+          const avgblocktime88 = cache.length >= 88
+            ? (b.timestamp - cache[cache.length - 88].timestamp) / 88
+            : 0
+          const hashrate = b.difficulty / avgblocktime25
           cache.push({
             number: b.number,
             blocktime: blocktime,
-            avgblocktime: avgblocktime,
             timestamp: b.timestamp,
+            avgblocktime10: avgblocktime10,
+            avgblocktime25: avgblocktime25,
+            avgblocktime88: avgblocktime88,
+            hashrate: hashrate,
             txns: b.transactions.length,
             gasLimit: b.gasLimit,
             gasUsed: b.gasUsed,
@@ -182,7 +211,6 @@ export default {
   async init(ipcPath, cb) {
     try {
       web3Admin = await new Admin(ipcPath, net)
-      // web3Pool = await new TxPool(ipcPath, net)
       web3 = await new Web3(ipcPath, net)
       populateBlockCache(function() {
         return cb()
