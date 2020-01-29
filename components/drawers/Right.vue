@@ -51,7 +51,7 @@
           </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
-      <v-list-item two-line>
+      <v-list-item two-line v-if="availableSwap.percent">
         <v-list-item-content>
           <v-list-item-title>
             Swap
