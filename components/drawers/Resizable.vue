@@ -162,21 +162,21 @@ export default {
 </script>
 <style>
 .resizable-drawer {
-  min-width: 20px;
+  min-width: 20px !important;
   background-color: rgba(0, 0, 0, 0) !important;
-  pointer-events: none;
+  pointer-events: none !important;
 }
 
 .resizable-drawer-left > .v-navigation-drawer__border {
-  margin-right: 20px;
+  margin-right: 20px !important;
 }
 
 .resizable-drawer-right > .v-navigation-drawer__border {
-  margin-left: 20px;
+  margin-left: 20px !important;
 }
 
 .resizable-drawer-left {
-  padding-right: 20px;
+  padding-right: 20px !important;
 }
 
 .resizable-drawer-right {
@@ -185,42 +185,43 @@ export default {
 }
 
 .resizable-drawer-content {
-  pointer-events: auto;
-  padding-left: 4px;
-  width: 100%;
-  height: 100%;
+  pointer-events: auto !important;
+  padding-left: 4px !important;
+  width: 100% !important;
+  height: 100% !important;
+  background-color: #1e1e1e !important;
 }
 
 .drawer-handle {
-  pointer-events: auto;
-  position: absolute;
-  top: calc(50vh - 60px);
+  pointer-events: auto !important;
+  position: absolute !important;
+  top: calc(50vh - 60px) !important;
   z-index: 10 !important;
   height: 40px;
   width: 20px !important;
   min-width: 10px !important;
   padding: 0 !important;
   margin: 0 !important;
-  opacity: 0.5;
-  text-align: center;
-  overflow: hidden;
+  opacity: 0.5 !important;
+  text-align: center !important;
+  overflow: hidden !important;
 }
 
 .drawer-handle:hover {
-  opacity: 1;
+  opacity: 1 !important;
 }
 
 .drawer-handle .v-btn__content {
-  overflow: hidden;
+  overflow: hidden !important;
 }
 
 .drawer-handle.left {
   right: 0 !important;
-  border-radius: 0 20px 20px 0;
+  border-radius: 0 20px 20px 0 !important;
 }
 
 .drawer-handle.right {
   left: 0 !important;
-  border-radius: 20px 0 0 20px;
+  border-radius: 20px 0 0 20px !important;
 }
 </style>
