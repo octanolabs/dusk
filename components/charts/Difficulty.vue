@@ -40,23 +40,6 @@ export default {
       }
     }
   },
-  methods: {
-    convertHashes(hashes, showUnit) {
-      const sizes = ['Hash', 'KH', 'MH', 'GH', 'TH']
-      if (hashes === 0) {
-        return 'n/a'
-      }
-      const i = parseInt(Math.floor(Math.log(hashes) / Math.log(1000)))
-      if (i === 0) {
-        return hashes + ' ' + sizes[i]
-      }
-      let unit = ''
-      if (showUnit) {
-        unit = ' ' + sizes[i]
-      }
-      return (hashes / 1000 ** i).toFixed(2) + unit
-    }
-  },
   computed: {
     options() {
       return {
