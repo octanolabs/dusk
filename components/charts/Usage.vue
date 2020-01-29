@@ -85,7 +85,33 @@ export default {
           display: false
         },
         tooltips: {
-          mode: 'index'
+          mode: 'index',
+          callbacks: {
+            label(tooltipItem, data) {
+              let label = tooltipItem.value || 0
+              if (label) {
+                if (tooltipItem.datasetIndex === 0) {
+                  label = 'Txns: ' + label
+                }
+                if (tooltipItem.datasetIndex === 1) {
+                  label = 'Gas Used: ' + label
+                }
+                if (tooltipItem.datasetIndex === 2) {
+                  label = 'Gas Limit: ' + label
+                }
+                if (tooltipItem.datasetIndex === 3) {
+                  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB']
+                  const bytes = label
+                  const i = parseInt(
+                    Math.floor(Math.log(bytes) / Math.log(1024))
+                  )
+                  const unit = ' ' + sizes[i]
+                  label = 'Size: ' + (bytes / 1024 ** i).toFixed(1) + unit
+                }
+              }
+              return label
+            }
+          }
         }
       }
     }
