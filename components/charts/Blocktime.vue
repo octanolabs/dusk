@@ -75,12 +75,24 @@ export default {
           mode: 'index',
           callbacks: {
             label(tooltipItem, data) {
-              let label = data.datasets[tooltipItem.datasetIndex].label || ''
-
+              let label = tooltipItem.value || 0
               if (label) {
-                label += ': '
+                if (tooltipItem.datasetIndex === 0) {
+                  label = 'Blocktime: ' + parseFloat(label).toFixed(2) + 's'
+                }
+                if (tooltipItem.datasetIndex === 1) {
+                  label =
+                    'Average (10blocks): ' + parseFloat(label).toFixed(2) + 's'
+                }
+                if (tooltipItem.datasetIndex === 2) {
+                  label =
+                    'Average (25blocks): ' + parseFloat(label).toFixed(2) + 's'
+                }
+                if (tooltipItem.datasetIndex === 3) {
+                  label =
+                    'Average (88blocks): ' + parseFloat(label).toFixed(2) + 's'
+                }
               }
-              label += Math.round(tooltipItem.yLabel * 100) / 100
               return label
             }
           }
