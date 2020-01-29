@@ -26,7 +26,7 @@
               <v-list-item-content>
                 <div class="overline mb-4">Last Block</div>
                 <v-list-item-title class="headline mb-1">
-                  {{ timeSince }} ago
+                  {{ seconds }} ago
                 </v-list-item-title>
                 <v-list-item-subtitle>
                   Flux. {{ latestBlock.avgblocktime88.toFixed(2) }}s
@@ -119,10 +119,6 @@ export default {
             blocktime: 0,
             difficulty: 0
           }
-    },
-    timeSince() {
-      const seconds = Math.round(new Date().getTime() / 1000)
-      return seconds - this.latestBlock.timestamp
     },
     blockNumber() {
       return this.latestBlock.number
@@ -335,6 +331,13 @@ export default {
       }
       return (bytes / 1000 ** i).toFixed(2) + unit
     }
+  },
+  created() {
+    const t = this
+    setInterval(function() {
+      const now = Math.round(new Date().getTime() / 1000)
+      t.seconds = now - t.blocks[t.blocks.length - 1].timestamp
+    }, 1000)
   }
 }
 </script>
