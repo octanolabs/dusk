@@ -54,16 +54,25 @@ export default {
         responsive: true,
         maintainAspectRatio: false,
         title: {
-          display: false,
-          position: 'top',
-          text: this.title
+          display: false
         },
         legend: {
-          display: false,
-          position: this.legend,
-          align: this.legend === 'top' ? 'center' : this.legend,
-          labels: {
-            fontFamily: "'Avenir', 'Helvetica', 'Arial', 'sans-serif'"
+          display: false
+        },
+        tooltips: {
+          callbacks: {
+            label(tooltipItem, data) {
+              const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB']
+              const bytes = data.datasets[0].data[tooltipItem.index] || 0
+              const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)))
+              const unit = ' ' + sizes[i]
+              return (
+                data.labels[tooltipItem.index] +
+                ': ' +
+                (bytes / 1024 ** i).toFixed(1) +
+                unit
+              )
+            }
           }
         }
       }
