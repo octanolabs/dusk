@@ -2,7 +2,7 @@
   <div no-gutters>
     <v-col :cols="12" class="pa-0">
       <v-row no-gutters class="pb-2">
-        <v-col :cols="4" class="pr-1">
+        <v-col :cols="6" class="pr-1">
           <v-card>
             <v-list-item three-line>
               <v-list-item-content>
@@ -23,7 +23,7 @@
             </v-list-item>
           </v-card>
         </v-col>
-        <v-col :cols="4" class="px-1">
+        <v-col :cols="6" class="pl-1">
           <v-card>
             <v-list-item three-line>
               <v-list-item-content>
