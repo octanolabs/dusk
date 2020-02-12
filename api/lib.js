@@ -12,7 +12,6 @@ export default {
       const cpus = os.cpus()
       let usage = []
       for (const i in cpus) {
-        console.log('cpu - ' + i)
         const cpu = cpus[i]
         let total = 0;
         let idle = 0;

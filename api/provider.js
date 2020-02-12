@@ -10,6 +10,7 @@ import consola from 'consola'
 import NanoTimer from 'nanotimer'
 import NodeCache from 'node-cache'
 import lib from './lib.js'
+import bCache from './blockCache.js'
 
 const ONE_DAY = 86400
 const TWO_HOURS = 7200
@@ -94,48 +95,15 @@ const polling = {
     }
   },
   blocks: {
-    cache: [],
     timer: new NanoTimer(),
     interval: '5s',
     method: function () {
-      const cache = polling.blocks.cache
+      const cache = bCache.get()
       if (cache.length > 0) {
         const i = cache.length-1
-        web3.eth.getBlock(cache[i].number + 1, true, async function(err, b) {
+        web3.eth.getBlock(cache[i].number + 1, false, function(err, b) {
           if (!err && b) {
-            const blocktime = cache.length > 0
-              ? b.timestamp - cache[i].timestamp
-              : 0
-            const avgblocktime10 = cache.length >= 10
-              ? (b.timestamp - cache[cache.length - 10].timestamp) / 10
-              : 0
-            const avgblocktime25 = cache.length >= 25
-              ? (b.timestamp - cache[cache.length - 25].timestamp) / 25
-              : 0
-            const avgblocktime88 = cache.length >= 88
-              ? (b.timestamp - cache[cache.length - 88].timestamp) / 88
-              : 0
-            const hashrate = b.difficulty / avgblocktime10
-
-            cache.push({
-              number: b.number,
-              blocktime: blocktime,
-              avgblocktime10: avgblocktime10,
-              avgblocktime25: avgblocktime25,
-              avgblocktime88: avgblocktime88,
-              hashrate: hashrate,
-              timestamp: b.timestamp,
-              txns: b.transactions.length,
-              gasLimit: b.gasLimit,
-              gasUsed: b.gasUsed,
-              size: b.size,
-              miner: b.miner,
-              difficulty: b.difficulty,
-              hash: b.hash,
-              parent: b.parent
-            })
-            cache.shift()
-            polling.blocks.cache = cache
+            bCache.push(b)
           }
         })
       }
@@ -143,77 +111,35 @@ const polling = {
   }
 }
 
-const avgBlockTime = function(cache) {
-  this.avgblocktime =
-    (this.blocks[this.blocks.length - 1].timestamp -
-      this.blocks[0].timestamp) /
-    this.blocks.length
-  // estimate hashrate based on avg blocktime
-  this.hashrate =
-    this.blocks[this.blocks.length - 1].difficulty / this.avgblocktime
-}
-
-// seed the block cache with latest 88 blocks
-const populateBlockCache = function(cb) {
-  let cache = []
-  web3.eth.getBlock('latest', false, function(err, block) {
-    const head = block.number
-    let blocknumber = head - 177
-    lib.syncLoop(177, function(loop){
-      const i = loop.iteration()
-      blocknumber++
-      web3.eth.getBlock(blocknumber, true, async function(err, b) {
-        if (err) {
-          consola.error(new Error(err))
-          loop.break(true)
-        } else {
-          const blocktime = cache.length > 0
-            ? b.timestamp - cache[cache.length-1].timestamp
-            : 0
-          const avgblocktime10 = cache.length >= 10
-            ? (b.timestamp - cache[cache.length - 10].timestamp) / 10
-            : 0
-          const avgblocktime25 = cache.length >= 25
-            ? (b.timestamp - cache[cache.length - 25].timestamp) / 25
-            : 0
-          const avgblocktime88 = cache.length >= 88
-            ? (b.timestamp - cache[cache.length - 88].timestamp) / 88
-            : 0
-          const hashrate = b.difficulty / avgblocktime25
-          cache.push({
-            number: b.number,
-            blocktime: blocktime,
-            timestamp: b.timestamp,
-            avgblocktime10: avgblocktime10,
-            avgblocktime25: avgblocktime25,
-            avgblocktime88: avgblocktime88,
-            hashrate: hashrate,
-            txns: b.transactions.length,
-            gasLimit: b.gasLimit,
-            gasUsed: b.gasUsed,
-            size: b.size,
-            miner: b.miner,
-            difficulty: b.difficulty,
-            hash: b.hash,
-            parent: b.parent
-          })
-          loop.next()
-        }
-      })
-    }, function() {
-      polling.blocks.cache = cache.splice(cache.length-88)
-      return cb()
-    })
-  })
-}
-
 export default {
   async init(ipcPath, cb) {
     try {
       web3Admin = await new Admin(ipcPath, net)
       web3 = await new Web3(ipcPath, net)
-      populateBlockCache(function() {
-        return cb()
+      web3.eth.getBlock('latest', false, function(err, head) {
+        if (err || !head ) {
+          consola.fatal(new Error(err))
+          return cb()
+        } else {
+          const cache = []
+          let blockNumber = head.number - (bCache.maxlen() * 2)
+          lib.syncLoop((bCache.maxlen() * 2) + 1, function (loop) {
+            const i = loop.iteration()
+            web3.eth.getBlock(blockNumber + i, false, function(err, block) {
+              if (!err && block) {
+                cache.push(block)
+                loop.next()
+              } else {
+                loop.break(true)
+                loop.next()
+              }
+            })
+          }, function () {
+            bCache.set(cache, function() {
+              return cb()
+            })
+          })
+        }
       })
     } catch (err) {
       consola.error(new Error(err))
@@ -240,7 +166,7 @@ export default {
     return polling.pending.cache
   },
   getBlocks() {
-    return polling.blocks.cache
+    return bCache.get()
   }
 }
 
