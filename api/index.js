@@ -22,7 +22,6 @@ provider.init(os.homedir() + '/.ubiq/gubiq.ipc', async function() {
   await provider.startPolling('peers')
   await provider.startPolling('chaindata')
   await provider.startPolling('systemInfo')
-  await provider.startPolling('pending')
   await provider.startPolling('blocks')
 })
 

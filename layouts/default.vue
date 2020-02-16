@@ -32,10 +32,12 @@ export default {
     const t = this
     setInterval(function() {
       t.$store.dispatch('systemInfo')
-      t.$store.dispatch('pending')
-      t.$store.dispatch('blocks')
       t.$store.dispatch('peers')
     }, 10000)
+    setInterval(function() {
+      t.$store.dispatch('pending')
+      t.$store.dispatch('blocks')
+    }, 2000)
   },
   methods: {
     async logout() {

@@ -85,7 +85,6 @@ export default {
           mode: 'index',
           callbacks: {
             label(tooltipItem, data) {
-              console.log(tooltipItem)
               const hashes = tooltipItem.value
               const sizes = ['Hash', 'KH', 'MH', 'GH', 'TH']
               if (hashes === 0) {

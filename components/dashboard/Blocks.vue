@@ -29,7 +29,7 @@
                   {{ seconds }} ago
                 </v-list-item-title>
                 <v-list-item-subtitle>
-                  Flux. {{ latestBlock.avgblocktime88.toFixed(2) }}s
+                  Prev. {{ latestBlock.blocktime }}s
                 </v-list-item-subtitle>
               </v-list-item-content>
               <v-list-item-avatar tile size="80">
@@ -47,7 +47,7 @@
                   {{ latestBlock.number }}
                 </v-list-item-title>
                 <v-list-item-subtitle>
-                  {{ latestBlock.hash.substring(0, 14) }}..
+                  {{ latestBlock.hash.substring(0, 12) }}..
                 </v-list-item-subtitle>
               </v-list-item-content>
               <v-list-item-avatar tile size="80">
@@ -117,8 +117,12 @@ export default {
             avgblocktime25: 0,
             avgblocktime88: 0,
             blocktime: 0,
-            difficulty: 0
+            difficulty: 0,
+            timestamp: 0
           }
+    },
+    pending() {
+      return this.$store.state.pending
     },
     blockNumber() {
       return this.latestBlock.number
@@ -228,7 +232,7 @@ export default {
               },
               {
                 yAxisID: 'hash',
-                backgroundColor: 'rgba(255, 0, 255, 1)', // magenta
+                backgroundColor: 'rgba(255, 0, 255, 1)', // maglatestBlockenta
                 borderColor: 'rgba(255, 0, 255, 0.5)',
                 pointRadius: 0,
                 data: this.chartData.hashrate,
@@ -300,6 +304,13 @@ export default {
         : {}
     }
   },
+  created() {
+    const t = this
+    setInterval(function() {
+      const now = Math.round(new Date().getTime() / 1000)
+      t.seconds = now - t.pending.timestamp
+    }, 1000)
+  },
   methods: {
     convertBytes(bytes, showUnit) {
       const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB']
@@ -331,13 +342,6 @@ export default {
       }
       return (bytes / 1000 ** i).toFixed(2) + unit
     }
-  },
-  created() {
-    const t = this
-    setInterval(function() {
-      const now = Math.round(new Date().getTime() / 1000)
-      t.seconds = now - t.blocks[t.blocks.length - 1].timestamp
-    }, 1000)
   }
 }
 </script>

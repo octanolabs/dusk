@@ -3,6 +3,7 @@
 
 // Any component modifications must be imported
 @import '~vuetify/src/components/VBtn/_variables.scss';
+@import url('https://fonts.googleapis.com/css?family=Ubuntu+Mono&display=swap');
 
 $btn-font-weight: 600;
 
@@ -29,7 +30,7 @@ pre {
 }
 
 .v-application {
-  font-family: Ubuntu Mono !important;
+  font-family: Ubuntu Mono, monospace !important;
   font-style: normal;
   font-variant: normal;
 }

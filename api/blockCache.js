@@ -1,49 +1,57 @@
 import lib from './lib.js'
+import LRU from 'lru-cache'
 
-const MAXLEN = 88
+let MAXLEN = 88
 
-let CACHE = []
+// https://www.npmjs.com/package/lru-cache
+let CACHE = new LRU(MAXLEN)
+let PENDING = {}
 
 export default {
   clear() {
-    CACHE = []
+    CACHE.reset()
+    PENDING = {}
   },
   get() {
-    return CACHE
+    return CACHE.values().reverse()
   },
   set(blocks, cb) {
-    CACHE = [] // reset cache
+    CACHE.reset() // reset cache
     lib.syncLoop(blocks.length, function(loop) {
       const i = loop.iteration()
       const block = blocks[i]
-      calcBlockValues(block, function (calc) {
-        CACHE.push({
-          number: block.number,
-          blocktime: calc.blocktime,
-          avgblocktime10: calc.avgblocktime10,
-          avgblocktime25: calc.avgblocktime25,
-          avgblocktime88: calc.avgblocktime88,
-          hashrate: calc.hashrate,
-          timestamp: block.timestamp,
-          txns: block.transactions.length,
-          gasLimit: block.gasLimit,
-          gasUsed: block.gasUsed,
-          size: block.size,
-          miner: block.miner,
-          difficulty: block.difficulty,
-          hash: block.hash,
-          parent: block.parentHash
+      const next = i <= blocks.length ? blocks[i + 1] : false
+      if (next) {
+        calcBlockValues(block, next, function (calc) {
+          CACHE.set(block.number, {
+            number: block.number,
+            blocktime: calc.blocktime,
+            avgblocktime10: calc.avgblocktime10,
+            avgblocktime25: calc.avgblocktime25,
+            avgblocktime88: calc.avgblocktime88,
+            hashrate: calc.hashrate,
+            timestamp: block.timestamp,
+            txns: block.transactions.length,
+            gasLimit: block.gasLimit,
+            gasUsed: block.gasUsed,
+            size: block.size,
+            miner: block.miner,
+            difficulty: block.difficulty,
+            hash: block.hash,
+            parent: block.parentHash
+          })
+          loop.next()
         })
+      } else {
         loop.next()
-      })
+      }
     }, function() {
-      checklen()
       return cb()
     })
   },
   push(block) {
-    calcBlockValues(block, function (calc) {
-      CACHE.push({
+    calcBlockValues(block, PENDING, function (calc) {
+      CACHE.set(block.number, {
         number: block.number,
         blocktime: calc.blocktime,
         avgblocktime10: calc.avgblocktime10,
@@ -60,33 +68,38 @@ export default {
         hash: block.hash,
         parent: block.parentHash
       })
-      checklen()
     })
   },
-  maxlen() {
-    return MAXLEN
+  maxlen(len) {
+    if (len) {
+      MAXLEN = len
+      CACHE = new LRU(len)
+    } else {
+      return MAXLEN
+    }
+  },
+  pending(block) {
+    if (block) {
+      PENDING = block
+    } else {
+      return PENDING
+    }
   }
 }
 
-const checklen = function () {
-  if (CACHE.length > MAXLEN) {
-    CACHE = CACHE.splice(CACHE.length - MAXLEN, MAXLEN)
-  }
-}
-
-const calcBlockValues = function(block, cb) {
+const calcBlockValues = async function(block, next, cb) {
   const len = CACHE.length
   const blocktime = len > 0
-    ? block.timestamp - CACHE[len - 1].timestamp
+    ? next.timestamp - block.timestamp
     : 0
   const avgblocktime10 = len >= 10
-    ? (block.timestamp - CACHE[len - 10].timestamp) / 10
+    ? (next.timestamp - CACHE.peek(block.number - 10).timestamp) / 10
     : 0
   const avgblocktime25 = len >= 25
-    ? (block.timestamp - CACHE[len - 25].timestamp) / 25
+    ? (next.timestamp - CACHE.peek(block.number - 25).timestamp) / 25
     : 0
   const avgblocktime88 = len >= 88
-    ? (block.timestamp - CACHE[len - 88].timestamp) / 88
+    ? (next.timestamp - CACHE.peek(block.number - 88).timestamp) / 88
     : 0
   const hashrate = block.difficulty / avgblocktime10
   return cb({

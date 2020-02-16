@@ -78,22 +78,6 @@ const polling = {
       })
     }
   },
-  pending: {
-    cache: {},
-    timer: new NanoTimer(),
-    interval: '5s',
-    method: function () {
-      if (web3) {
-        web3.eth.getBlock('pending', true, function(err, pending) {
-          if (err) {
-            consola.error(new Error(err))
-          } else {
-            polling.pending.cache = pending
-          }
-        })
-      }
-    }
-  },
   blocks: {
     timer: new NanoTimer(),
     interval: '5s',
@@ -103,7 +87,12 @@ const polling = {
         const i = cache.length-1
         web3.eth.getBlock(cache[i].number + 1, false, function(err, b) {
           if (!err && b) {
-            bCache.push(b)
+            web3.eth.getBlock('pending', true, function(err, pending) {
+              if (!err && pending) {
+                bCache.pending(pending)
+                bCache.push(b)
+              }
+            })
           }
         })
       }
@@ -116,7 +105,7 @@ export default {
     try {
       web3Admin = await new Admin(ipcPath, net)
       web3 = await new Web3(ipcPath, net)
-      web3.eth.getBlock('latest', false, function(err, head) {
+      web3.eth.getBlock('pending', false, function(err, head) {
         if (err || !head ) {
           consola.fatal(new Error(err))
           return cb()
@@ -163,7 +152,7 @@ export default {
     return polling.systemInfo.cache
   },
   getPendingTxns() {
-    return polling.pending.cache
+    return bCache.pending()
   },
   getBlocks() {
     return bCache.get()

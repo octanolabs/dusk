@@ -186,7 +186,6 @@ export default {
 
 .resizable-drawer-content {
   pointer-events: auto !important;
-  padding-left: 4px !important;
   width: 100% !important;
   height: 100% !important;
   background-color: #1e1e1e !important;
