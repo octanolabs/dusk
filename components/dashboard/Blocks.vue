@@ -83,10 +83,34 @@
         </v-card>
       </v-col>
     </v-row>
+    <v-row no-gutters class="pb-2">
+      <v-data-table
+        :headers="headers"
+        :items="pendingTxns"
+        :items-per-page="5"
+        item-key="id"
+        flat
+        dense
+      >
+        <template v-slot:item.hash="{ item }">
+          {{ format(item.hash) }}
+        </template>
+        <template v-slot:item.from="{ item }">
+          {{ format(item.from) }}
+        </template>
+        <template v-slot:item.to="{ item }">
+          {{ format(item.to) }}
+        </template>
+        <template v-slot:item.value="{ item }">
+          {{ fromWei(item.value) }}
+        </template>
+      </v-data-table>
+    </v-row>
   </div>
 </template>
 
 <script>
+import BN from 'bignumber.js'
 import Blocktime from '~/components/charts/Blocktime.vue'
 import Difficulty from '~/components/charts/Difficulty.vue'
 import Usage from '~/components/charts/Usage.vue'
@@ -100,7 +124,13 @@ export default {
   },
   data() {
     return {
-      seconds: 0
+      seconds: 0,
+      headers: [
+        { text: 'Hash', value: 'hash' },
+        { text: 'From', value: 'from' },
+        { text: 'To', value: 'to' },
+        { text: 'Value', value: 'value' }
+      ]
     }
   },
   computed: {
@@ -123,6 +153,9 @@ export default {
     },
     pending() {
       return this.$store.state.pending
+    },
+    pendingTxns() {
+      return this.$store.state.pending.transactions || []
     },
     blockNumber() {
       return this.latestBlock.number
@@ -341,6 +374,12 @@ export default {
         unit = ' ' + sizes[i]
       }
       return (bytes / 1000 ** i).toFixed(2) + unit
+    },
+    format(hash) {
+      return hash.substring(0, 12) + '..'
+    },
+    fromWei(wei) {
+      return new BN(wei).div(1000000000000000000).toString()
     }
   }
 }
