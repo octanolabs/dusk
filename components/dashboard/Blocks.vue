@@ -84,27 +84,29 @@
       </v-col>
     </v-row>
     <v-row no-gutters class="pb-2">
-      <v-data-table
-        :headers="headers"
-        :items="pendingTxns"
-        :items-per-page="5"
-        item-key="id"
-        flat
-        dense
-      >
-        <template v-slot:item.hash="{ item }">
-          {{ format(item.hash) }}
-        </template>
-        <template v-slot:item.from="{ item }">
-          {{ format(item.from) }}
-        </template>
-        <template v-slot:item.to="{ item }">
-          {{ format(item.to) }}
-        </template>
-        <template v-slot:item.value="{ item }">
-          {{ fromWei(item.value) }}
-        </template>
-      </v-data-table>
+      <v-col :cols="12">
+        <v-data-table
+          :headers="headers"
+          :items="pendingTxns"
+          :items-per-page="5"
+          item-key="id"
+          flat
+          dense
+        >
+          <template v-slot:item.hash="{ item }">
+            {{ format(item.hash) }}
+          </template>
+          <template v-slot:item.from="{ item }">
+            {{ format(item.from) }}
+          </template>
+          <template v-slot:item.to="{ item }">
+            {{ format(item.to) }}
+          </template>
+          <template v-slot:item.value="{ item }">
+            {{ fromWei(item.value) }}
+          </template>
+        </v-data-table>
+      </v-col>
     </v-row>
   </div>
 </template>
