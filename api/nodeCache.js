@@ -1,48 +1,29 @@
 import LRU from 'lru-cache'
 import axios from 'axios'
-import {Admin} from 'web3-eth-admin'
-import net from 'net'
 
 const ONE_DAY = 86400
 
 // https://www.npmjs.com/package/lru-cache
 let CACHE = new LRU({ maxAge: ONE_DAY })
-let LOCAL = false
-let web3Admin = null
+let GEODATA = new LRU({maxAge: ONE_DAY })
 
 export default {
-  async init(ipcPath) {
-    web3Admin = await new Admin(ipcPath, net)
-  },
   clear() {
     CACHE.reset()
-    LOCAL = false
+    GEODATA.reset()
   },
   get() {
-    return CACHE.values().reverse()
+    return CACHE.values()
   },
-  poll() {
-    web3Admin.getPeers(function(err, peers) {
-      if (err) {
-        consola.error(new Error(err))
-      } else {
-        n(peers)
-      }
-    })
-  },
-  localhost() {
-    if (LOCAL) {
-      return LOCAL
-    } else {
-      web3Admin.getNodeInfo(function(err, info) {
-        if(!err) {
-          parseNode(info, 0, true)
-          return LOCAL
-        } else {
-          return false
-        }
-      })
+  set(peers, cb) {
+    CACHE.reset()
+    for (const i in peers) {
+      parseNode(peers[i], parseInt(i) + 1, false)
     }
+    return cb()
+  },
+  localhost(info) {
+    parseNode(info, 0, true)
   }
 }
 
@@ -65,11 +46,11 @@ const parseNode = function(node, id, local) {
   peer.id = id
 
   const ip = local ? node.ip : node.network.remoteAddress.split(':')[0]
-  let cachedPeer = CACHE.get(ip)
-  if (!CACHE.get(ip)) {
+  if (!GEODATA.get(ip)) {
     axios.get('https://ip2c.org/' + ip)
       .then( function(response) {
         const parsed = parseCountryCode(response.data)
+        GEODATA.set(ip, parsed)
         peer.countryName = parsed.name
         peer.countryCode = parsed.code
         CACHE.set(ip, peer)
@@ -77,6 +58,11 @@ const parseNode = function(node, id, local) {
       .catch( function(err) {
         consola.error(new Error(err))
       })
+  } else {
+    const geodata = GEODATA.get(ip)
+    peer.countryName = geodata.name
+    peer.countryCode = geodata.code
+    CACHE.set(ip, peer)
   }
 }
 
@@ -85,11 +71,5 @@ const parseCountryCode = function(code) {
   return {
     name: split[3],
     code: split[1]
-  }
-}
-
-const n = function(peers) {
-  for (const i in peers) {
-    parseNode(peers[i], parseInt(i) + 1, false)
   }
 }

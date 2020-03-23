@@ -15,13 +15,24 @@ import nCache from './nodeCache.js'
 const TWO_HOURS = 7200
 
 let web3 = null
+let web3Admin = null
 
 const polling = {
   peers: {
     timer: new NanoTimer(),
     interval: '5s',
     method: function() {
-      nCache.poll()
+      web3Admin.getPeers(function(err, peers) {
+        if (err) {
+          consola.error(new Error(err))
+        } else {
+          web3Admin.getNodeInfo(function(err, localhost) {
+            nCache.set(peers, function() {
+              nCache.localhost(localhost)
+            })
+          })
+        }
+      })
     }
   },
   systemInfo: {
@@ -82,8 +93,7 @@ export default {
   async init(ipcPath, cb) {
     try {
       web3 = await new Web3(ipcPath, net)
-      await nCache.init(ipcPath)
-      const localhost = nCache.localhost()
+      web3Admin = await new Admin(ipcPath, net)
       web3.eth.getBlock('pending', false, function(err, head) {
         if (err || !head ) {
           consola.fatal(new Error(err))
