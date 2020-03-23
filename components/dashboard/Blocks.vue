@@ -26,7 +26,7 @@
               <v-list-item-content>
                 <div class="overline mb-4">Last Block</div>
                 <v-list-item-title class="headline mb-1">
-                  {{ seconds }} ago
+                  {{ seconds }}s ago
                 </v-list-item-title>
                 <v-list-item-subtitle>
                   Prev. {{ latestBlock.blocktime }}s
