@@ -8,44 +8,22 @@ import disk from 'diskusage'
 import axios from 'axios'
 import consola from 'consola'
 import NanoTimer from 'nanotimer'
-import NodeCache from 'node-cache'
 import lib from './lib.js'
 import bCache from './blockCache.js'
+import nCache from './nodeCache.js'
 
-const ONE_DAY = 86400
 const TWO_HOURS = 7200
 
-let web3Admin = null
 let web3 = null
 
-const geo = new NodeCache({stdTTL: ONE_DAY})
 const polling = {
   peers: {
-    cache: [],
     timer: new NanoTimer(),
     interval: '5s',
     method: function() {
-      if (web3Admin) {
-        // get our nodes info first
-        web3Admin.getNodeInfo(function(err, info) {
-          if (err) {
-            consola.error(new Error(err))
-          } else {
-            polling.nodeInfo = parseNode(info, 0, true)
-            web3Admin.getPeers(function(err2, peers) {
-              if (err2) {
-                consola.error(new Error(err2))
-              } else {
-                polling.peers.cache = n(peers)
-                polling.peers.cache.unshift(polling.nodeInfo)
-              }
-            })
-          }
-        })
-      }
+      nCache.poll()
     }
   },
-  nodeInfo: {},
   systemInfo: {
     cache: {},
     timer: new NanoTimer(),
@@ -103,8 +81,9 @@ const polling = {
 export default {
   async init(ipcPath, cb) {
     try {
-      web3Admin = await new Admin(ipcPath, net)
       web3 = await new Web3(ipcPath, net)
+      await nCache.init(ipcPath)
+      const localhost = nCache.localhost()
       web3.eth.getBlock('pending', false, function(err, head) {
         if (err || !head ) {
           consola.fatal(new Error(err))
@@ -140,13 +119,10 @@ export default {
     return
   },
   getPeers() {
-    return polling.peers.cache
-  },
-  getCountryCode(ip) {
-    return geo.get(ip)
+    return nCache.get()
   },
   getNodeInfo() {
-    return polling.nodeInfo
+    return nCache.localhost()
   },
   getSystemInfo() {
     return polling.systemInfo.cache
@@ -156,64 +132,5 @@ export default {
   },
   getBlocks() {
     return bCache.get()
-  }
-}
-
-const n = function(peers) {
-  let info = []
-  for (const i in peers) {
-    info.push(parseNode(peers[i], i + 1, false))
-  }
-  return info
-}
-
-const parseNode = function(node, id, local) {
-  // "Gubiq/v3.0.1-andromeda-834c1f86/linux-amd64/go1.13.5"
-  // "Gubiq/UbiqMainnet/v3.0.1-andromeda-834c1f86/linux-amd64/go1.13.5"
-  const peer = {}
-  const name = node.name
-  let split = name.split('/')
-  peer.client = split[0]
-  const version = split[1].substr(0, 1) === 'v' ? split[1] : split[2]
-  const vsplit = version.split('-')
-  peer.version = vsplit[0]
-  peer.tag = vsplit[1]
-  peer.build = vsplit[2]
-  const platform = split[1].substr(0, 1) === 'v' ? split[2] : split[3]
-  split = platform.split('-')
-  peer.os = split[0]
-  peer.arch = split[1]
-  peer.id = id
-
-  const ip = local ? node.ip : node.network.remoteAddress.split(':')[0]
-  let countryCode = geo.get(ip)
-  if (countryCode == undefined) {
-    axios.get('https://ip2c.org/' + ip)
-      .then( function(response) {
-        const set = geo.set(ip, response.data)
-        const parsed = parseCountryCode(response.data)
-        peer.countryName = parsed.name
-        peer.countryCode = parsed.code
-        return peer
-      })
-      .catch( function(err) {
-        consola.error(new Error(err))
-        peer.countryName = ''
-        peer.countryCode = ''
-        return peer
-      })
-  } else {
-    const parsed = parseCountryCode(countryCode)
-    peer.countryName = parsed.name
-    peer.countryCode = parsed.code
-    return peer
-  }
-}
-
-const parseCountryCode = function(code) {
-  const split = code.split(';')
-  return {
-    name: split[3],
-    code: split[1]
   }
 }

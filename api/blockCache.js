@@ -1,7 +1,7 @@
 import lib from './lib.js'
 import LRU from 'lru-cache'
 
-let MAXLEN = 88
+let MAXLEN = 100
 
 // https://www.npmjs.com/package/lru-cache
 let CACHE = new LRU(MAXLEN)
