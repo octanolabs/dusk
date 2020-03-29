@@ -1,16 +1,12 @@
 import {Admin} from 'web3-eth-admin'
 import Web3 from 'web3'
 import net from 'net'
-import os from 'os'
-import fs from 'fs'
-import getSize from 'get-folder-size'
-import disk from 'diskusage'
-import axios from 'axios'
 import consola from 'consola'
 import NanoTimer from 'nanotimer'
 import lib from './lib.js'
 import bCache from './blockCache.js'
 import nCache from './nodeCache.js'
+import sCache from './systemCache.js'
 
 const TWO_HOURS = 7200
 
@@ -36,35 +32,17 @@ const polling = {
     }
   },
   systemInfo: {
-    cache: {},
     timer: new NanoTimer(),
     interval: '25s',
-    method: async function() {
-      try {
-        const info = await disk.check(os.homedir())
-        info.chaindata = polling.chaindata.cache
-        polling.systemInfo.cache = {
-          totalmem: os.totalmem(),
-          freemem: os.freemem(),
-          meminfo: await lib.meminfo(),
-          loadavg: os.loadavg(),
-          cpus: await lib.cpuinfo(),
-          diskusage: info
-        }
-      } catch (err) {
-        consola.error(new Error(err))
-      }
+    method: function () {
+      sCache.set()
     }
   },
   chaindata: {
-    cache: 0,
     timer: new NanoTimer(),
     interval: '3600s',
     method: function () {
-      getSize(os.homedir() + '/.ubiq/gubiq/chaindata', (err, size) => {
-        if (err) { throw err }
-        polling.chaindata.cache = size
-      })
+      sCache.setChaindata()
     }
   },
   blocks: {
@@ -135,7 +113,7 @@ export default {
     return nCache.localhost()
   },
   getSystemInfo() {
-    return polling.systemInfo.cache
+    return sCache.get()
   },
   getPendingTxns() {
     return bCache.pending()
