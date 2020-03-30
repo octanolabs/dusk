@@ -1,7 +1,7 @@
 <template>
   <v-app dark>
     <right-drawer />
-    <v-content>
+    <v-content class="">
       <nuxt />
     </v-content>
   </v-app>
@@ -29,6 +29,7 @@ export default {
     this.$store.dispatch('systemInfo')
     this.$store.dispatch('pending')
     this.$store.dispatch('blocks')
+    this.$store.dispatch('clientInfo')
     const t = this
     setInterval(function() {
       t.$store.dispatch('systemInfo')

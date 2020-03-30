@@ -23,6 +23,7 @@ provider.init(os.homedir() + '/.ubiq/gubiq.ipc', async function() {
   await provider.startPolling('chaindata')
   await provider.startPolling('systemInfo')
   await provider.startPolling('blocks')
+  await provider.startPolling('clientBinaries')
 })
 
 router.get('/country', (req, res) => {
@@ -48,6 +49,10 @@ router.get('/pending', (req, res) => {
 
 router.get('/blocks', (req, res) => {
   return res.json({ list: provider.getBlocks() })
+})
+
+router.get('/clients', (req, res) => {
+  return res.json({ info: provider.getClientBinaries() })
 })
 
 // Export the server middleware

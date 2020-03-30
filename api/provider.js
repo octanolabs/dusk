@@ -3,15 +3,18 @@ import Web3 from 'web3'
 import net from 'net'
 import consola from 'consola'
 import NanoTimer from 'nanotimer'
+
 import lib from './lib.js'
 import bCache from './blockCache.js'
 import nCache from './nodeCache.js'
 import sCache from './systemCache.js'
-
-const TWO_HOURS = 7200
+import cCache from './clientCache.js'
 
 let web3 = null
 let web3Admin = null
+
+const ONE_HOUR = '3600s'
+const SIX_HOURS = '21600s'
 
 const polling = {
   peers: {
@@ -40,9 +43,16 @@ const polling = {
   },
   chaindata: {
     timer: new NanoTimer(),
-    interval: '3600s',
+    interval: ONE_HOUR,
     method: function () {
       sCache.setChaindata()
+    }
+  },
+  clientBinaries: {
+    timer: new NanoTimer(),
+    interval: SIX_HOURS,
+    method: function () {
+      cCache.set()
     }
   },
   blocks: {
@@ -70,6 +80,7 @@ const polling = {
 export default {
   async init(ipcPath, cb) {
     try {
+      cCache.set()
       web3 = await new Web3(ipcPath, net)
       web3Admin = await new Admin(ipcPath, net)
       web3.eth.getBlock('pending', false, function(err, head) {
@@ -120,5 +131,8 @@ export default {
   },
   getBlocks() {
     return bCache.get()
+  },
+  getClientBinaries() {
+    return cCache.get()
   }
 }

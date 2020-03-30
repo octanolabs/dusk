@@ -6,6 +6,7 @@ export const state = () => ({
   peers: [],
   nodeInfo: {},
   systemInfo: {},
+  clientInfo: {},
   pending: {},
   drawers: {
     right: true
@@ -30,6 +31,9 @@ export const mutations = {
   },
   SET_BLOCKS(state, data) {
     state.blocks = data
+  },
+  SET_CLIENTINFO(state, data) {
+    state.clientInfo = data
   }
 }
 
@@ -92,6 +96,18 @@ export const actions = {
     try {
       const { data } = await axios.get('/api/blocks')
       commit('SET_BLOCKS', data.list)
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        consola.error(new Error('Bad credentials'))
+      }
+      consola.error(new Error(error))
+    }
+  },
+
+  async clientInfo({ commit }) {
+    try {
+      const { data } = await axios.get('/api/clients')
+      commit('SET_CLIENTINFO', data.info)
     } catch (error) {
       if (error.response && error.response.status === 401) {
         consola.error(new Error('Bad credentials'))
