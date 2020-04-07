@@ -68,3 +68,7 @@ pre {
 .resizable-drawer-content {
   background-color: $transparent !important;
 }
+
+.theme--dark.v-tabs > .v-tabs-bar {
+  background-color: $transparent !important;
+}

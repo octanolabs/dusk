@@ -33,7 +33,7 @@ export const mutations = {
     state.blocks = data
   },
   SET_CLIENTINFO(state, data) {
-    state.clientInfo = data
+    state.clientInfo = JSON.parse(data)
   }
 }
 
