@@ -5,7 +5,6 @@
       "name": "go-ubiq",
       "tag": "gubiq",
       "desc": "Ubiq fork of Geth.",
-      "icon": "gubiq.svg",
       "networks": [ 88 ],
       "releases": [
         {
@@ -61,38 +60,6 @@
           }
         }
       ]
-    },
-    {
-      "name": "go-ethereum",
-      "tag": "geth",
-      "desc": "Official Go implementation of the Ethereum protocol.",
-      "networks": [ 88 ],
-      "releases": [
-        {
-          "version": "1.9.12",
-          "maxHeight": 0,
-          "tag": "Tall Moose",
-          "note": "This is a small bugfix release, mostly to keep a semi-regular schedule.",
-          "darwin-amd64": {
-            "url": "https://github.com/ubiq/go-ubiq/releases/download/v3.0.1/gubiq-darwin-amd64",
-            "sha256": "340173ac5758054a558ca31257309e9cb2860534e239b711a0c14c7236189c78",
-            "size": 28643632
-          },
-          "linux-amd64": {
-            "url": "https://github.com/ubiq/go-ubiq/releases/download/v3.0.1/gubiq-linux-amd64",
-            "sha256": "5bb82c6a8f1b1fb441ff6d72e7114104263c4461ad7dddf7ef18cb5763d10455",
-            "size": 25775528
-          },
-          "linux-arm-7": {
-            "url": "https://github.com/ubiq/go-ubiq/releases/download/v3.0.1/gubiq-linux-arm-7",
-            "sha256": "06d105485aae819ba3f510d8d5916a63c34953770e277b80a78d71fe42848a67",
-            "size": 22774548
-          },
-          "linux-arm64": {
-            "url": "https://github.com/ubiq/go-ubiq/releases/download/v3.0.1/gubiq-linux-arm64",
-            "sha256": "cc03df2fedd4e02f4c15705deed36308e119c877b0ee158d8cf05c57b7fea5aa",
-            "size": 24529952
-          }
-        },
+    }
   ]
 }

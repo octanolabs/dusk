@@ -1,9 +1,9 @@
-import consola from 'consola'
-import disk from 'diskusage'
-import getSize from 'get-folder-size'
 import fs from 'fs'
 import os from 'os'
 import { promisify } from 'util'
+import consola from 'consola'
+import disk from 'diskusage'
+import getSize from 'get-folder-size'
 
 const readFile = promisify(fs.readFile)
 
@@ -21,12 +21,19 @@ export default {
     try {
       const info = await disk.check(os.homedir())
       info.chaindata = CHAINDATA
+
+      let arch = await os.arch()
+      const platform = await os.platform()
+      if (arch === 'x64') {
+        arch = 'amd64'
+      }
       CACHE = {
         totalmem: os.totalmem(),
         freemem: os.freemem(),
         meminfo: await meminfo(),
         loadavg: os.loadavg(),
         cpus: await cpuinfo(),
+        platform: platform + '-' + arch,
         diskusage: info
       }
     } catch (err) {
@@ -36,7 +43,9 @@ export default {
   async setChaindata() {
     try {
       getSize(os.homedir() + '/.ubiq/gubiq/chaindata', (err, size) => {
-        if (err) { consola.error(new Error(err)) }
+        if (err) {
+          consola.error(new Error(err))
+        }
         CHAINDATA = size
       })
     } catch (e) {
@@ -48,15 +57,15 @@ export default {
 async function cpuinfo() {
   try {
     const cpus = os.cpus()
-    let usage = []
+    const usage = []
     for (const i in cpus) {
       const cpu = cpus[i]
-      let total = 0;
-      let idle = 0;
+      let total = 0
+      let idle = 0
       for (const type in cpu.times) {
         total += cpu.times[type]
         if (type === 'idle') {
-          idle = Math.round(100 * cpu.times[type] / total)
+          idle = Math.round((100 * cpu.times[type]) / total)
         }
       }
       usage.push(idle)

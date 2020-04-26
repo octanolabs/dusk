@@ -6,7 +6,7 @@
   "author": "Luke Williams",
   "scripts": {
     "build": "nuxt build",
-    "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
+    "lint": "eslint --fix --ext .js,.vue --ignore-path .gitignore .",
     "dev": "cross-env NODE_ENV=development nodemon server/index.js --watch server",
     "generate": "nuxt generate",
     "start": "cross-env NODE_ENV=production node server/index.js",
@@ -24,6 +24,7 @@
     "express": "^4.16.4",
     "express-session": "^1.17.0",
     "get-folder-size": "^2.0.1",
+    "jsonfile": "^6.0.1",
     "lru-cache": "^5.1.1",
     "nanotimer": "^0.3.15",
     "node-cache": "^5.1.0",

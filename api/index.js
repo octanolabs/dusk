@@ -1,7 +1,7 @@
-import consola from 'consola'
+// import consola from 'consola'
+import os from 'os'
 import express from 'express'
 import provider from './provider.js'
-import os from 'os'
 
 // Create express router
 const router = express.Router()
@@ -54,6 +54,8 @@ router.get('/blocks', (req, res) => {
 router.get('/clients', (req, res) => {
   return res.json({ info: provider.getClientBinaries() })
 })
+
+router.post('/download', (req, res) => {})
 
 // Export the server middleware
 export default {

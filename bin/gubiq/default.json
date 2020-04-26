@@ -1,0 +1,13 @@
+{
+  "type": "geth",
+  "datadir": "~/.ubiq",
+  "network": 88,
+  "port": 30388,
+  "maxpeers": "25",
+  "cache": 16,
+  "syncmode": "fast",
+  "gcmode": "full",
+  "rpc": false,
+  "rpcApi": ["db", "eth", "net", "web3"],
+  "rpcPort": 8588
+}

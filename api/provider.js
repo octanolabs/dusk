@@ -1,6 +1,6 @@
-import {Admin} from 'web3-eth-admin'
-import Web3 from 'web3'
 import net from 'net'
+import { Admin } from 'web3-eth-admin'
+import Web3 from 'web3'
 import consola from 'consola'
 import NanoTimer from 'nanotimer'
 
@@ -20,15 +20,19 @@ const polling = {
   peers: {
     timer: new NanoTimer(),
     interval: '5s',
-    method: function() {
+    method() {
       web3Admin.getPeers(function(err, peers) {
         if (err) {
           consola.error(new Error(err))
         } else {
           web3Admin.getNodeInfo(function(err, localhost) {
-            nCache.set(peers, function() {
-              nCache.localhost(localhost)
-            })
+            if (err) {
+              consola.error(new Error(err))
+            } else {
+              nCache.set(peers, function() {
+                nCache.localhost(localhost)
+              })
+            }
           })
         }
       })
@@ -37,31 +41,31 @@ const polling = {
   systemInfo: {
     timer: new NanoTimer(),
     interval: '25s',
-    method: function () {
+    method() {
       sCache.set()
     }
   },
   chaindata: {
     timer: new NanoTimer(),
     interval: ONE_HOUR,
-    method: function () {
+    method() {
       sCache.setChaindata()
     }
   },
   clientBinaries: {
     timer: new NanoTimer(),
     interval: SIX_HOURS,
-    method: function () {
+    method() {
       cCache.set()
     }
   },
   blocks: {
     timer: new NanoTimer(),
     interval: '5s',
-    method: function () {
+    method() {
       const cache = bCache.get()
       if (cache.length > 0) {
-        const i = cache.length-1
+        const i = cache.length - 1
         web3.eth.getBlock(cache[i].number + 1, false, function(err, b) {
           if (!err && b) {
             web3.eth.getBlock('pending', true, function(err, pending) {
@@ -84,28 +88,32 @@ export default {
       web3 = await new Web3(ipcPath, net)
       web3Admin = await new Admin(ipcPath, net)
       web3.eth.getBlock('pending', false, function(err, head) {
-        if (err || !head ) {
+        if (err || !head) {
           consola.fatal(new Error(err))
           return cb()
         } else {
           const cache = []
-          let blockNumber = head.number - (bCache.maxlen() * 2)
-          lib.syncLoop((bCache.maxlen() * 2) + 1, function (loop) {
-            const i = loop.iteration()
-            web3.eth.getBlock(blockNumber + i, false, function(err, block) {
-              if (!err && block) {
-                cache.push(block)
-                loop.next()
-              } else {
-                loop.break(true)
-                loop.next()
-              }
-            })
-          }, function () {
-            bCache.set(cache, function() {
-              return cb()
-            })
-          })
+          const blockNumber = head.number - bCache.maxlen() * 2
+          lib.syncLoop(
+            bCache.maxlen() * 2 + 1,
+            function(loop) {
+              const i = loop.iteration()
+              web3.eth.getBlock(blockNumber + i, false, function(err, block) {
+                if (!err && block) {
+                  cache.push(block)
+                  loop.next()
+                } else {
+                  loop.break(true)
+                  loop.next()
+                }
+              })
+            },
+            function() {
+              bCache.set(cache, function() {
+                return cb()
+              })
+            }
+          )
         }
       })
     } catch (err) {
@@ -114,8 +122,11 @@ export default {
   },
   startPolling(name) {
     polling[name].timer.setTimeout(polling[name].method, '', '5s')
-    polling[name].timer.setInterval(polling[name].method, '', polling[name].interval) // repeat
-    return
+    polling[name].timer.setInterval(
+      polling[name].method,
+      '',
+      polling[name].interval
+    ) // repeat
   },
   getPeers() {
     return nCache.get()

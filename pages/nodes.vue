@@ -7,7 +7,7 @@
         </v-tab>
         <v-tab-item v-for="client in clients" :key="client.tag">
           <v-card>
-            <versions :client="client" />
+            <versions :client="client" :platform="platform" />
           </v-card>
         </v-tab-item>
       </v-tabs>
@@ -25,12 +25,13 @@ export default {
   },
   data() {
     return {
+      platform: 'linux-amd64',
       tab: null
     }
   },
   computed: {
     clients() {
-      return this.$store.state.clientInfo.clients
+      return this.$store.state.clientInfo
         ? this.$store.state.clientInfo.clients
         : []
     }

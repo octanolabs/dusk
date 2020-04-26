@@ -1,11 +1,12 @@
-import LRU from 'lru-cache'
 import axios from 'axios'
+import consola from 'consola'
+import LRU from 'lru-cache'
 
 const ONE_DAY = 86400
 
 // https://www.npmjs.com/package/lru-cache
-let CACHE = new LRU({ maxAge: ONE_DAY })
-let GEODATA = new LRU({maxAge: ONE_DAY })
+const CACHE = new LRU({ maxAge: ONE_DAY })
+const GEODATA = new LRU({ maxAge: ONE_DAY })
 
 export default {
   clear() {
@@ -47,15 +48,16 @@ const parseNode = function(node, id, local) {
 
   const ip = local ? node.ip : node.network.remoteAddress.split(':')[0]
   if (!GEODATA.get(ip)) {
-    axios.get('https://ip2c.org/' + ip)
-      .then( function(response) {
+    axios
+      .get('https://ip2c.org/' + ip)
+      .then(function(response) {
         const parsed = parseCountryCode(response.data)
         GEODATA.set(ip, parsed)
         peer.countryName = parsed.name
         peer.countryCode = parsed.code
         CACHE.set(ip, peer)
       })
-      .catch( function(err) {
+      .catch(function(err) {
         consola.error(new Error(err))
       })
   } else {

@@ -1,7 +1,7 @@
 <template>
   <v-layout column justify-center align-center>
     <v-flex xs12 sm8 md6>
-      <div class="text-center">
+      <div class="text-center mt-4">
         <logo />
         <h1 style="color:#6fceb7">
           octano<span style="color:#e76754">dusk</span>

@@ -10,7 +10,8 @@ export const state = () => ({
   pending: {},
   drawers: {
     right: true
-  }
+  },
+  settings: {}
 })
 
 export const mutations = {
@@ -33,7 +34,7 @@ export const mutations = {
     state.blocks = data
   },
   SET_CLIENTINFO(state, data) {
-    state.clientInfo = JSON.parse(data)
+    state.clientInfo = data
   }
 }
 

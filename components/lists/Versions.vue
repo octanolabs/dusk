@@ -41,7 +41,7 @@
             :value="item.progress"
             color="grey"
           />
-          <v-icon v-if="item.status === 0 && isDownloading" class="secondary">
+          <v-icon v-if="!item.status === 0 && isDownloading" class="secondary">
             mdi-cloud-off-outline
           </v-icon>
           <v-icon
@@ -65,7 +65,7 @@
         </v-list-item-content>
         <v-list-item-action>
           <v-list-item-action-text>
-            {{ humanFileSize(item[platform].size, true) }}
+            {{ humanFileSize(item.download.size, true) }}
           </v-list-item-action-text>
           <a
             :href="
@@ -93,12 +93,6 @@ export default {
       default() {
         return {}
       }
-    },
-    platform: {
-      type: String,
-      default() {
-        return 'linux-amd64'
-      }
     }
   },
   computed: {
@@ -106,10 +100,13 @@ export default {
       return false
     },
     downloaded() {
-      return 0
+      return this.client.downloaded
     },
     releases() {
       return this.client.releases || []
+    },
+    platform() {
+      return this.$store.state.clientInfo.platform
     }
   },
   methods: {

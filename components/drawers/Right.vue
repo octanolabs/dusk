@@ -1,6 +1,20 @@
 <template>
   <resizable-drawer :show="true" side="right" app>
-    <v-list>
+    <v-toolbar>
+      <v-btn icon to="/" class="ma-1">
+        <v-icon>mdi-view-dashboard</v-icon>
+      </v-btn>
+      <v-btn icon to="/clients" class="ma-1">
+        <v-icon>mdi-download-network</v-icon>
+      </v-btn>
+      <v-btn icon to="/settings" class="ma-1">
+        <v-icon>mdi-router-wireless-settings</v-icon>
+      </v-btn>
+      <v-btn icon class="ma-1">
+        <v-icon>mdi-console</v-icon>
+      </v-btn>
+    </v-toolbar>
+    <v-list class="pa-0">
       <v-list-item>
         <v-list-item-action>
           <img src="~/static/octano.svg" height="36px" style="height:36px;" />
@@ -12,108 +26,108 @@
         </v-list-item-content>
       </v-list-item>
     </v-list>
-    <v-list-item-title class="pl-4">
-      CPU
-    </v-list-item-title>
-    <v-sheet class="px-4 bg-transparent">
-      <v-sparkline
-        :value="cpuinfo"
-        :gradient="['#e76754', '#6fceb7', '#6fceb7']"
-        gradient-direction="bottom"
-        color="#e76754"
-        padding="1"
-        smooth="2"
-        type="bar"
-        height="100px"
-        auto-line-width
-        fill
-      ></v-sparkline>
-    </v-sheet>
-    <v-list>
-      <v-list-item two-line>
-        <v-list-item-content>
-          <v-list-item-title>
-            Memory
-          </v-list-item-title>
-          <v-list-item-subtitle>
-            <v-progress-linear
-              :value="availableMemory.percent"
-              background-color="secondary"
-              color="primary"
-              height="25"
-              reactive
-            >
-              <strong>
-                {{ convertKBytes(availableMemory.kBytes, true) }} /
-                {{ convertKBytes(availableMemory.total, true) }}
-              </strong>
-            </v-progress-linear>
-          </v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
-      <v-list-item v-if="availableSwap.percent" two-line>
-        <v-list-item-content>
-          <v-list-item-title>
-            Swap
-          </v-list-item-title>
-          <v-list-item-subtitle>
-            <v-progress-linear
-              :value="availableSwap.percent"
-              background-color="secondary"
-              color="primary"
-              height="25"
-              reactive
-            >
-              <strong>
-                {{ convertKBytes(availableSwap.kBytes, true) }} /
-                {{ convertKBytes(availableSwap.total, true) }}
-              </strong>
-            </v-progress-linear>
-          </v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
-    </v-list>
-    <v-list-item-title class="pl-4">
-      Storage
-    </v-list-item-title>
-    <v-row no-gutters>
-      <v-col :cols="6" class="pl-4">
-        <v-chip
-          color="primary"
-          class="text-center mb-2"
-          style="display:block;width:100px;"
-          label
-        >
-          Available
-        </v-chip>
-        <v-chip
-          color="secondary"
-          class="text-center mb-2"
-          style="display:block;width:100px;"
-          label
-        >
-          Chaindata
-        </v-chip>
-        <v-chip
-          color="#444"
-          class="text-center"
-          style="display:block;width:100px;"
-          label
-        >
-          System
-        </v-chip>
-      </v-col>
-      <v-col :cols="6">
-        <doughnut-chart
-          v-if="chartStorage"
-          :data="chartStorage"
-          title="Storage"
-          legend="left"
-          left
-        />
-      </v-col>
-    </v-row>
-    <span style="position:absolute;bottom:0;width:100%;">
+    <span style="position:absolute;bottom:0;width:100%;padding-right:15px;">
+      <v-list-item-title class="pl-4">
+        CPU
+      </v-list-item-title>
+      <v-sheet class="px-4 bg-transparent">
+        <v-sparkline
+          :value="cpuinfo"
+          :gradient="['#e76754', '#6fceb7', '#6fceb7']"
+          gradient-direction="bottom"
+          color="#e76754"
+          padding="1"
+          smooth="2"
+          type="bar"
+          height="100px"
+          auto-line-width
+          fill
+        ></v-sparkline>
+      </v-sheet>
+      <v-list>
+        <v-list-item two-line>
+          <v-list-item-content>
+            <v-list-item-title>
+              Memory
+            </v-list-item-title>
+            <v-list-item-subtitle>
+              <v-progress-linear
+                :value="availableMemory.percent"
+                background-color="secondary"
+                color="primary"
+                height="25"
+                reactive
+              >
+                <strong>
+                  {{ convertKBytes(availableMemory.kBytes, true) }} /
+                  {{ convertKBytes(availableMemory.total, true) }}
+                </strong>
+              </v-progress-linear>
+            </v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item v-if="availableSwap.percent" two-line>
+          <v-list-item-content>
+            <v-list-item-title>
+              Swap
+            </v-list-item-title>
+            <v-list-item-subtitle>
+              <v-progress-linear
+                :value="availableSwap.percent"
+                background-color="secondary"
+                color="primary"
+                height="25"
+                reactive
+              >
+                <strong>
+                  {{ convertKBytes(availableSwap.kBytes, true) }} /
+                  {{ convertKBytes(availableSwap.total, true) }}
+                </strong>
+              </v-progress-linear>
+            </v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+      <v-list-item-title class="pl-4">
+        Storage
+      </v-list-item-title>
+      <v-row no-gutters class="mb-4">
+        <v-col :cols="6" class="pl-4">
+          <v-chip
+            color="primary"
+            class="text-center mb-2"
+            style="display:block;width:100px;"
+            label
+          >
+            Available
+          </v-chip>
+          <v-chip
+            color="secondary"
+            class="text-center mb-2"
+            style="display:block;width:100px;"
+            label
+          >
+            Chaindata
+          </v-chip>
+          <v-chip
+            color="#444"
+            class="text-center"
+            style="display:block;width:100px;"
+            label
+          >
+            System
+          </v-chip>
+        </v-col>
+        <v-col :cols="6">
+          <doughnut-chart
+            v-if="chartStorage"
+            :data="chartStorage"
+            title="Storage"
+            legend="left"
+            left
+          />
+        </v-col>
+      </v-row>
       <v-list-item-title class="pl-4">
         Load Average
       </v-list-item-title>
