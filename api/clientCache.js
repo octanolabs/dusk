@@ -57,17 +57,19 @@ export default {
   get() {
     return CLIENTS
   },
-  async set() {
+  async set(localPath, remotePath) {
     // try fetching remote.
     try {
-      const remote = await axios.get('https://raw.githubusercontent.com/octanolabs/dusk2/develop/clientBinaries.json')
-      CLIENTS = await parse(JSON.parse(remote.data))
+      const remote = await axios.get(remotePath)
+      CLIENTS = await parse(remote.data)
       CLIENTS.source = 'remote'
-    } catch (err) {
+      return
+    } catch (e) {
       try {
-        jf.readFile('./clientBinaries.json', async function (err, local) {
+        jf.readFile(localPath, async function (err, local) {
           CLIENTS = await parse(local)
-          CLIENTS.source = 'raw'
+          CLIENTS.source = 'local'
+          return
         })
       } catch (e) {
         consola.error(new Error(e))

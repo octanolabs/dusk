@@ -56,7 +56,7 @@ const polling = {
     timer: new NanoTimer(),
     interval: SIX_HOURS,
     method() {
-      cCache.set()
+      cCache.set('./clientBinaries.json', 'https://raw.githubusercontent.com/octanolabs/dusk/develop/clientBinaries.json')
     }
   },
   blocks: {
