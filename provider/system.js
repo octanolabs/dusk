@@ -3,12 +3,10 @@ import os from 'os'
 import { promisify } from 'util'
 import consola from 'consola'
 import disk from 'diskusage'
-import getSize from 'get-folder-size'
 
 const readFile = promisify(fs.readFile)
 
 let CACHE = {}
-let CHAINDATA = 0
 
 export default {
   clear() {
@@ -19,37 +17,16 @@ export default {
   },
   async set() {
     try {
-      const info = await disk.check(os.homedir())
-      info.chaindata = CHAINDATA
-
-      let arch = await os.arch()
-      const platform = await os.platform()
-      if (arch === 'x64') {
-        arch = 'amd64'
-      }
       CACHE = {
         totalmem: os.totalmem(),
         freemem: os.freemem(),
         meminfo: await meminfo(),
         loadavg: os.loadavg(),
         cpus: await cpuinfo(),
-        platform: platform + '-' + arch,
-        diskusage: info
+        diskusage: await disk.check(os.homedir())
       }
     } catch (err) {
       consola.error(new Error(err))
-    }
-  },
-  async setChaindata() {
-    try {
-      getSize(os.homedir() + '/.ubiq/gubiq/chaindata', (err, size) => {
-        if (err) {
-          consola.error(new Error(err))
-        }
-        CHAINDATA = size
-      })
-    } catch (e) {
-      consola.error(new Error(e))
     }
   }
 }

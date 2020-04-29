@@ -1,7 +1,7 @@
-// import consola from 'consola'
+import consola from 'consola'
 import os from 'os'
 import express from 'express'
-import provider from './provider.js'
+import provider from '../provider/index.js'
 
 // Create express router
 const router = express.Router()
@@ -17,45 +17,25 @@ router.use((req, res, next) => {
   next()
 })
 
+let providers = {}
+
 // start polling
-provider.init(os.homedir() + '/.ubiq/gubiq.ipc', async function() {
-  await provider.startPolling('peers')
-  await provider.startPolling('chaindata')
-  await provider.startPolling('systemInfo')
-  await provider.startPolling('blocks')
-  await provider.startPolling('clientBinaries')
-})
+const start = async function() {
+  try {
+    providers = await provider.init()
+    for (let key of Object.keys(providers)) {
+      await provider.startProvider(key)
+    }
+  } catch (e) {
+    consola.error(new Error(e))
+  }
+}
 
-router.get('/country', (req, res) => {
-  const ip = req.body.ip
-  return res.json({ code: provider.getCountryCode(ip) })
-})
-
-router.get('/nodeinfo', (req, res) => {
-  return res.json({ info: provider.getNodeInfo() })
-})
-
-router.get('/peers', (req, res) => {
-  return res.json({ list: provider.getPeers() })
-})
+start()
 
 router.get('/system', (req, res) => {
-  return res.json({ info: provider.getSystemInfo() })
+  return res.json({ info: providers.system.get() })
 })
-
-router.get('/pending', (req, res) => {
-  return res.json({ info: provider.getPendingTxns() })
-})
-
-router.get('/blocks', (req, res) => {
-  return res.json({ list: provider.getBlocks() })
-})
-
-router.get('/clients', (req, res) => {
-  return res.json({ info: provider.getClientBinaries() })
-})
-
-router.post('/download', (req, res) => {})
 
 // Export the server middleware
 export default {

@@ -80,10 +80,14 @@ export default {
     try {
       const response = await download(
         release.url,
-        'bin/' + client.tag + '/' + version
-      ).on('downloadProgress', (progress) => {})
+        'bin/' + client.tag + '/' + client.tag + '-' + release.version
+      ).on('downloadProgress', (progress) => {
+        consola.info(progress)
+      })
+      return response
     } catch (e) {
       consola.error(new Error(e))
+      return
     }
   }
 }
