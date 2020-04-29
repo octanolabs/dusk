@@ -87,47 +87,28 @@
             </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
+        <v-list-item v-if="diskusage" two-line>
+          <v-list-item-content>
+            <v-list-item-title>
+              Storage
+            </v-list-item-title>
+            <v-list-item-subtitle>
+              <v-progress-linear
+                :value="availableStorage.percent"
+                background-color="secondary"
+                color="primary"
+                height="25"
+                reactive
+              >
+                <strong>
+                  {{ convertBytes(availableStorage.kBytes, true) }} /
+                  {{ convertBytes(availableStorage.total, true) }}
+                </strong>
+              </v-progress-linear>
+            </v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
-      <v-list-item-title class="pl-4">
-        Storage
-      </v-list-item-title>
-      <v-row no-gutters class="mb-4">
-        <v-col :cols="6" class="pl-4">
-          <v-chip
-            color="primary"
-            class="text-center mb-2"
-            style="display:block;width:100px;"
-            label
-          >
-            Available
-          </v-chip>
-          <v-chip
-            color="secondary"
-            class="text-center mb-2"
-            style="display:block;width:100px;"
-            label
-          >
-            Chaindata
-          </v-chip>
-          <v-chip
-            color="#444"
-            class="text-center"
-            style="display:block;width:100px;"
-            label
-          >
-            System
-          </v-chip>
-        </v-col>
-        <v-col :cols="6">
-          <doughnut-chart
-            v-if="chartStorage"
-            :data="chartStorage"
-            title="Storage"
-            legend="left"
-            left
-          />
-        </v-col>
-      </v-row>
       <v-list-item-title class="pl-4">
         Load Average
       </v-list-item-title>
@@ -158,13 +139,11 @@
 </template>
 
 <script>
-import DoughnutChart from '~/components/charts/Storage.vue'
 import ResizableDrawer from '~/components/drawers/Resizable'
 
 export default {
   components: {
-    ResizableDrawer,
-    DoughnutChart
+    ResizableDrawer
   },
   computed: {
     system() {
@@ -172,6 +151,9 @@ export default {
     },
     meminfo() {
       return this.$store.state.systemInfo.meminfo
+    },
+    diskusage() {
+      return this.$store.state.systemInfo.diskusage
     },
     cpuinfo() {
       return this.$store.state.systemInfo.cpus
@@ -194,23 +176,14 @@ export default {
           }
         : { percent: 0, kBytes: 0, total: 0 }
     },
-    chartStorage() {
-      return this.system.diskusage
+    availableStorage() {
+      return this.diskusage
         ? {
-            labels: ['Available', 'System', 'Chaindata'],
-            datasets: [
-              {
-                backgroundColor: ['#6fceb7', '#444', '#e76754'],
-                data: [
-                  this.system.diskusage.available,
-                  this.system.diskusage.total - this.system.diskusage.available,
-                  this.system.diskusage.chaindata
-                ],
-                borderWidth: [0, 0, 0]
-              }
-            ]
+            percent: (this.diskusage.available / this.diskusage.total) * 100,
+            kBytes: this.diskusage.available,
+            total: this.diskusage.total
           }
-        : false
+        : { percent: 0, kBytes: 0, total: 0 }
     }
   },
   methods: {
@@ -228,6 +201,21 @@ export default {
         unit = ' ' + sizes[i]
       }
       return (kBytes / 1024 ** i).toFixed(1) + unit
+    },
+    convertBytes(bytes, showUnit) {
+      const sizes = ['bytes', 'KB', 'MB', 'GB', 'TB']
+      if (bytes === 0) {
+        return 'n/a'
+      }
+      const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)))
+      if (i === 0) {
+        return bytes + ' ' + sizes[i]
+      }
+      let unit = ''
+      if (showUnit) {
+        unit = ' ' + sizes[i]
+      }
+      return (bytes / 1024 ** i).toFixed(1) + unit
     }
   }
 }
