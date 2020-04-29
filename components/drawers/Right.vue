@@ -1,30 +1,58 @@
 <template>
   <resizable-drawer :show="true" side="right" app>
     <v-toolbar>
-      <v-btn icon to="/" class="ma-1">
-        <v-icon>mdi-view-dashboard</v-icon>
-      </v-btn>
-      <v-btn icon to="/clients" class="ma-1">
-        <v-icon>mdi-download-network</v-icon>
-      </v-btn>
-      <v-btn icon to="/settings" class="ma-1">
-        <v-icon>mdi-router-wireless-settings</v-icon>
-      </v-btn>
-      <v-btn icon class="ma-1">
-        <v-icon>mdi-console</v-icon>
-      </v-btn>
+      <v-list dense class="pa-0">
+        <v-list-item>
+          <v-list-item-action>
+            <img src="~/static/octano.svg" height="36px" style="height:36px;" />
+          </v-list-item-action>
+          <v-list-item-content class="text-right">
+            <h1 style="color:#6fceb7">
+              octano<span style="color:#e76754">dusk</span>
+            </h1>
+            <v-list-item-subtitle style="color:#e76754">
+              v{{ version }}
+            </v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
     </v-toolbar>
-    <v-list class="pa-0">
+    <v-list dense class="pa-0">
       <v-list-item>
-        <v-list-item-action>
-          <img src="~/static/octano.svg" height="36px" style="height:36px;" />
-        </v-list-item-action>
-        <v-list-item-content class="text-right">
-          <h1 style="color:#6fceb7">
-            octano<span style="color:#e76754">dusk</span>
-          </h1>
+        <v-list-item-content>
+          <v-list-item-title>
+            {{ system.hostname }}
+          </v-list-item-title>
+          <v-list-item-subtitle v-if="system.userInfo">
+            {{ system.userInfo.username }}
+          </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
+      <v-list-item>
+        <v-list-item-content>
+          <v-list-item-title>
+            {{ system.platform }}
+          </v-list-item-title>
+          <v-list-item-subtitle>{{ system.release }}</v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
+      <template v-for="key of Object.keys(networkInterfaces)">
+        <v-list-item
+          v-if="
+            system.networkInterfaces[key][0] &&
+              system.networkInterfaces[key][0].address !== '127.0.0.1'
+          "
+        >
+          <v-list-item-content>
+            <v-list-item-title>
+              {{ system.networkInterfaces[key][0].address }}
+            </v-list-item-title>
+            <v-list-item-subtitle>
+              {{ system.networkInterfaces[key][1].address }}
+            </v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+      </template>
     </v-list>
     <span style="position:absolute;bottom:0;width:100%;padding-right:15px;">
       <v-list-item-title class="pl-4">
@@ -146,17 +174,23 @@ export default {
     ResizableDrawer
   },
   computed: {
+    version() {
+      return this.$store.state.version
+    },
     system() {
-      return this.$store.state.systemInfo
+      return this.$store.state.system
     },
     meminfo() {
-      return this.$store.state.systemInfo.meminfo
+      return this.$store.state.system.meminfo
     },
     diskusage() {
-      return this.$store.state.systemInfo.diskusage
+      return this.$store.state.system.diskusage
     },
     cpuinfo() {
-      return this.$store.state.systemInfo.cpus
+      return this.$store.state.system.cpus
+    },
+    networkInterfaces() {
+      return this.system.networkInterfaces || {}
     },
     availableMemory() {
       return this.meminfo

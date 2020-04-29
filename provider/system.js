@@ -8,6 +8,19 @@ const readFile = promisify(fs.readFile)
 
 let CACHE = {}
 
+const platform = async function() {
+  try {
+    let arch = await os.arch()
+    const platform = await os.platform()
+    if (arch === 'x64') {
+      arch = 'amd64'
+    }
+    return platform + '-' + arch
+  } catch (e) {
+    consola.error(new Error(e))
+  }
+}
+
 export default {
   clear() {
     CACHE = {}
@@ -23,7 +36,12 @@ export default {
         meminfo: await meminfo(),
         loadavg: os.loadavg(),
         cpus: await cpuinfo(),
-        diskusage: await disk.check(os.homedir())
+        diskusage: await disk.check(os.homedir()),
+        hostname: os.hostname(),
+        release: os.release(),
+        platform: await platform(),
+        userInfo: os.userInfo(),
+        networkInterfaces: os.networkInterfaces()
       }
     } catch (err) {
       consola.error(new Error(err))

@@ -25,20 +25,11 @@ export default {
     }
   },
   created() {
-    this.$store.dispatch('peers')
-    this.$store.dispatch('systemInfo')
-    this.$store.dispatch('pending')
-    this.$store.dispatch('blocks')
-    this.$store.dispatch('clientInfo')
+    this.$store.dispatch('system')
     const t = this
     setInterval(function() {
-      t.$store.dispatch('systemInfo')
-      t.$store.dispatch('peers')
+      t.$store.dispatch('system')
     }, 10000)
-    setInterval(function() {
-      t.$store.dispatch('pending')
-      t.$store.dispatch('blocks')
-    }, 2000)
   },
   methods: {
     async logout() {
