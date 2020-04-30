@@ -22,10 +22,10 @@ module.exports = {
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
   },
   /*
-  ** Add server middleware
-  ** Nuxt.js uses `connect` module as server
-  ** So most of express middleware works with nuxt.js server middleware
-  */
+   ** Add server middleware
+   ** Nuxt.js uses `connect` module as server
+   ** So most of express middleware works with nuxt.js server middleware
+   */
   serverMiddleware: [
     // body-parser middleware
     bodyParser.json(),
@@ -48,15 +48,11 @@ module.exports = {
   /*
    ** Global CSS
    */
-  css: [
-    '~/scss/main.scss'
-  ],
+  css: ['~/scss/main.scss'],
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: [
-    { src: '~/plugins/highlightjs', mode: 'client' }
-  ],
+  plugins: [{ src: '~/plugins/highlightjs', mode: 'client' }],
   /*
    ** Nuxt.js dev-modules
    */
@@ -72,7 +68,8 @@ module.exports = {
     // Doc: https://axios.nuxtjs.org/usage
     // Doc: https://auth.nuxtjs.org/#getting-started
     '@nuxtjs/axios',
-    '@nuxtjs/auth'
+    '@nuxtjs/auth',
+    'nuxt-i18n'
   ],
   /*
    ** Axios module configuration
@@ -85,10 +82,14 @@ module.exports = {
     strategies: {
       local: {
         endpoints: {
-          login: { url: '/session/login', method: 'post', propertyName: 'token' },
+          login: {
+            url: '/session/login',
+            method: 'post',
+            propertyName: 'token'
+          },
           logout: { url: '/session/logout', method: 'post' },
           user: { url: '/session/user', method: 'get', propertyName: 'user' }
-        },
+        }
         // tokenRequired: true,
         // tokenType: 'bearer'
       }
@@ -114,6 +115,50 @@ module.exports = {
         }
       }
     }
+  },
+  /*
+   ** i18n configuration
+   **
+   */
+  i18n:{
+    locales: [
+      {
+        code: 'en',
+        name: 'English'
+      },
+      {
+        code: 'es',
+        name: 'Español'
+      },
+      {
+        code: 'ru',
+        name: 'Pусский'
+      }
+    ],
+    defaultLocale: 'en',
+    strategy: 'prefix_except_default',
+    vueI18n: {
+      fallbackLocale: 'en',
+      messages: {
+        en: require('./i18n/en.json'),
+        es: require('./i18n/es.json'),
+        ru: require('./i18n/ru.json')
+      }
+    },
+    detectBrowserLanguage: {
+      // If enabled, a cookie is set once a user has been redirected to his
+      // preferred language to prevent subsequent redirections
+      // Set to false to redirect every time
+      useCookie: true,
+      // Set to override the default domain of the cookie. Defaults to host of the site.
+      cookieDomain: null,
+      // Cookie name
+      cookieKey: 'i18n_redirected',
+      // Set to always redirect to value stored in the cookie, not just once
+      alwaysRedirect: false,
+      // If no locale for the browsers locale is a match, use this one as a fallback
+      fallbackLocale: 'en'
+    },
   },
   /*
    ** Build configuration

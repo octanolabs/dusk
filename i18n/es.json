@@ -1,0 +1,13 @@
+{
+  "login": {
+    "login": "Iniciar sesión",
+    "passphrase": "contraseña",
+    "error": "contraseña invalida",
+    "required": "necesario"
+  },
+  "menu": {
+    "server": "Servidor",
+    "settings": "Configuraciones",
+    "logout": "Cerrar sesión"
+  }
+}
