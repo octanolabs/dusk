@@ -1,5 +1,6 @@
 <template>
   <v-app dark>
+    <left-drawer v-if="authed" />
     <right-drawer v-if="authed" />
     <v-content>
       <nuxt />
@@ -9,10 +10,12 @@
 
 <script>
 import RightDrawer from '@/components/drawers/Right'
+import LeftDrawer from '@/components/drawers/Left'
 
 export default {
   components: {
-    RightDrawer
+    RightDrawer,
+    LeftDrawer
   },
   data() {
     return {
