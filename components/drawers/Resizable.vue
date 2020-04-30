@@ -17,10 +17,10 @@
     <v-tooltip :left="left" :right="right">
       <template v-slot:activator="{ on }">
         <v-btn
-          v-on="on"
-          @click.stop="toggle()"
           :class="{ 'drawer-handle': true, left: left, right: right }"
           color="secondary"
+          v-on="on"
+          @click.stop="toggle()"
         >
           <v-icon
             v-if="expanded"

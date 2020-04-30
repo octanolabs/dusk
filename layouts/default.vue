@@ -1,7 +1,7 @@
 <template>
   <v-app dark>
-    <right-drawer />
-    <v-content class="">
+    <right-drawer v-if="authed" />
+    <v-content>
       <nuxt />
     </v-content>
   </v-app>

@@ -42,6 +42,7 @@
             system.networkInterfaces[key][0] &&
               system.networkInterfaces[key][0].address !== '127.0.0.1'
           "
+          :key="key"
         >
           <v-list-item-content>
             <v-list-item-title>
