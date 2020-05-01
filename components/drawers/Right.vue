@@ -56,87 +56,111 @@
       </template>
     </v-list>
     <span style="position:absolute;bottom:0;width:100%;padding-right:15px;">
-      <v-list-item-title class="pl-4">
-        {{ $t('system.cpu') }}
-      </v-list-item-title>
-      <v-sheet class="px-4 bg-transparent">
-        <v-sparkline
-          :value="cpuinfo"
-          :gradient="['#e76754', '#6fceb7', '#6fceb7']"
-          gradient-direction="bottom"
-          color="#e76754"
-          padding="1"
-          smooth="2"
-          type="bar"
-          height="100px"
-          auto-line-width
-          fill
-        ></v-sparkline>
-      </v-sheet>
       <v-list>
-        <v-list-item two-line>
+        <v-list-item>
           <v-list-item-content>
             <v-list-item-title>
-              {{ $t('system.memory') }}
+              {{ $t('system.cpu') }}
             </v-list-item-title>
-            <v-list-item-subtitle>
-              <v-progress-linear
-                :value="availableMemory.percent"
-                background-color="secondary"
-                color="primary"
-                height="25"
-                reactive
-              >
-                <strong>
-                  {{ convertKBytes(availableMemory.kBytes, true) }} /
-                  {{ convertKBytes(availableMemory.total, true) }}
-                </strong>
-              </v-progress-linear>
+            <v-list-item-subtitle class="bg-transparent">
+              <v-sparkline
+                :value="cpuinfo"
+                :gradient="['#e76754', '#6fceb7', '#6fceb7']"
+                gradient-direction="bottom"
+                color="#e76754"
+                padding="1"
+                smooth="2"
+                type="bar"
+                height="100px"
+                auto-line-width
+                fill
+              ></v-sparkline>
             </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item v-if="availableSwap.percent" two-line>
-          <v-list-item-content>
-            <v-list-item-title>
-              {{ $t('system.swap') }}
-            </v-list-item-title>
-            <v-list-item-subtitle>
-              <v-progress-linear
-                :value="availableSwap.percent"
-                background-color="secondary"
-                color="primary"
-                height="25"
-                reactive
-              >
-                <strong>
-                  {{ convertKBytes(availableSwap.kBytes, true) }} /
-                  {{ convertKBytes(availableSwap.total, true) }}
-                </strong>
-              </v-progress-linear>
-            </v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item v-if="diskusage" two-line>
-          <v-list-item-content>
-            <v-list-item-title>
-              {{ $t('system.storage') }}
-            </v-list-item-title>
-            <v-list-item-subtitle>
-              <v-progress-linear
-                :value="availableStorage.percent"
-                background-color="secondary"
-                color="primary"
-                height="25"
-                reactive
-              >
-                <strong>
-                  {{ convertBytes(availableStorage.kBytes, true) }} /
-                  {{ convertBytes(availableStorage.total, true) }}
-                </strong>
-              </v-progress-linear>
-            </v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
+        <v-template v-for="key of Object.keys(available)" :key="key">
+          <v-tooltip v-if="available[key].total" left>
+            <template v-slot:activator="{ on }">
+              <v-list-item two-line v-on="on">
+                <v-list-item-content>
+                  <v-list-item-title>
+                    {{ $t('system')[key] }}
+                  </v-list-item-title>
+                  <v-list-item-subtitle>
+                    <v-progress-linear
+                      :value="available[key].percent"
+                      background-color="secondary"
+                      color="primary"
+                      height="25"
+                      reactive
+                    >
+                      <strong>
+                        {{
+                          convertUnits(
+                            available[key].available,
+                            true,
+                            available[key].units
+                          )
+                        }}
+                        /
+                        {{
+                          convertUnits(
+                            available[key].total,
+                            true,
+                            available[key].units
+                          )
+                        }}
+                      </strong>
+                    </v-progress-linear>
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+            </template>
+            <v-subheader>{{ $t('system')[key] }}</v-subheader>
+            <v-simple-table dense transparent>
+              <template v-slot:default>
+                <tbody>
+                  <tr style="color:#6fceb7">
+                    <th>{{ $t('system.available') }}</th>
+                    <td>
+                      {{
+                        convertUnits(
+                          available[key].available,
+                          true,
+                          available[key].units
+                        )
+                      }}
+                    </td>
+                  </tr>
+                  <tr style="color:#e76754">
+                    <th>{{ $t('system.used') }}</th>
+                    <td>
+                      {{
+                        convertUnits(
+                          available[key].used,
+                          true,
+                          available[key].units
+                        )
+                      }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>{{ $t('system.total') }}</th>
+                    <td>
+                      {{
+                        convertUnits(
+                          available[key].total,
+                          true,
+                          available[key].units
+                        )
+                      }}
+                    </td>
+                  </tr>
+                </tbody>
+              </template>
+            </v-simple-table>
+          </v-tooltip>
+        </v-template>
       </v-list>
       <v-list-item-title class="pl-4">
         {{ $t('system.loadavg') }}
@@ -193,52 +217,45 @@ export default {
     networkInterfaces() {
       return this.system.networkInterfaces || {}
     },
-    availableMemory() {
-      return this.meminfo
-        ? {
-            percent: (this.meminfo.MemAvailable / this.meminfo.MemTotal) * 100,
-            kBytes: this.meminfo.MemAvailable,
-            total: this.meminfo.MemTotal
-          }
-        : { percent: 0, kBytes: 0, total: 0 }
-    },
-    availableSwap() {
-      return this.meminfo
-        ? {
-            percent: (this.meminfo.SwapFree / this.meminfo.SwapTotal) * 100,
-            kBytes: this.meminfo.SwapFree,
-            total: this.meminfo.SwapTotal
-          }
-        : { percent: 0, kBytes: 0, total: 0 }
-    },
-    availableStorage() {
-      return this.diskusage
-        ? {
-            percent: (this.diskusage.available / this.diskusage.total) * 100,
-            kBytes: this.diskusage.available,
-            total: this.diskusage.total
-          }
-        : { percent: 0, kBytes: 0, total: 0 }
+    available() {
+      return {
+        memory: this.meminfo
+          ? {
+              percent:
+                (this.meminfo.MemAvailable / this.meminfo.MemTotal) * 100,
+              available: this.meminfo.MemAvailable,
+              total: this.meminfo.MemTotal,
+              used: this.meminfo.MemTotal - this.meminfo.MemAvailable,
+              units: 'kBytes'
+            }
+          : { percent: 0, kBytes: 0, total: 0, used: 0 },
+        swap: this.meminfo
+          ? {
+              percent: (this.meminfo.SwapFree / this.meminfo.SwapTotal) * 100,
+              available: this.meminfo.SwapFree,
+              total: this.meminfo.SwapTotal,
+              used: this.meminfo.SwapTotal - this.meminfo.SwapFree,
+              units: 'kBytes'
+            }
+          : { percent: 0, kBytes: 0, total: 0 },
+        storage: this.diskusage
+          ? {
+              percent: (this.diskusage.available / this.diskusage.total) * 100,
+              available: this.diskusage.available,
+              total: this.diskusage.total,
+              used: this.diskusage.total - this.diskusage.available,
+              units: 'bytes'
+            }
+          : { percent: 0, kBytes: 0, total: 0, used: 0 }
+      }
     }
   },
   methods: {
-    convertKBytes(kBytes, showUnit) {
-      const sizes = ['KB', 'MB', 'GB', 'TB']
-      if (kBytes === 0) {
-        return 'n/a'
-      }
-      const i = parseInt(Math.floor(Math.log(kBytes) / Math.log(1024)))
-      if (i === 0) {
-        return kBytes + ' ' + sizes[i]
-      }
-      let unit = ''
-      if (showUnit) {
-        unit = ' ' + sizes[i]
-      }
-      return (kBytes / 1024 ** i).toFixed(1) + unit
-    },
-    convertBytes(bytes, showUnit) {
-      const sizes = ['bytes', 'KB', 'MB', 'GB', 'TB']
+    convertUnits(bytes, showUnit, units) {
+      const sizes =
+        units === 'bytes'
+          ? ['bytes', 'KB', 'MB', 'GB', 'TB']
+          : ['KB', 'MB', 'GB', 'TB']
       if (bytes === 0) {
         return 'n/a'
       }
