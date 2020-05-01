@@ -1,5 +1,5 @@
 import express from 'express'
-
+import storage from 'node-persist'
 // Create express router
 const router = express.Router()
 
@@ -14,7 +14,29 @@ router.use((req, res, next) => {
   next()
 })
 
-// Add POST - /api/auth/login
+const start = async function() {
+  try {
+    await storage.init({
+      dir: 'persist'
+    })
+    const user = await storage.getItem('user')
+    if (!user) {
+      await storage.setItem('user', {
+        username: 'dusk',
+        hash: 'octano',
+        attempts: 0,
+        locale: 'en'
+      })
+    }
+  } catch (e) {
+    console.log(e)
+  }
+}
+
+start()
+
+
+// Add POST - /session/login
 router.post('/login', (req, res) => {
   // TODO: lol.
   if (req.body.username === 'dusk' && req.body.password === 'octano') {
@@ -24,13 +46,13 @@ router.post('/login', (req, res) => {
   res.status(401).json({ message: 'Bad credentials' })
 })
 
-// Add POST - /api/auth/logout
+// Add POST - /session/logout
 router.post('/logout', (req, res) => {
   delete req.session.user
   res.json({ ok: true })
 })
 
-// Add GET - /api/auth/logout
+// Add GET - /session/user
 router.get('/user', (req, res) => {
   res.json({ user: req.session.user })
 })
