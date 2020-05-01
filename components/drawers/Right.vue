@@ -57,7 +57,7 @@
     </v-list>
     <span style="position:absolute;bottom:0;width:100%;padding-right:15px;">
       <v-list-item-title class="pl-4">
-        CPU
+        {{ $t('system.cpu') }}
       </v-list-item-title>
       <v-sheet class="px-4 bg-transparent">
         <v-sparkline
@@ -77,7 +77,7 @@
         <v-list-item two-line>
           <v-list-item-content>
             <v-list-item-title>
-              Memory
+              {{ $t('system.memory') }}
             </v-list-item-title>
             <v-list-item-subtitle>
               <v-progress-linear
@@ -98,7 +98,7 @@
         <v-list-item v-if="availableSwap.percent" two-line>
           <v-list-item-content>
             <v-list-item-title>
-              Swap
+              {{ $t('system.swap') }}
             </v-list-item-title>
             <v-list-item-subtitle>
               <v-progress-linear
@@ -119,7 +119,7 @@
         <v-list-item v-if="diskusage" two-line>
           <v-list-item-content>
             <v-list-item-title>
-              Storage
+              {{ $t('system.storage') }}
             </v-list-item-title>
             <v-list-item-subtitle>
               <v-progress-linear
@@ -139,14 +139,14 @@
         </v-list-item>
       </v-list>
       <v-list-item-title class="pl-4">
-        Load Average
+        {{ $t('system.loadavg') }}
       </v-list-item-title>
       <v-simple-table style="border-radius:0;">
         <thead>
           <tr>
-            <th class="text-center">1m</th>
-            <th class="text-center">5m</th>
-            <th class="text-center">15m</th>
+            <th class="text-center">{{ $t('system.1minute') }}</th>
+            <th class="text-center">{{ $t('system.5minutes') }}</th>
+            <th class="text-center">{{ $t('system.15minutes') }}</th>
           </tr>
         </thead>
         <tbody>

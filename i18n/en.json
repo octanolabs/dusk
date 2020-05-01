@@ -9,5 +9,18 @@
     "server": "Server",
     "settings": "Settings",
     "logout": "Logout"
+  },
+  "system": {
+    "cpu": "CPU",
+    "memory": "Memory",
+    "swap": "Swap",
+    "storage": "Storage",
+    "loadavg": "Load Average",
+    "1minute": "1m",
+    "5minutes": "5m",
+    "15minutes": "15m",
+    "available": "Available",
+    "total": "Total",
+    "used": "Used"
   }
 }
