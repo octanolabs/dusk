@@ -44,17 +44,16 @@ pre {
   max-height: calc(100vh);
 }
 
-.container {
-  padding: 0 !important;
-  margin: 0 !important;
-}
-
 .bg-transparent {
   background-color: $transparent !important;
 }
 
 .v-btn {
   text-transform:none !important;
+}
+
+.v-tooltip__content {
+  background-color: #1E1E1E !important;
 }
 
 .custom-highlight-row {
