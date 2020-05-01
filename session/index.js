@@ -1,5 +1,7 @@
+import consola from 'consola'
 import express from 'express'
 import storage from 'node-persist'
+import bcrypt from 'bcrypt'
 // Create express router
 const router = express.Router()
 
@@ -14,6 +16,9 @@ router.use((req, res, next) => {
   next()
 })
 
+const SALT_ROUNDS = 16
+const ONE_HOUR = 3600
+
 const start = async function() {
   try {
     await storage.init({
@@ -21,15 +26,21 @@ const start = async function() {
     })
     const user = await storage.getItem('user')
     if (!user) {
-      await storage.setItem('user', {
-        username: 'dusk',
-        hash: 'octano',
-        attempts: 0,
-        locale: 'en'
+      bcrypt.hash('octano', SALT_ROUNDS, async function(err, hash) {
+        if (err) consola.error(new Error(err))
+        await storage.setItem('user', {
+          username: 'dusk',
+          hash: hash,
+          locale: 'en',
+          maxAttempts: 5,
+          locktime: ONE_HOUR,
+          attempts: 0,
+          locked: 0
+        })
       })
     }
   } catch (e) {
-    console.log(e)
+    consola.error(new Error(e))
   }
 }
 
@@ -37,13 +48,26 @@ start()
 
 
 // Add POST - /session/login
-router.post('/login', (req, res) => {
-  // TODO: lol.
-  if (req.body.username === 'dusk' && req.body.password === 'octano') {
-    req.session.user = { username: req.body.username }
-    return res.json({ username: req.body.username })
+router.post('/login', async (req, res) => {
+  try {
+    const user = await storage.getItem('user')
+    if (!user || user.username !== req.body.username.toLowerCase()) {
+      // user store does not exist?? or username is invalid.
+      res.status(401).json({ message: 'Bad credentials' })
+    } else {
+      bcrypt.compare(req.body.password, user.hash, function(err, result) {
+        if (!err && result === true) {
+          req.session.user = { username: req.body.username }
+          return res.json({ username: req.body.username })
+        } else {
+          // invalid password
+          res.status(401).json({ message: 'Bad credentials' })
+        }
+      })
+    }
+  } catch (e) {
+    res.status(401).json({ message: 'Bad credentials' })
   }
-  res.status(401).json({ message: 'Bad credentials' })
 })
 
 // Add POST - /session/logout
