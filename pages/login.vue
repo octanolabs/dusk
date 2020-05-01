@@ -23,8 +23,9 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer />
-            <v-btn color="primary" type="submit">
-              {{ $t('login.login') }}
+            <v-btn color="primary" type="submit" :disabled="spin">
+              <v-icon v-if="spin === true">mdi-cog mdi-spin</v-icon>
+              <span v-else>{{ $t('login.login') }}</span>
             </v-btn>
           </v-card-actions>
         </form>
@@ -57,6 +58,7 @@ export default {
       formPassword: '',
       showPassword: false,
       snackbar: false,
+      spin: false,
       rules: {
         required: (value) => !!value || this.$t('login.required')
       }
@@ -70,16 +72,19 @@ export default {
   methods: {
     async login() {
       try {
+        this.spin = true
         await this.$auth.loginWith('local', {
           data: { username: 'dusk', password: this.formPassword }
         })
         this.formPassword = ''
         this.formError = null
+        this.spin = false
         // this.$router.push({ path: '/dashboard' })
       } catch (e) {
         this.formError = this.$t('login.error')
         this.snackbar = true
         this.formPassword = ''
+        this.spin = true
       }
     }
   }
