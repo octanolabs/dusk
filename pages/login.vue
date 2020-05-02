@@ -92,7 +92,7 @@ export default {
         this.formError = this.$t('login.error')
         this.snackbar = true
         this.formPassword = ''
-        this.spin = true
+        this.spin = false
       }
     }
   }
