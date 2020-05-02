@@ -78,8 +78,8 @@
             </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
-        <v-template v-for="key of Object.keys(available)" :key="key">
-          <v-tooltip v-if="available[key].total" left>
+        <template v-for="key of Object.keys(available)">
+          <v-tooltip v-if="available[key].total" :key="key" left>
             <template v-slot:activator="{ on }">
               <v-list-item two-line v-on="on">
                 <v-list-item-content>
@@ -160,7 +160,7 @@
               </template>
             </v-simple-table>
           </v-tooltip>
-        </v-template>
+        </template>
       </v-list>
       <v-list-item-title class="pl-4">
         {{ $t('system.loadavg') }}
