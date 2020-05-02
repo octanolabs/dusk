@@ -11,6 +11,13 @@
         <form v-if="!authenticated" @submit.prevent="login">
           <v-card-text>
             <v-text-field
+              v-model="formUsername"
+              class="input-group--focused"
+              :label="$t('login.username')"
+              name="username"
+              :rules="[rules.required]"
+            ></v-text-field>
+            <v-text-field
               v-model="formPassword"
               class="input-group--focused"
               :label="$t('login.passphrase')"
@@ -56,6 +63,7 @@ export default {
     return {
       formError: null,
       formPassword: '',
+      formUsername: '',
       showPassword: false,
       snackbar: false,
       spin: false,
@@ -74,7 +82,7 @@ export default {
       try {
         this.spin = true
         await this.$auth.loginWith('local', {
-          data: { username: 'dusk', password: this.formPassword }
+          data: { username: this.formUsername, password: this.formPassword }
         })
         this.formPassword = ''
         this.formError = null

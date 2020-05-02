@@ -1,6 +1,7 @@
 {
   "login": {
     "login": "Iniciar sesión",
+    "username": "username",
     "passphrase": "contraseña",
     "error": "contraseña invalida",
     "required": "necesario"

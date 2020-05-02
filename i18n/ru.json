@@ -1,6 +1,7 @@
 {
   "login": {
     "login": "авторизоваться",
+    "username": "username",
     "passphrase": "пароль",
     "error": "Неверный пароль",
     "required": "требуется"

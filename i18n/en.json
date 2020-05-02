@@ -1,6 +1,7 @@
 {
   "login": {
     "login": "Login",
+    "username": "username",
     "passphrase": "passphrase",
     "error": "invalid passphrase",
     "required": "required"
