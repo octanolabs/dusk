@@ -23,5 +23,42 @@
     "available": "Available",
     "total": "Total",
     "used": "Used"
+  },
+  "account": {
+    "account": "Account",
+    "changePassphrase": "Change Passphrase",
+    "username": "username",
+    "save": "Save",
+    "updated": {
+      "success": "Account settings updated sucessfully!",
+      "error": "Failed to updated account settings."
+    },
+    "passphrase": {
+      "passphrase": "passphrase",
+      "current": "current passphrase",
+      "new": "new passphrase",
+      "confirm": "confirm new passphrase",
+      "enter": "Enter current passphrase"
+    },
+    "attempts": {
+      "label": "max. attempts",
+      "info": "Maximum number of failed login attempts before initiating account lockdown.",
+      "title": "Max. Login Attempts"
+    },
+    "locktime": {
+      "label": "locktime (s)",
+      "info": "Time (in seconds) to lock account if max. attempts is triggered.",
+      "title": "Account Lock Time"
+    },
+    "locale": {
+      "label": "language",
+      "info": "Select language (override browser language)",
+      "title": "Language"
+    },
+    "username": {
+      "label": "username",
+      "minlen": "Username must be atleast 4 characters in length"
+    },
+    "save": "Save"
   }
 }

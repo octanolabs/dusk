@@ -33,6 +33,33 @@
                     style="max-width:15px;margin-top:10px;margin-right:5px"
                   />
                   <v-subtitle>
+                    {{ $t('account.locale.title') }}
+                  </v-subtitle>
+                  <v-divider style="margin-top:10px;margin-left:5px" />
+                </v-row>
+                <v-row class="px-5">
+                  <p>
+                    <small>
+                      {{ $t('account.locale.info') }}
+                    </small>
+                  </p>
+                </v-row>
+                <v-row class="px-4">
+                  <v-select
+                    v-model="account.locale"
+                    :items="langs"
+                    :label="$t('account.locale.label')"
+                    item-text="name"
+                    item-value="code"
+                    outlined
+                    @change="changeLocale()"
+                  ></v-select>
+                </v-row>
+                <v-row>
+                  <v-divider
+                    style="max-width:15px;margin-top:10px;margin-right:5px"
+                  />
+                  <v-subtitle>
                     {{ $t('account.attempts.title') }}
                   </v-subtitle>
                   <v-divider style="margin-top:10px;margin-left:5px" />
@@ -144,7 +171,7 @@ export default {
         password: '',
         showPassword: false,
         username: this.$auth.user.username,
-        locale: this.$auth.user.locale
+        locale: this.$i18n.locale
       },
       passphrase: {
         current: '',
@@ -175,10 +202,16 @@ export default {
       }
     },
     langs() {
-      return this.$i18n.locales.filter((i) => i.code !== this.$i18n.locale)
+      return this.$i18n.locales
+    },
+    lang() {
+      return this.$i18n.locales[this.$i18n.locale]
     }
   },
   methods: {
+    changeLocale() {
+      this.$i18n.setLocale(this.account.locale)
+    },
     saveSettings() {
       this.spin = true
       const self = this
@@ -187,7 +220,8 @@ export default {
           username: this.account.username,
           maxAttempts: this.account.attempts,
           locktime: this.account.locktime,
-          password: this.account.password
+          password: this.account.password,
+          locale: this.account.locale
         })
         .then(function(response) {
           if (!response.data.success) {

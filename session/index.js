@@ -99,7 +99,7 @@ router.post('/update-settings', async (req, res) => {
           await storage.setItem('user', {
             username: req.body.username,
             hash: user.hash,
-            locale: 'en', // update lang - TODO
+            locale: req.body.locale,
             maxAttempts: req.body.maxAttempts,
             locktime: req.body.locktime,
             attempts: user.attempts,
