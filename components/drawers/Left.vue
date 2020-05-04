@@ -17,7 +17,11 @@
       <v-list nav dense>
         <v-tooltip right>
           <template v-slot:activator="{ on }">
-            <v-list-item link v-on="on">
+            <v-list-item
+              link
+              v-on="on"
+              @click.stop="showAccountSettings = true"
+            >
               <v-list-item-icon>
                 <v-icon>mdi-account-cog</v-icon>
               </v-list-item-icon>
@@ -39,11 +43,22 @@
         </v-tooltip>
       </v-list>
     </template>
+    <account-settings v-model="showAccountSettings" />
   </v-navigation-drawer>
 </template>
 
 <script>
+import AccountSettings from '../forms/AccountSettings.vue'
+
 export default {
+  components: {
+    AccountSettings
+  },
+  data() {
+    return {
+      showAccountSettings: false
+    }
+  },
   methods: {
     logout() {
       this.$auth.logout()
