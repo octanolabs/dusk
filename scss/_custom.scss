@@ -56,6 +56,10 @@ pre {
   background-color: #1E1E1E !important;
 }
 
+.v-bottom-sheet.v-dialog.v-bottom-sheet--inset {
+  max-width: 640px !important;
+}
+
 .custom-highlight-row {
   background-color: $primary;
 }

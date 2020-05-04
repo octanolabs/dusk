@@ -57,8 +57,12 @@ router.post('/login', async (req, res) => {
     } else {
       bcrypt.compare(req.body.password, user.hash, function(err, result) {
         if (!err && result === true) {
-          req.session.user = { username: req.body.username }
-          return res.json({ username: req.body.username })
+          req.session.user = {
+            username: user.username,
+            maxAttempts: user.maxAttempts,
+            locktime: user.locktime
+          }
+          return res.json({ username: user.username })
         } else {
           // invalid password
           res.status(401).json({ message: 'Bad credentials' })
@@ -79,6 +83,42 @@ router.post('/logout', (req, res) => {
 // Add GET - /session/user
 router.get('/user', (req, res) => {
   res.json({ user: req.session.user })
+})
+
+router.post('/update-settings', async (req, res) => {
+  try {
+    const user = await storage.getItem('user')
+    if (!user || !req.session.user || user.username !== req.session.user.username || req.body.username.length < 4) {
+      // user store does not exist?? or username is invalid.
+      res.json({ success: false })
+    } else {
+      // verify password
+      bcrypt.compare(req.body.password, user.hash, async function(err, result) {
+        if (!err && result === true) {
+          //password is correct
+          await storage.setItem('user', {
+            username: req.body.username,
+            hash: user.hash,
+            locale: 'en', // update lang - TODO
+            maxAttempts: req.body.maxAttempts,
+            locktime: req.body.locktime,
+            attempts: user.attempts,
+            locked: user.locked
+          })
+          req.session.user = {
+            username: req.body.username,
+            maxAttempts: req.body.maxAttempts,
+            locktime: req.body.locktime
+          }
+          res.json({ success: true })
+        } else {
+          res.json({ success: false })
+        }
+      })
+    }
+  } catch (e) {
+    res.json({ success: false, message: e })
+  }
 })
 
 // Export the server middleware
