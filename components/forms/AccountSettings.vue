@@ -8,6 +8,7 @@
           absolute
           top
           right
+          :disabled="spin"
           @click.stop="showme = false"
         >
           <v-icon>mdi-close</v-icon>
@@ -189,13 +190,12 @@ export default {
           password: this.account.password
         })
         .then(function(response) {
-          console.log(response)
           if (!response.data.success) {
-            self.snackbar.text = self.$t(response.data.message)
+            self.snackbar.text = self.$t('account.updated.error')
             self.snackbar.show = true
             self.snackbar.color = 'secondary'
           } else {
-            self.snackbar.text = self.$t('account.updated')
+            self.snackbar.text = self.$t('account.updated.success')
             self.snackbar.show = true
             self.snackbar.color = 'primary'
           }
