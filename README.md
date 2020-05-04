@@ -2,6 +2,11 @@
 
 > Dashboard for managing a node
 
+## Default Credentials
+
+username: dusk
+passphrase: octano
+
 ## Build Setup
 
 ``` bash
