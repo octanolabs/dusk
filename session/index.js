@@ -16,7 +16,7 @@ router.use((req, res, next) => {
   next()
 })
 
-const SALT_ROUNDS = 16
+const DEFAULT_SALT_ROUNDS = 12
 const ONE_HOUR = 3600
 
 const start = async function() {
@@ -26,16 +26,16 @@ const start = async function() {
     })
     const user = await storage.getItem('user')
     if (!user) {
-      bcrypt.hash('octano', SALT_ROUNDS, async function(err, hash) {
+      bcrypt.hash('octano', DEFAULT_SALT_ROUNDS, async function(err, hash) {
         if (err) consola.error(new Error(err))
         await storage.setItem('user', {
           username: 'dusk',
           hash: hash,
-          locale: 'en',
           maxAttempts: 5,
           locktime: ONE_HOUR,
           attempts: 0,
-          locked: 0
+          locked: 0,
+          bcrypt: DEFAULT_SALT_ROUNDS
         })
       })
     }
@@ -60,7 +60,8 @@ router.post('/login', async (req, res) => {
           req.session.user = {
             username: user.username,
             maxAttempts: user.maxAttempts,
-            locktime: user.locktime
+            locktime: user.locktime,
+            bcrypt: user.bcrypt
           }
           return res.json({ username: user.username })
         } else {
@@ -103,6 +104,7 @@ router.post('/update-settings', async (req, res) => {
             maxAttempts: req.body.maxAttempts,
             locktime: req.body.locktime,
             attempts: user.attempts,
+            bcrypt: user.bcrypt,
             locked: user.locked
           })
           req.session.user = {
@@ -111,6 +113,47 @@ router.post('/update-settings', async (req, res) => {
             locktime: req.body.locktime
           }
           res.json({ success: true })
+        } else {
+          res.json({ success: false })
+        }
+      })
+    }
+  } catch (e) {
+    res.json({ success: false, message: e })
+  }
+})
+
+router.post('/change-passphrase', async (req, res) => {
+  try {
+    const user = await storage.getItem('user')
+    if (!user || !req.session.user || user.username !== req.session.user.username) {
+      // user store does not exist?? or username is invalid.
+      res.json({ success: false })
+    } else {
+      // verify password
+      bcrypt.compare(req.body.password, user.hash, async function(err, result) {
+        if (!err && result === true) {
+          //passphrase is correct
+          //hash new passphrase
+          bcrypt.hash(req.body.new, req.body.bcrypt, async function(err, hash) {
+            await storage.setItem('user', {
+              username: user.username,
+              hash: hash,
+              locale: user.locale,
+              maxAttempts: user.maxAttempts,
+              locktime: user.locktime,
+              attempts: user.attempts,
+              bcrypt: req.body.bcrypt,
+              locked: user.locked
+            })
+            req.session.user = {
+              username: user.username,
+              maxAttempts: user.maxAttempts,
+              locktime: user.locktime,
+              bcrypt: req.body.bcrypt
+            }
+            res.json({ success: true })
+          })
         } else {
           res.json({ success: false })
         }

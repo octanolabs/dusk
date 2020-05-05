@@ -33,12 +33,21 @@
       "success": "Account settings updated sucessfully!",
       "error": "Failed to updated account settings."
     },
+    "changed": {
+      "success": "Passphrase changed sucessfully!",
+      "error": "Failed to change passphrase."
+    },
     "passphrase": {
       "passphrase": "passphrase",
       "current": "current passphrase",
-      "new": "new passphrase",
-      "confirm": "confirm new passphrase",
+      "new": "New passphrase",
+      "confirm": "Confirm new passphrase",
       "enter": "Enter current passphrase"
+    },
+    "bcrypt": {
+      "label": "key expansion rounds",
+      "info": "Number of bcrypt rounds to use when hashing passphrase.",
+      "title": "Salt Rounds (bcrypt)"
     },
     "attempts": {
       "label": "max. attempts",
