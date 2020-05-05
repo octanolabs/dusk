@@ -27,7 +27,6 @@
   "account": {
     "account": "Account",
     "changePassphrase": "Change Passphrase",
-    "username": "username",
     "save": "Save",
     "updated": {
       "success": "Account settings updated sucessfully!",
@@ -42,7 +41,9 @@
       "current": "current passphrase",
       "new": "New passphrase",
       "confirm": "Confirm new passphrase",
-      "enter": "Enter current passphrase"
+      "enter": "Enter current passphrase",
+      "validation": "Passphrase must contain at least: \n* 1 number\n* 2 special characters,\n* 1 lowercase,\n* 1 uppercase\n* be greater than 8 chracters in length",
+      "mustmatch": "Passphrases do not match."
     },
     "bcrypt": {
       "label": "key expansion rounds",
@@ -66,7 +67,7 @@
     },
     "username": {
       "label": "username",
-      "minlen": "Username must be atleast 4 characters in length"
+      "minlen": "Username must be atleast 4 characters in length and only contain lowercase (a-z)."
     },
     "save": "Save"
   }

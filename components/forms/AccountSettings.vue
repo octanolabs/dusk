@@ -25,7 +25,7 @@
                     class="input-group--focused"
                     :label="$t('account.username.label')"
                     name="username"
-                    :rules="[rules.required]"
+                    :rules="[rules.required, rules.minlen]"
                   ></v-text-field>
                 </v-row>
                 <v-row>
@@ -142,7 +142,7 @@
                     name="newPassphrase"
                     :append-icon="showPassphrase ? 'mdi-eye' : 'mdi-eye-off'"
                     :type="showPassphrase ? 'text' : 'password'"
-                    :rules="[rules.required]"
+                    :rules="[rules.required, rules.mustContain]"
                     @click:append="showPassphrase = !showPassphrase"
                   ></v-text-field>
                 </v-row>
@@ -154,7 +154,7 @@
                     name="confirmPassphrase"
                     :append-icon="showPassphrase ? 'mdi-eye' : 'mdi-eye-off'"
                     :type="showPassphrase ? 'text' : 'password'"
-                    :rules="[rules.required]"
+                    :rules="[rules.required, rules.mustMatch]"
                     @click:append="showPassphrase = !showPassphrase"
                   ></v-text-field>
                 </v-row>
@@ -260,11 +260,21 @@ export default {
         color: 'primary'
       },
       showPassphrase: false,
+      testPassphrase: new RegExp(
+        /^(?=.*\d)(?=(.*\W){2})(?=.*[a-z])(?=.*[A-Z])(?!.*\s).{8,72}$/
+      ),
+      testUsername: new RegExp(/^([a-z]{4,32})$/),
       spin: false,
       rules: {
         required: (value) => !!value || this.$t('login.required'),
         minlen: (value) =>
-          value.length >= 4 ? true : this.$t('account.username.minlen')
+          this.testUsername.test(value) || this.$t('account.username.minlen'),
+        mustContain: (value) =>
+          this.testPassphrase.test(value) ||
+          this.$t('account.passphrase.validation'),
+        mustMatch: (value) =>
+          this.passphrase.new === value ||
+          this.$t('account.passphrase.mustmatch')
       }
     }
   },
