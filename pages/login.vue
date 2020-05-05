@@ -87,7 +87,7 @@ export default {
         this.formPassword = ''
         this.formError = null
         this.spin = false
-        // this.$router.push({ path: '/dashboard' })
+        this.$router.push({ path: '/' })
       } catch (e) {
         this.formError = this.$t('login.error')
         this.snackbar = true

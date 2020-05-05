@@ -62,16 +62,52 @@ router.post('/login', async (req, res) => {
       // missing credentials
       res.status(401).json({ message: 'Bad credentials' })
     } else {
-      bcrypt.compare(req.body.password, user.hash, function(err, result) {
-        if (!err && result === true && user.username === req.body.username.toLowerCase()) {
-          // both password and username are correct, success!
-          req.session.user = {
+      const usernamePass = user.username === req.body.username.toLowerCase()
+      bcrypt.compare(req.body.password, user.hash, async function(err, result) {
+        if (!err && result === true && usernamePass) {
+          // both password and username are correct
+          // make sure account is not locked
+          if ((user.locked + (user.locktime*1000)) > Date.now()) {
+            // account is locked
+            res.status(401).json({ message: 'Bad credentials' })
+          } else {
+            if (user.attempts > 0 || user.locked > 0) {
+              await storage.setItem('user', {
+                username: user.username,
+                hash: user.hash,
+                locale: user.locale,
+                maxAttempts: user.maxAttempts,
+                locktime: user.locktime,
+                attempts: 0,
+                bcrypt: user.bcrypt,
+                locked: 0
+              })
+            }
+            req.session.user = {
+              username: user.username,
+              maxAttempts: user.maxAttempts,
+              locktime: user.locktime,
+              bcrypt: user.bcrypt
+            }
+            return res.json({ username: user.username })
+          }
+        } else if (!err && usernamePass) {
+          // password failed but username is correct.
+          // increment failed login attempts
+          const failedAttempts = user.attempts + 1
+          // set locked if failed attempts >= max attempts
+          const locked = failedAttempts < user.maxAttempts ? 0 : Date.now()
+          await storage.setItem('user', {
             username: user.username,
+            hash: user.hash,
+            locale: user.locale,
             maxAttempts: user.maxAttempts,
             locktime: user.locktime,
-            bcrypt: user.bcrypt
-          }
-          return res.json({ username: user.username })
+            attempts: failedAttempts,
+            bcrypt: user.bcrypt,
+            locked: locked
+          })
+          return res.status(401).json({ message: 'Bad credentials' })
         } else {
           // invalid credentials
           res.status(401).json({ message: 'Bad credentials' })

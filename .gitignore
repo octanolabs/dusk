@@ -90,4 +90,4 @@ sw.*
 *.swp
 
 # Dusk persistent stores
-# persist
+persist
