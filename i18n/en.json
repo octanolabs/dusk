@@ -3,7 +3,7 @@
     "login": "Login",
     "username": "username",
     "passphrase": "passphrase",
-    "error": "invalid passphrase",
+    "error": "invalid credentials",
     "required": "required"
   },
   "menu": {

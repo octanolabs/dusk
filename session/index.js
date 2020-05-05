@@ -51,12 +51,20 @@ start()
 router.post('/login', async (req, res) => {
   try {
     const user = await storage.getItem('user')
-    if (!user || user.username !== req.body.username.toLowerCase()) {
-      // user store does not exist?? or username is invalid.
+    /* compare passphrase first if possible to ensure bcrypts compute cost
+     * also applies if username is invalid otherwise response times can be used
+     * to validate a usernames existence.
+     *
+     * Return exactly the same on all fail conditions, do not leak which value
+     * is invalid (username or passphrase).
+     */
+    if (!user || !req.body.password || !req.body.username) {
+      // missing credentials
       res.status(401).json({ message: 'Bad credentials' })
     } else {
       bcrypt.compare(req.body.password, user.hash, function(err, result) {
-        if (!err && result === true) {
+        if (!err && result === true && user.username === req.body.username.toLowerCase()) {
+          // both password and username are correct, success!
           req.session.user = {
             username: user.username,
             maxAttempts: user.maxAttempts,
@@ -65,12 +73,13 @@ router.post('/login', async (req, res) => {
           }
           return res.json({ username: user.username })
         } else {
-          // invalid password
+          // invalid credentials
           res.status(401).json({ message: 'Bad credentials' })
         }
       })
     }
   } catch (e) {
+    // some other issue
     res.status(401).json({ message: 'Bad credentials' })
   }
 })
