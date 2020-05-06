@@ -73,5 +73,16 @@
       "minlen": "Username must be atleast 4 characters in length and only contain lowercase (a-z)."
     },
     "save": "Save"
+  },
+  "networks": {
+    "name": "network name",
+    "type": "type",
+    "engine": "consensus engine",
+    "networkId": "networkId",
+    "chainId": "chainId",
+    "explorer": "block explorer",
+    "stats": "network stats",
+    "mainnet": "mainnet",
+    "testnet": "testnet"
   }
 }

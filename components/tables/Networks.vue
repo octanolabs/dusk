@@ -12,9 +12,9 @@
     </template>
     <template v-slot:item.testnet="{ item }">
       <v-chip v-if="item.testnet === true" color="secondary" label>
-        Testnet
+        {{ $t('networks.testnet') }}
       </v-chip>
-      <v-chip v-else color="primary" label>Mainnet</v-chip>
+      <v-chip v-else color="primary" label>{{ $t('networks.mainnet') }}</v-chip>
     </template>
     <template v-slot:item.explorer="{ item }">
       <a :href="item.explorer" target="_blank">{{ item.explorer }}</a>
@@ -31,16 +31,16 @@ export default {
     return {
       headers: [
         {
-          text: 'Name',
+          text: this.$t('networks.name'),
           align: 'start',
           value: 'name'
         },
-        { text: 'Type', value: 'testnet' },
-        { text: 'Consensus Engine', value: 'engine' },
-        { text: 'Network ID', value: 'networkId' },
-        { text: 'Chain ID', value: 'chainId' },
-        { text: 'Explorer', value: 'explorer' },
-        { text: 'Stats', value: 'ethstats' }
+        { text: this.$t('networks.type'), value: 'testnet' },
+        { text: this.$t('networks.engine'), value: 'engine' },
+        { text: this.$t('networks.networkId'), value: 'networkId' },
+        { text: this.$t('networks.chainId'), value: 'chainId' },
+        { text: this.$t('networks.explorer'), value: 'explorer' },
+        { text: this.$t('networks.stats'), value: 'ethstats' }
       ]
     }
   },
