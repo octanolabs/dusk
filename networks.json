@@ -2,16 +2,21 @@
   "networks": [
     {
       "networkId": 88,
+      "chainId": 8,
       "testnet": false,
       "name": "Ubiq",
       "icon": "ubiq.svg",
-      "engine": "ubqhash"
+      "engine": "ubqhash",
+      "explorer": "https://ubiqscan.io"
     },
-    { "networkId": 89,
+    {
+      "networkId": 89,
+      "chainId": 9,
       "testnet": true,
       "name": "Igni",
       "icon": "igni.svg",
-      "engine": "clique"
+      "engine": "clique",
+      "explorer": "https://igni.ubiqscan.io"
     }
   ]
 }

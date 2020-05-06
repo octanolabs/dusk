@@ -27,6 +27,9 @@
                 </v-chip>
                 <v-chip v-else color="primary" label>Mainnet</v-chip>
               </template>
+              <template v-slot:item.explorer="{ item }">
+                <a :href="item.explorer" target="_blank">{{ item.explorer }}</a>
+              </template>
             </v-data-table>
           </v-card-text>
         </v-card>
@@ -52,7 +55,9 @@ export default {
           value: 'testnet'
         },
         { text: 'Consensus Engine', value: 'engine' },
-        { text: 'NetworkId', value: 'networkId' }
+        { text: 'Network ID', value: 'networkId' },
+        { text: 'Chain ID', value: 'chainId' },
+        { text: 'Explorer', value: 'explorer' }
       ]
     }
   },
