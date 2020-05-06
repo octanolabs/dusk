@@ -29,6 +29,7 @@ export default {
   },
   created() {
     this.$store.dispatch('system')
+    this.$store.dispatch('networks')
     const t = this
     setInterval(function() {
       t.$store.dispatch('system')

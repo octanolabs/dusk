@@ -1,0 +1,17 @@
+{
+  "networks": [
+    {
+      "networkId": 88,
+      "testnet": false,
+      "name": "Ubiq",
+      "icon": "ubiq.svg",
+      "engine": "ubqhash"
+    },
+    { "networkId": 89,
+      "testnet": true,
+      "name": "Igni",
+      "icon": "igni.svg",
+      "engine": "clique"
+    }
+  ]
+}
