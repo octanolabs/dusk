@@ -91,3 +91,6 @@ sw.*
 
 # Dusk persistent stores
 persist
+
+# Dusk custom packages
+packages/custom/
