@@ -19,6 +19,9 @@
     <template v-slot:item.explorer="{ item }">
       <a :href="item.explorer" target="_blank">{{ item.explorer }}</a>
     </template>
+    <template v-slot:item.ethstats="{ item }">
+      <a :href="item.ethstats" target="_blank">{{ item.ethstats }}</a>
+    </template>
   </v-data-table>
 </template>
 
@@ -32,15 +35,12 @@ export default {
           align: 'start',
           value: 'name'
         },
-        {
-          text: 'Type',
-          align: 'end',
-          value: 'testnet'
-        },
+        { text: 'Type', value: 'testnet' },
         { text: 'Consensus Engine', value: 'engine' },
         { text: 'Network ID', value: 'networkId' },
         { text: 'Chain ID', value: 'chainId' },
-        { text: 'Explorer', value: 'explorer' }
+        { text: 'Explorer', value: 'explorer' },
+        { text: 'Stats', value: 'ethstats' }
       ]
     }
   },

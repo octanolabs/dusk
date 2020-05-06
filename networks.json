@@ -7,7 +7,8 @@
       "name": "Ubiq",
       "icon": "ubiq.svg",
       "engine": "ubqhash",
-      "explorer": "https://ubiqscan.io"
+      "explorer": "https://ubiqscan.io",
+      "ethstats": "https://ubiq.darcr.us"
     },
     {
       "networkId": 89,
@@ -16,7 +17,8 @@
       "name": "Igni",
       "icon": "igni.svg",
       "engine": "clique",
-      "explorer": "https://igni.ubiqscan.io"
+      "explorer": "https://igni.ubiqscan.io",
+      "ethstats": "https://stats.octano.dev"
     }
   ]
 }
