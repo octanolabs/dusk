@@ -1,17 +1,30 @@
 <template>
   <v-navigation-drawer left app fixed mini-variant>
     <v-list nav dense>
-      <v-tooltip right>
-        <template v-slot:activator="{ on }">
-          <v-list-item link v-on="on">
-            <v-list-item-icon>
-              <v-icon>mdi-server</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>{{ $t('menu.server') }}</v-list-item-title>
-          </v-list-item>
-        </template>
-        <span>{{ $t('menu.server') }}</span>
-      </v-tooltip>
+      <v-list-item link to="/">
+        <v-list-item-icon>
+          <v-icon>mdi-server</v-icon>
+        </v-list-item-icon>
+        <v-list-item-title>{{ $t('menu.server') }}</v-list-item-title>
+      </v-list-item>
+      <v-list-item link to="/networks">
+        <v-list-item-icon>
+          <v-icon>mdi-lan</v-icon>
+        </v-list-item-icon>
+        <v-list-item-title>{{ $t('menu.networks') }}</v-list-item-title>
+      </v-list-item>
+      <v-list-item link to="/clients">
+        <v-list-item-icon>
+          <v-icon>mdi-cloud-download</v-icon>
+        </v-list-item-icon>
+        <v-list-item-title>{{ $t('menu.clients') }}</v-list-item-title>
+      </v-list-item>
+      <v-list-item link to="/packages">
+        <v-list-item-icon>
+          <v-icon>mdi-package</v-icon>
+        </v-list-item-icon>
+        <v-list-item-title>{{ $t('menu.packages') }}</v-list-item-title>
+      </v-list-item>
     </v-list>
     <template v-slot:append>
       <v-list nav dense>

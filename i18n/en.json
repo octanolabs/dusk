@@ -8,6 +8,9 @@
   },
   "menu": {
     "server": "Server",
+    "networks": "Networks",
+    "clients": "Clients",
+    "packages": "Packages",
     "settings": "Settings",
     "logout": "Logout"
   },
