@@ -1,10 +1,16 @@
 {
-  "name": "gubiq",
-  "version": "1.0.0",
-  "author": {
-    "name": "Luke Williams",
-    "github": "iquidus"
+  "package": {
+    "id": "gubiq",
+    "fullname": "go-ubiq",
+    "version": 1,
+    "type": "geth"
   },
-  "type": "client",
-  "github": "octanolabs/duskpkg-gubiq"
+  "client": {
+    "local": "client.json",
+    "remote": "octanolabs/dusk/develop/packages/octano/gubiq/client.json"
+  },
+  "networks": {
+    "local": "networks.json",
+    "remote": "octanolabs/dusk/develop/packages/octano/gubiq/networks.json"
+  }
 }

@@ -68,7 +68,17 @@
     "rpcPort": 8588
   },
   "options": {
-    "networks": [ 88 ],
+    "networks": [
+      {
+        "id": 88,
+        "version": "1.0.0"
+      },
+      {
+        "id": 89,
+        "flag": "--igni",
+        "version": "3.1.0"
+      }
+    },
     "syncmode": ["fast", "full"],
     "gcmode": ["full", "archive"]
   }

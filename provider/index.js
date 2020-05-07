@@ -3,6 +3,7 @@ import NanoTimer from 'nanotimer'
 
 import system from './system.js'
 import networks from './networks.js'
+import packages from './packages.js'
 
 const providers = {
   system: {
@@ -22,6 +23,15 @@ const providers = {
     },
     get() {
       return networks.get()
+    }
+  },
+  packages: {
+    timer: new NanoTimer(),
+    set() {
+      packages.set('./packages')
+    },
+    get() {
+      return packages.get()
     }
   }
 }

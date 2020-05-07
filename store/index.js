@@ -8,6 +8,7 @@ export const state = () => ({
   },
   system: {},
   networks: [],
+  packages: {},
   version: '0.0.1'
 })
 
@@ -20,6 +21,9 @@ export const mutations = {
   },
   SET_NETWORKS(state, data) {
     state.networks = data
+  },
+  SET_PACKAGES(state, data) {
+    state.packages = data
   }
 }
 
@@ -39,6 +43,17 @@ export const actions = {
     try {
       const { data } = await axios.get('/api/networks')
       commit('SET_NETWORKS', data.info.networks)
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        consola.error(new Error('Bad credentials'))
+      }
+      consola.error(new Error(error))
+    }
+  },
+  async packages({ commit }) {
+    try {
+      const { data } = await axios.get('/api/packages')
+      commit('SET_PACKAGES', data.info)
     } catch (error) {
       if (error.response && error.response.status === 401) {
         consola.error(new Error('Bad credentials'))

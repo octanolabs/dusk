@@ -41,6 +41,10 @@ router.get('/networks', (req, res) => {
   return res.json({ info: providers.networks.get() })
 })
 
+router.get('/packages', (req, res) => {
+  return res.json({ info: providers.packages.get() })
+})
+
 // Export the server middleware
 export default {
   path: '/api',

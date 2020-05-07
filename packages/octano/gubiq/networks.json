@@ -1,0 +1,27 @@
+{
+  "networks": [
+    {
+      "networkId": 88,
+      "chainId": 8,
+      "testnet": false,
+      "name": "Ubiq",
+      "icon": "ubiq.svg",
+      "engine": "ubqhash",
+      "explorer": "https://ubiqscan.io",
+      "ethstats": "https://ubiq.darcr.us",
+      "minVer": "1.0.0"
+    },
+    {
+      "networkId": 89,
+      "chainId": 9,
+      "testnet": true,
+      "name": "Igni",
+      "icon": "igni.svg",
+      "engine": "clique",
+      "explorer": "https://igni.ubiqscan.io",
+      "ethstats": "https://stats.octano.dev",
+      "flag": "--igni",
+      "minVer": "3.1.0"
+    }
+  ]
+}
