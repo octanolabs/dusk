@@ -2,6 +2,7 @@
   "name": "go-ubiq",
   "id": "gubiq",
   "desc": "Ubiq fork of Geth.",
+  "icon": "static/networks/ubiq.svg",
   "releases": [
     {
       "version": "3.0.1",

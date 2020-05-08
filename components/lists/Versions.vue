@@ -2,13 +2,26 @@
   <v-card>
     <div class="d-flex flex-no-wrap justify-space-between">
       <div>
-        <v-card-title class="headline">
-          {{ client.name }}
-          <v-chip small color="primary" outlined label class="ml-3">
-            {{ client.platform }}
-          </v-chip>
-        </v-card-title>
-        <v-card-subtitle v-text="client.desc"></v-card-subtitle>
+        <v-list>
+          <v-list-item>
+            <v-list-item-avatar>
+              <img
+                v-if="client.icon"
+                :src="require('~/packages' + client.duskpkg.path + client.icon)"
+              />
+              <v-icon v-else color="#222" v-text="O.o"></v-icon>
+            </v-list-item-avatar>
+            <v-list-item-content>
+              <v-list-item-title>
+                {{ client.name }}
+                <v-chip small color="primary" outlined label class="ml-3">
+                  {{ client.platform }}
+                </v-chip>
+              </v-list-item-title>
+              <v-list-item-subtitle>{{ client.desc }}</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
         <v-card-actions>
           <v-chip label outlined color="primary">
             {{ releases.length }} versions available

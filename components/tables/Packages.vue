@@ -4,7 +4,7 @@
       <v-avatar size="28px">
         <img
           v-if="item.icon"
-          :src="require('~/packages/octano/' + item.id + '/' + item.icon)"
+          :src="require('~/packages' + item.path + item.icon)"
         />
         <v-icon v-else color="#222" v-text="O.o"></v-icon>
       </v-avatar>

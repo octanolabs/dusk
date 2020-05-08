@@ -2,7 +2,7 @@
   <v-layout column justify-center align-center>
     <v-flex xs12 sm8 md6>
       <div class="text-center mt-12">
-        <logo />
+        <octano-logo />
         <h1 style="color:#6fceb7">
           octano<span style="color:#e76754">dusk</span>
         </h1>
@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
+import OctanoLogo from '~/components/Logo.vue'
 
 export default {
   nuxtI18n: {
@@ -57,7 +57,7 @@ export default {
     }
   },
   components: {
-    Logo
+    OctanoLogo
   },
   data() {
     return {

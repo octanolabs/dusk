@@ -1,6 +1,13 @@
 <template>
   <v-data-table :headers="headers" :items="networks" :items-per-page="5" flat>
     <template v-slot:item.name="{ item }">
+      <v-avatar size="28px">
+        <img
+          v-if="item.icon"
+          :src="require('~/packages' + item.duskpkg.path + item.icon)"
+        />
+        <v-icon v-else color="#222" v-text="O.o"></v-icon>
+      </v-avatar>
       {{ item.name }}
     </template>
     <template v-slot:item.clients="{ item }">

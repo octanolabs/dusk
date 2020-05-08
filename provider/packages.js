@@ -44,6 +44,7 @@ const loadPackages = async function(pkgs) {
       const duskpkg = await stat(packagePath)
       if (duskpkg.isDirectory()) {
         let pkg = await readJson(path.join(packagePath, 'dusk.json'))
+        pkg.path = packagePath.substr(8) + '/' // octano/packageid
         PACKAGES.push(pkg)
         if (pkg.client) {
           const clientData = await getPackageData (
@@ -52,7 +53,7 @@ const loadPackages = async function(pkgs) {
           )
           const client = await parseClient(clientData)
           client.duskpkg = {
-            path: packagePath,
+            path: packagePath.substr(8) + '/',
             id: client.id
           }
           CLIENTS.push(client)
@@ -66,6 +67,10 @@ const loadPackages = async function(pkgs) {
                 NETWORKS[type][n.networkId].clients.push(client.id)
               } else {
                 n.clients = [ client.id ]
+                n.duskpkg = {
+                  path: packagePath.substr(8) + '/',
+                  id: client.id
+                }
                 NETWORKS[type][n.networkId] = n
               }
             }
