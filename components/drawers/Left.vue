@@ -13,6 +13,12 @@
         </v-list-item-icon>
         <v-list-item-title>{{ $t('menu.clients') }}</v-list-item-title>
       </v-list-item>
+      <v-list-item link to="/packages">
+        <v-list-item-icon>
+          <v-icon>mdi-package</v-icon>
+        </v-list-item-icon>
+        <v-list-item-title>{{ $t('menu.packages') }}</v-list-item-title>
+      </v-list-item>
     </v-list>
     <template v-slot:append>
       <v-list nav dense>

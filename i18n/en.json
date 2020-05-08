@@ -84,5 +84,11 @@
     "stats": "network stats",
     "mainnet": "mainnet",
     "testnet": "testnet"
+  },
+  "packages": {
+    "id": "packageId",
+    "name": "name",
+    "type": "type",
+    "version": "version"
   }
 }

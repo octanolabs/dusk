@@ -1,16 +1,11 @@
 {
-  "package": {
-    "id": "gubiq",
-    "fullname": "go-ubiq",
-    "version": 1,
-    "type": "geth"
-  },
+  "id": "gubiq",
+  "name": "go-ubiq",
+  "version": 1,
+  "type": "geth",
+  "icon": "static/networks/ubiq.svg",
   "client": {
     "local": "client.json",
     "remote": "octanolabs/dusk/develop/packages/octano/gubiq/client.json"
-  },
-  "networks": {
-    "local": "networks.json",
-    "remote": "octanolabs/dusk/develop/packages/octano/gubiq/networks.json"
   }
 }
