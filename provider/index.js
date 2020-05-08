@@ -2,7 +2,6 @@ import consola from 'consola'
 import NanoTimer from 'nanotimer'
 
 import system from './system.js'
-import networks from './networks.js'
 import packages from './packages.js'
 
 const providers = {
@@ -14,15 +13,6 @@ const providers = {
     },
     get() {
       return system.get()
-    }
-  },
-  networks: {
-    timer: new NanoTimer(),
-    set() {
-      networks.set('./networks.json')
-    },
-    get() {
-      return networks.get()
     }
   },
   packages: {
