@@ -23,9 +23,6 @@
           </v-chip>
         </v-card-actions>
       </div>
-      <v-avatar class="ma-3" size="125" tile>
-        <v-img :src="require('~/static/clients/' + client.tag + '.png')" />
-      </v-avatar>
     </div>
     <v-divider />
     <v-list>

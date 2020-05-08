@@ -18,6 +18,10 @@ const readJson = promisify(jf.readFile)
 let PACKAGES = []
 let CUSTOM = []
 let CLIENTS = []
+let NETWORKS = {
+  testnet: {},
+  mainnet: {}
+}
 
 const platform = async function() {
   try {
@@ -47,7 +51,25 @@ const loadPackages = async function(pkgs) {
             'https://github.com/' + pkg.client.remote
           )
           const client = await parseClient(clientData)
+          client.duskpkg = {
+            path: packagePath,
+            id: client.id
+          }
           CLIENTS.push(client)
+          if (client.networks && client.networks.length > 0) {
+            for (let n of client.networks) {
+              let type = 'mainnet'
+              if (n.testnet) {
+                type = 'testnet'
+              }
+              if (NETWORKS[type][n.networkId]) {
+                NETWORKS[type][n.networkId].clients.push(client.id)
+              } else {
+                n.clients = [ client.id ]
+                NETWORKS[type][n.networkId] = n
+              }
+            }
+          }
         }
         return
       } else {
@@ -118,14 +140,16 @@ export default {
   clear() {
     PACKAGES = [],
     CUSTOM = [],
-    CLIENTS = []
+    CLIENTS = [],
+    NETWORKS = []
   },
   // return caches
   get() {
     return {
       octano: PACKAGES,
       custom: CUSTOM,
-      clients: CLIENTS
+      clients: CLIENTS,
+      networks: NETWORKS
     }
   },
   // set caches

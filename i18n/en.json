@@ -83,7 +83,8 @@
     "explorer": "block explorer",
     "stats": "network stats",
     "mainnet": "mainnet",
-    "testnet": "testnet"
+    "testnet": "testnet",
+    "clients": "supported clients"
   },
   "packages": {
     "id": "packageId",
