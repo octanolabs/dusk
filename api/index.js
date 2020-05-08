@@ -37,10 +37,6 @@ router.get('/system', (req, res) => {
   return res.json({ info: providers.system.get() })
 })
 
-router.get('/networks', (req, res) => {
-  return res.json({ info: providers.networks.get() })
-})
-
 router.get('/packages', (req, res) => {
   return res.json({ info: providers.packages.get() })
 })
