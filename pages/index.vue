@@ -2,7 +2,7 @@
   <v-container>
     <v-tabs>
       <v-tab :key="0">Instances</v-tab>
-      <v-tab :key="0">Networks</v-tab>
+      <v-tab :key="1">Networks</v-tab>
       <v-tab-item :key="0">
         <v-btn absolute dark fab top right color="primary">
           <v-icon>mdi-plus</v-icon>

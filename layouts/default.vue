@@ -29,7 +29,6 @@ export default {
   },
   created() {
     this.$store.dispatch('system')
-    this.$store.dispatch('networks')
     this.$store.dispatch('packages')
     const t = this
     setInterval(function() {

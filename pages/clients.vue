@@ -1,12 +1,12 @@
 <template>
   <v-container>
-    <v-tabs>
-      <v-tab :key="0">Clients</v-tab>
-      <v-tab-item :key="0">
+    <v-tabs v-model="tab">
+      <v-tab v-for="client in clients" :key="client.tag">
+        {{ client.name }}
+      </v-tab>
+      <v-tab-item v-for="client in clients" :key="client.tag">
         <v-card>
-          <v-card-text>
-            List clients here
-          </v-card-text>
+          <versions :client="client" />
         </v-card>
       </v-tab-item>
     </v-tabs>
@@ -14,7 +14,22 @@
 </template>
 
 <script>
+import Versions from '~/components/lists/Versions'
+
 export default {
-  middleware: 'auth'
+  middleware: 'auth',
+  components: {
+    Versions
+  },
+  data() {
+    return {
+      tab: null
+    }
+  },
+  computed: {
+    clients() {
+      return this.$store.state.packages.clients || []
+    }
+  }
 }
 </script>

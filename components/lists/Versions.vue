@@ -1,37 +1,35 @@
 <template>
-  <v-list two-line>
-    <v-card>
-      <div class="d-flex flex-no-wrap justify-space-between">
-        <div>
-          <v-card-title class="headline">
-            {{ client.name }}
-            <v-chip small color="primary" outlined label class="ml-3">
-              {{ platform }}
-            </v-chip>
-          </v-card-title>
-          <v-card-subtitle v-text="client.desc"></v-card-subtitle>
-          <v-card-actions>
-            <v-chip label outlined color="primary">
-              {{ releases.length }} versions available
-            </v-chip>
-            <v-chip
-              :color="downloaded > 0 ? 'primary' : 'secondary'"
-              label
-              outlined
-              class="ml-2"
-            >
-              {{ downloaded }} versions downloaded
-            </v-chip>
-          </v-card-actions>
-        </div>
-        <v-avatar class="ma-3" size="125" tile>
-          <v-img :src="require('~/static/clients/' + client.tag + '.png')" />
-        </v-avatar>
+  <v-card>
+    <div class="d-flex flex-no-wrap justify-space-between">
+      <div>
+        <v-card-title class="headline">
+          {{ client.name }}
+          <v-chip small color="primary" outlined label class="ml-3">
+            {{ client.platform }}
+          </v-chip>
+        </v-card-title>
+        <v-card-subtitle v-text="client.desc"></v-card-subtitle>
+        <v-card-actions>
+          <v-chip label outlined color="primary">
+            {{ releases.length }} versions available
+          </v-chip>
+          <v-chip
+            :color="downloaded > 0 ? 'primary' : 'secondary'"
+            label
+            outlined
+            class="ml-2"
+          >
+            {{ downloaded }} versions downloaded
+          </v-chip>
+        </v-card-actions>
       </div>
-    </v-card>
+      <v-avatar class="ma-3" size="125" tile>
+        <v-img :src="require('~/static/clients/' + client.tag + '.png')" />
+      </v-avatar>
+    </div>
     <v-divider />
-    <template v-for="(item, key, index) in releases">
-      <v-list-item :key="index">
+    <v-list>
+      <v-list-item v-for="item in releases" :key="item.version">
         <v-list-item-avatar>
           <v-progress-circular
             v-if="item.status === 1"
@@ -80,9 +78,9 @@
           </a>
         </v-list-item-action>
       </v-list-item>
-      <v-divider />
-    </template>
-  </v-list>
+    </v-list>
+    <v-divider />
+  </v-card>
 </template>
 
 <script>
@@ -104,9 +102,6 @@ export default {
     },
     releases() {
       return this.client.releases || []
-    },
-    platform() {
-      return this.$store.state.clientInfo.platform
     }
   },
   methods: {
