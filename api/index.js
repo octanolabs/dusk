@@ -41,6 +41,23 @@ router.get('/packages', (req, res) => {
   return res.json({ info: providers.packages.get() })
 })
 
+router.get('/downloading', (req, res) => {
+  return res.json({ info: providers.packages.downloading() })
+})
+
+router.post('/download', async (req, res) => {
+  if (!req.body.clientId || !req.body.version) {
+    res.status(401).json({ message: 'Bad params' })
+  } else {
+    const dl = await providers.packages.download(req.body.clientId, req.body.version)
+    if (dl) {
+      res.json({downloading: true})
+    } else {
+      res.json({downloading: false})
+    }
+  }
+})
+
 // Export the server middleware
 export default {
   path: '/api',

@@ -21,6 +21,7 @@ const access = promisify(fs.access)
 let PACKAGES = []
 let CUSTOM = []
 let CLIENTS = []
+let DOWNLOADING = {}
 let NETWORKS = {
   testnet: {},
   mainnet: {}
@@ -108,7 +109,7 @@ const parseClient = async function(json) {
           download: release[build]
         }
         releases.push(r)
-        await downloadRelease(client, r)
+        // await downloadRelease(client, r)
       }
     }
     client.releases = releases
@@ -163,7 +164,24 @@ const downloadRelease = async function(client, release) {
   try {
     const stream = await download(release.download.url, downloadPath, {
       isStream: true
-    }).on('downloadProgress', progress => consola.info(progress))
+    }).on('downloadProgress', progress => {
+      if (progress && progress.percent !== 1) {
+        DOWNLOADING = {
+          client: client.name,
+          version: release.version,
+          status: true,
+          error: false,
+          download: progress
+        }
+        consola.info(DOWNLOADING)
+      } else {
+        DOWNLOADING.status = false
+        consola.info('download complete')
+      }
+    }).on('error', error => {
+      DOWNLOADING.status = false
+      DOWNLOADING.error = error
+    })
   } catch (e) {
     consola.error(new Error(e))
   }
@@ -216,6 +234,29 @@ export default {
       }
     } catch (e) {
       consola.error(new Error(e))
+    }
+  },
+  downloading() {
+    return DOWNLOADING
+  },
+  async download(clientId, version) {
+    try {
+      for (let i in CLIENTS) {
+        const client = CLIENTS[i]
+        if (client.id === clientId) {
+          for (let x in client.releases) {
+            const release = client.releases[x]
+            if (release.version === version) {
+              await downloadRelease(client, release)
+              return DOWNLOADING
+            }
+          }
+        }
+      }
+      return
+    } catch (e) {
+      consola.error(new Error(e))
+      return
     }
   }
 }

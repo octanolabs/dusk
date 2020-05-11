@@ -40,15 +40,7 @@
     <v-divider />
     <v-list>
       <v-list-item v-for="item in releases" :key="item.version">
-        <v-list-item-avatar>
-          <v-progress-circular
-            v-if="item.status === 1"
-            :rotate="-90"
-            :size="100"
-            :width="15"
-            :value="item.progress"
-            color="grey"
-          />
+        <v-list-item-avatar @click.stop="downloadRelease(item.version)">
           <v-icon v-if="!item.status === 0 && isDownloading" class="secondary">
             mdi-cloud-off-outline
           </v-icon>
@@ -94,6 +86,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   props: {
     client: {
@@ -105,7 +99,7 @@ export default {
   },
   computed: {
     isDownloading() {
-      return false
+      return this.$store.state.downloading.status
     },
     downloaded() {
       return this.client.downloaded
@@ -133,6 +127,16 @@ export default {
       } while (Math.abs(b) >= thresh && u < units.length - 1)
 
       return `${b.toFixed(2)} ${units[u]}`
+    },
+    async downloadRelease(version) {
+      try {
+        await axios.post('/api/download', {
+          clientId: this.client.id,
+          version
+        })
+      } catch (e) {
+        console.log(e)
+      }
     }
   }
 }
