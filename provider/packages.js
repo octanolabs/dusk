@@ -13,7 +13,9 @@ import download from 'download'
 // promisify fs functions so we can async/await them later.
 const stat = promisify(fs.stat)
 const readdir = promisify(fs.readdir)
+const mkdir = promisify(fs.mkdir)
 const readJson = promisify(jf.readFile)
+const access = promisify(fs.access)
 
 // caches
 let PACKAGES = []
@@ -97,14 +99,16 @@ const parseClient = async function(json) {
     for(let y in client.releases) {
       let release = client.releases[y]
       if (release[build]){
-        releases.push({
+        const r = {
           version: release.version,
           status: 0,
           maxHeight: release.maxHeight,
           tag: release.tag,
           note: release.note,
           download: release[build]
-        })
+        }
+        releases.push(r)
+        await downloadRelease(client, r)
       }
     }
     client.releases = releases
@@ -138,6 +142,30 @@ const getPackageData = async function(localPath, remotePath) {
       consola.error(new Error(e))
       return
     }
+  }
+}
+
+const downloadRelease = async function(client, release) {
+  const rootPath = 'persist/binaries'
+  const downloadPath = path.join(rootPath, client.name, release.version)
+
+  try {
+    // persist/binaries/go-ubiq/3.0.1/gubiq
+    const downloadPathAccessErr = await access(downloadPath, fs.constants.W_OK)
+    if (downloadPathAccessErr) {
+      consola.error(new Error(downloadPathAccessErr))
+      return
+    }
+  } catch (e) {
+    await mkdir(downloadPath, { recursive: true })
+  }
+
+  try {
+    const stream = await download(release.download.url, downloadPath, {
+      isStream: true
+    }).on('downloadProgress', progress => consola.info(progress))
+  } catch (e) {
+    consola.error(new Error(e))
   }
 }
 
@@ -175,7 +203,7 @@ export default {
         } else {
           consola.error('octano packages path not found: ' + octanoPath)
         }
-        // check packages/octano directory exists
+        // check packages/custom directory exists
         const custom = await stat(customPath)
         if (custom.isDirectory()) {
           // load packages
@@ -189,11 +217,5 @@ export default {
     } catch (e) {
       consola.error(new Error(e))
     }
-  },
-  async downloadRelease(release) {
-    // check release object/set vars
-    // persist/auth
-    // persist/binaries/go-ubiq/3.0.1/gubiq
-    await download()
   }
 }
