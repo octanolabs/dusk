@@ -8,6 +8,7 @@ import os from 'os'
 import { promisify } from 'util'
 import consola from 'consola'
 import path from 'path'
+import download from 'download'
 
 // promisify fs functions so we can async/await them later.
 const stat = promisify(fs.stat)
@@ -172,7 +173,15 @@ export default {
           // load packages
           await loadPackages(octanoPath)
         } else {
-          consola.error('octano packages path not found: ' + rootPath)
+          consola.error('octano packages path not found: ' + octanoPath)
+        }
+        // check packages/octano directory exists
+        const custom = await stat(customPath)
+        if (custom.isDirectory()) {
+          // load packages
+          await loadPackages(customPath)
+        } else {
+          consola.error('custom packages path not found: ' + customPath)
         }
       } else {
         consola.error('packages path not found: ' + rootPath)
@@ -180,5 +189,11 @@ export default {
     } catch (e) {
       consola.error(new Error(e))
     }
+  },
+  async downloadRelease(release) {
+    // check release object/set vars
+    // persist/auth
+    // persist/binaries/go-ubiq/3.0.1/gubiq
+    await download()
   }
 }
