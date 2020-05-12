@@ -90,7 +90,7 @@ sw.*
 *.swp
 
 # Dusk persistent stores
-persist
+persist/
 
 # Dusk custom packages
 packages/custom/

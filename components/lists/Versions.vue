@@ -40,10 +40,17 @@
     <v-divider />
     <v-list>
       <v-list-item v-for="item in releases" :key="item.version">
-        <v-list-item-avatar @click.stop="downloadRelease(item.version)">
-          <v-icon v-if="!item.status === 0 && isDownloading" class="secondary">
-            mdi-cloud-off-outline
+        <v-list-item-avatar
+          v-if="(item.status === 1 && !isDownloading) || isDownloading"
+        >
+          <v-icon v-if="isDownloading" class="secondary">
+            mdi-cloud-sync-outline
           </v-icon>
+          <v-icon v-if="item.status === 1" class="primary">
+            mdi-cloud-check-outline
+          </v-icon>
+        </v-list-item-avatar>
+        <v-list-item-avatar v-else @click.stop="downloadRelease(item)">
           <v-icon
             v-if="!item.status || (item.status === 0 && !isDownloading)"
             class="secondary"
@@ -52,9 +59,6 @@
           </v-icon>
           <v-icon v-if="item.status === -1" class="secondary">
             mdi-cloud-alert
-          </v-icon>
-          <v-icon v-if="item.status === 2" class="primary">
-            mdi-cloud-check-outline
           </v-icon>
         </v-list-item-avatar>
         <v-list-item-content>
@@ -86,8 +90,6 @@
 </template>
 
 <script>
-import axios from 'axios'
-
 export default {
   props: {
     client: {
@@ -128,16 +130,13 @@ export default {
 
       return `${b.toFixed(2)} ${units[u]}`
     },
-    async downloadRelease(version) {
+    async downloadRelease(release) {
       try {
-        await axios.post('/api/download', {
+        await this.$store.dispatch('download', {
           clientId: this.client.id,
-          version
+          clientName: this.client.name,
+          version: release.version
         })
-        const t = this
-        setTimeout(function() {
-          t.$store.dispatch('downloading')
-        }, 5000)
       } catch (e) {
         console.log(e)
       }

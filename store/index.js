@@ -6,7 +6,7 @@ export const state = () => ({
     right: true
   },
   downloading: {
-    clientId: null,
+    client: null,
     version: null,
     status: false,
     download: {
@@ -32,6 +32,9 @@ export const mutations = {
   },
   SET_DOWNLOADING(state, data) {
     state.downloading = data
+  },
+  INIT_DOWNLOADING(state, data) {
+    state.downloading = data
   }
 }
 
@@ -52,20 +55,36 @@ export const actions = {
       const { data } = await axios.get('/api/packages')
       commit('SET_PACKAGES', data.info)
     } catch (error) {
-      if (error.response && error.response.status === 401) {
-        consola.error(new Error('Bad credentials'))
-      }
+      consola.error(new Error(error))
+    }
+  },
+  async download({ commit }, payload) {
+    try {
+      await axios.post('/api/download', {
+        clientId: payload.clientId,
+        version: payload.version
+      })
+      commit('INIT_DOWNLOADING', {
+        client: payload.clientName,
+        version: payload.version,
+        status: true,
+        download: {
+          percent: 0,
+          transferred: 0,
+          total: 0
+        }
+      })
+    } catch (error) {
       consola.error(new Error(error))
     }
   },
   async downloading({ commit }) {
     try {
       const { data } = await axios.get('/api/downloading')
-      commit('SET_DOWNLOADING', data.info)
-    } catch (error) {
-      if (error.response && error.response.status === 401) {
-        consola.error(new Error('Bad credentials'))
+      if (data.info && data.info.status !== undefined) {
+        commit('SET_DOWNLOADING', data.info)
       }
+    } catch (error) {
       consola.error(new Error(error))
     }
   }

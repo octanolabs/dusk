@@ -40,6 +40,26 @@ const platform = async function() {
   }
 }
 
+const downloadCompleted = async function(clientId, version) {
+  try {
+    for (let n in CLIENTS) {
+      if (CLIENTS[n].id === clientId) {
+        CLIENTS[n].downloaded = CLIENTS[n].downloaded + 1
+        for (let x in CLIENTS[n].releases) {
+          const release = CLIENTS[n].releases[x]
+          if (release.version === version) {
+            CLIENTS[n].releases[x].status = 1
+          }
+        }
+      }
+    }
+    return
+  } catch (e) {
+    consola.error(new Error(e))
+    return
+  }
+}
+
 const loadPackages = async function(pkgs) {
   try {
     const ls = await readdir(pkgs)
@@ -109,7 +129,6 @@ const parseClient = async function(json) {
           download: release[build]
         }
         releases.push(r)
-        // await downloadRelease(client, r)
       }
     }
     client.releases = releases
@@ -165,22 +184,24 @@ const downloadRelease = async function(client, release) {
     const stream = await download(release.download.url, downloadPath, {
       isStream: true
     }).on('downloadProgress', progress => {
-      if (progress && progress.percent !== 1) {
-        DOWNLOADING = {
-          client: client.name,
-          version: release.version,
-          status: true,
-          error: false,
-          download: progress
+      if (progress) {
+        if (progress.percent === 1) {
+          DOWNLOADING.status = false
+          downloadCompleted(client.id, release.version)
+        } else {
+          DOWNLOADING = {
+            client: client.name,
+            version: release.version,
+            status: true,
+            error: false,
+            download: progress
+          }
         }
-        consola.info(DOWNLOADING)
-      } else {
-        DOWNLOADING.status = false
-        consola.info('download complete')
       }
     }).on('error', error => {
       DOWNLOADING.status = false
       DOWNLOADING.error = error
+      consola.error(new Error(error))
     })
   } catch (e) {
     consola.error(new Error(e))
@@ -241,19 +262,20 @@ export default {
   },
   async download(clientId, version) {
     try {
-      for (let i in CLIENTS) {
-        const client = CLIENTS[i]
-        if (client.id === clientId) {
-          for (let x in client.releases) {
-            const release = client.releases[x]
-            if (release.version === version) {
-              await downloadRelease(client, release)
-              return DOWNLOADING
+      if (DOWNLOADING.status !== true) {
+        for (let i in CLIENTS) {
+          const client = CLIENTS[i]
+          if (client.id === clientId) {
+            for (let x in client.releases) {
+              const release = client.releases[x]
+              if (release.version === version) {
+                await downloadRelease(client, release)
+                return DOWNLOADING
+              }
             }
           }
         }
       }
-      return
     } catch (e) {
       consola.error(new Error(e))
       return
