@@ -25,6 +25,9 @@ const providers = {
     },
     download(clientId, version) {
       packages.download(clientId, version)
+    },
+    downloading() {
+      return packages.downloading()
     }
   }
 }

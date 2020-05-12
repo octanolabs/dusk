@@ -5,17 +5,20 @@
     <v-content>
       <nuxt />
     </v-content>
+    <downloading />
   </v-app>
 </template>
 
 <script>
 import RightDrawer from '@/components/drawers/Right'
 import LeftDrawer from '@/components/drawers/Left'
+import Downloading from '@/components/forms/Downloading'
 
 export default {
   components: {
     RightDrawer,
-    LeftDrawer
+    LeftDrawer,
+    Downloading
   },
   data() {
     return {
@@ -33,6 +36,7 @@ export default {
     const t = this
     setInterval(function() {
       t.$store.dispatch('system')
+      t.$store.dispatch('packages')
     }, 10000)
   },
   methods: {

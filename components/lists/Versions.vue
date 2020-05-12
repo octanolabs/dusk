@@ -134,6 +134,10 @@ export default {
           clientId: this.client.id,
           version
         })
+        const t = this
+        setTimeout(function() {
+          t.$store.dispatch('downloading')
+        }, 5000)
       } catch (e) {
         console.log(e)
       }
