@@ -3,6 +3,7 @@ import os from 'os'
 import { promisify } from 'util'
 import consola from 'consola'
 import disk from 'diskusage'
+import Platform from './platform'
 
 const readFile = promisify(fs.readFile)
 
@@ -28,7 +29,7 @@ export default {
         diskusage: await disk.check(os.homedir()),
         hostname: os.hostname(),
         release: os.release(),
-        platform: await parsePlatform(arch, platform),
+        platform: await Platform.parse(arch, platform),
         userInfo: os.userInfo(),
         networkInterfaces: os.networkInterfaces()
       }
@@ -48,14 +49,6 @@ export default {
     async memInfo(meminfo) {
       try {
         return await parseMeminfo(meminfo)
-      } catch (e) {
-        consola.error(new Error(e))
-        return null
-      }
-    },
-    async platform(arch, platform) {
-      try {
-        return await parsePlatform(arch, platform)
       } catch (e) {
         consola.error(new Error(e))
         return null
@@ -97,18 +90,6 @@ async function parseMeminfo(raw) {
       }
     }
     return json
-  } catch (e) {
-    consola.error(new Error(e))
-    return null
-  }
-}
-
-async function parsePlatform(arch, platform) {
-  try {
-    if (arch === 'x64') {
-      arch = 'amd64'
-    }
-    return platform + '-' + arch
   } catch (e) {
     consola.error(new Error(e))
     return null

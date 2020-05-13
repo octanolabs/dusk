@@ -34,16 +34,6 @@ test('memInfo/parseMeminfo', async (done) => {
   }
 })
 
-test('platform/parsePlatform', async (done) => {
-  try {
-    const platform = await provider.helpers.platform('x64', 'linux')
-    await expect(platform).toBe('linux-amd64')
-    done()
-  } catch (e) {
-    done(e)
-  }
-})
-
 test('set/get', async (done) => {
   try {
     await provider.set()
