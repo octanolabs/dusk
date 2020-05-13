@@ -8,50 +8,64 @@ const readFile = promisify(fs.readFile)
 
 let CACHE = {}
 
-const platform = async function() {
-  try {
-    let arch = await os.arch()
-    const platform = await os.platform()
-    if (arch === 'x64') {
-      arch = 'amd64'
-    }
-    return platform + '-' + arch
-  } catch (e) {
-    consola.error(new Error(e))
-  }
-}
-
 export default {
-  clear() {
-    CACHE = {}
-  },
   get() {
     return CACHE
   },
   async set() {
     try {
+      const raw = await readFile('/proc/meminfo', 'utf8')
+      const cpus = await os.cpus()
+      const arch = await os.arch()
+      const platform = await os.platform()
+
       CACHE = {
         totalmem: os.totalmem(),
         freemem: os.freemem(),
-        meminfo: await meminfo(),
+        meminfo: await parseMeminfo(raw),
         loadavg: os.loadavg(),
-        cpus: await cpuinfo(),
+        cpus: await parseCpus(cpus),
         diskusage: await disk.check(os.homedir()),
         hostname: os.hostname(),
         release: os.release(),
-        platform: await platform(),
+        platform: await parsePlatform(arch, platform),
         userInfo: os.userInfo(),
         networkInterfaces: os.networkInterfaces()
       }
     } catch (err) {
       consola.error(new Error(err))
     }
+  },
+  helpers: {
+    async cpuInfo(cpus) {
+      try {
+        return await parseCpus(cpus)
+      } catch (e) {
+        consola.error(new Error(e))
+        return null
+      }
+    },
+    async memInfo(meminfo) {
+      try {
+        return await parseMeminfo(meminfo)
+      } catch (e) {
+        consola.error(new Error(e))
+        return null
+      }
+    },
+    async platform(arch, platform) {
+      try {
+        return await parsePlatform(arch, platform)
+      } catch (e) {
+        consola.error(new Error(e))
+        return null
+      }
+    }
   }
 }
 
-async function cpuinfo() {
+async function parseCpus(cpus) {
   try {
-    const cpus = os.cpus()
     const usage = []
     for (const i in cpus) {
       const cpu = cpus[i]
@@ -72,10 +86,9 @@ async function cpuinfo() {
   }
 }
 
-async function meminfo() {
+async function parseMeminfo(raw) {
   const json = {}
   try {
-    const raw = await readFile('/proc/meminfo', 'utf8')
     const lines = raw.split('\n')
     for (const i in lines) {
       const parts = lines[i].split(':')
@@ -84,6 +97,18 @@ async function meminfo() {
       }
     }
     return json
+  } catch (e) {
+    consola.error(new Error(e))
+    return null
+  }
+}
+
+async function parsePlatform(arch, platform) {
+  try {
+    if (arch === 'x64') {
+      arch = 'amd64'
+    }
+    return platform + '-' + arch
   } catch (e) {
     consola.error(new Error(e))
     return null
