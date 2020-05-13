@@ -9,7 +9,7 @@ import { promisify } from 'util'
 import consola from 'consola'
 import path from 'path'
 import download from 'download'
-
+import Platform from './platform'
 // promisify fs functions so we can async/await them later.
 const stat = promisify(fs.stat)
 const readdir = promisify(fs.readdir)
@@ -25,19 +25,6 @@ let DOWNLOADING = {}
 let NETWORKS = {
   testnet: {},
   mainnet: {}
-}
-
-const platform = async function() {
-  try {
-    let arch = await os.arch()
-    const platform = await os.platform()
-    if (arch === 'x64') {
-      arch = 'amd64'
-    }
-    return platform + '-' + arch
-  } catch (e) {
-    consola.error(new Error(e))
-  }
 }
 
 const downloadCompleted = async function(clientId, version) {
@@ -113,7 +100,9 @@ const loadPackages = async function(pkgs) {
 const parseClient = async function(json) {
   try {
     let client = json
-    const build = await platform()
+    let arch = await os.arch()
+    const platform = await os.platform()
+    const build = await Platform.parse(arch, platform)
     client.platform = build
     client.downloaded = 0
     let releases = []
