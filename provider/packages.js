@@ -280,5 +280,8 @@ export default {
       consola.error(new Error(e))
       return
     }
+  },
+  initDownloading(data) {
+    DOWNLOADING = data
   }
 }

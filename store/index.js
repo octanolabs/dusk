@@ -87,5 +87,25 @@ export const actions = {
     } catch (error) {
       consola.error(new Error(error))
     }
+  },
+  async downloadComplete({ commit }) {
+    // reset download state
+    const downloading = {
+      client: null,
+      version: null,
+      status: false,
+      download: {
+        percent: 0,
+        transferred: 0,
+        total: 0
+      }
+    }
+
+    try {
+      await axios.post('/api/resetdownload', { downloading })
+      commit('INIT_DOWNLOADING', downloading)
+    } catch (error) {
+      consola.error(new Error(error))
+    }
   }
 }

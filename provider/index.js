@@ -28,6 +28,9 @@ const providers = {
     },
     downloading() {
       return packages.downloading()
+    },
+    initDownloading(data) {
+      packages.initDownloading(data)
     }
   }
 }
