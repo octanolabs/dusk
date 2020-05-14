@@ -8,6 +8,8 @@ import os from 'os'
 import { promisify } from 'util'
 import consola from 'consola'
 import path from 'path'
+import cmpver from 'compare-versions'
+
 import Platform from './platform'
 import Downloader from './downloader'
 // promisify fs functions so we can async/await them later.
@@ -32,7 +34,7 @@ const downloadCompleted = async function(clientId, version) {
       if (CLIENTS[n].id === clientId) {
         for (let x in CLIENTS[n].releases) {
           const release = CLIENTS[n].releases[x]
-          if (release.version === version) {
+          if (cmpver(release.version, version) === 0) {
             if (CLIENTS[n].releases[x].status !== 1) {
               CLIENTS[n].downloaded = CLIENTS[n].downloaded + 1
               CLIENTS[n].releases[x].status = 1
