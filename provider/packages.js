@@ -33,8 +33,10 @@ const downloadCompleted = async function(clientId, version) {
         for (let x in CLIENTS[n].releases) {
           const release = CLIENTS[n].releases[x]
           if (release.version === version) {
-            CLIENTS[n].downloaded = CLIENTS[n].downloaded + 1
-            CLIENTS[n].releases[x].status = 1
+            if (CLIENTS[n].releases[x].status !== 1) {
+              CLIENTS[n].downloaded = CLIENTS[n].downloaded + 1
+              CLIENTS[n].releases[x].status = 1
+            }
           }
         }
       }
