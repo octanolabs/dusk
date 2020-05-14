@@ -8,8 +8,8 @@ import os from 'os'
 import { promisify } from 'util'
 import consola from 'consola'
 import path from 'path'
-import download from 'download'
 import Platform from './platform'
+import Downloader from './downloader'
 // promisify fs functions so we can async/await them later.
 const stat = promisify(fs.stat)
 const readdir = promisify(fs.readdir)
@@ -21,7 +21,6 @@ const access = promisify(fs.access)
 let PACKAGES = []
 let CUSTOM = []
 let CLIENTS = []
-let DOWNLOADING = {}
 let NETWORKS = {
   testnet: {},
   mainnet: {}
@@ -154,49 +153,6 @@ const getPackageData = async function(localPath, remotePath) {
   }
 }
 
-const downloadRelease = async function(client, release) {
-  const rootPath = 'persist/binaries'
-  const downloadPath = path.join(rootPath, client.name, release.version)
-
-  try {
-    // persist/binaries/go-ubiq/3.0.1/gubiq
-    const downloadPathAccessErr = await access(downloadPath, fs.constants.W_OK)
-    if (downloadPathAccessErr) {
-      consola.error(new Error(downloadPathAccessErr))
-      return
-    }
-  } catch (e) {
-    await mkdir(downloadPath, { recursive: true })
-  }
-
-  try {
-    const stream = await download(release.download.url, downloadPath, {
-      isStream: true
-    }).on('downloadProgress', progress => {
-      if (progress) {
-        if (progress.percent === 1) {
-          DOWNLOADING.status = false
-          downloadCompleted(client.id, release.version)
-        } else {
-          DOWNLOADING = {
-            client: client.name,
-            version: release.version,
-            status: true,
-            error: false,
-            download: progress
-          }
-        }
-      }
-    }).on('error', error => {
-      DOWNLOADING.status = false
-      DOWNLOADING.error = error
-      consola.error(new Error(error))
-    })
-  } catch (e) {
-    consola.error(new Error(e))
-  }
-}
-
 export default {
   // clear all caches
   clear() {
@@ -247,19 +203,41 @@ export default {
     }
   },
   downloading() {
-    return DOWNLOADING
+    return Downloader.get()
   },
   async download(clientId, version) {
     try {
-      if (DOWNLOADING.status !== true) {
+      const { status } = Downloader.get()
+      if (status !== true) {
         for (let i in CLIENTS) {
           const client = CLIENTS[i]
           if (client.id === clientId) {
             for (let x in client.releases) {
               const release = client.releases[x]
               if (release.version === version) {
-                await downloadRelease(client, release)
-                return DOWNLOADING
+                const downloadPath = path.join('persist/binaries', client.name, release.version)
+                try {
+                  // persist/binaries/go-ubiq/3.0.1/gubiq
+                  const downloadPathAccessErr = await access(downloadPath, fs.constants.W_OK)
+                  if (downloadPathAccessErr) {
+                    consola.error(new Error(downloadPathAccessErr))
+                    return
+                  }
+                } catch (e) {
+                  await mkdir(downloadPath, { recursive: true })
+                }
+                await Downloader.helpers.download(
+                  release.download.url,
+                  downloadPath,
+                  {
+                    name: client.name,
+                    version: release.version
+                  }
+                )
+                Downloader.emitter.on('download-complete', function() {
+                  downloadCompleted(client.id, release.version)
+                })
+                return
               }
             }
           }
@@ -271,6 +249,6 @@ export default {
     }
   },
   initDownloading(data) {
-    DOWNLOADING = data
+    Downloader.set(data)
   }
 }

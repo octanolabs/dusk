@@ -58,6 +58,15 @@ router.post('/download', async (req, res) => {
   }
 })
 
+router.post('/resetdownload', async (req, res) => {
+  const dl = await providers.packages.initDownloading(req.body.downloading)
+  if (dl) {
+    res.json({reset: true})
+  } else {
+    res.json({reset: false})
+  }
+})
+
 // Export the server middleware
 export default {
   path: '/api',

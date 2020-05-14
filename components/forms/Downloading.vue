@@ -64,7 +64,6 @@ export default {
   },
   watch: {
     status(val) {
-      console.log('download status changed: ' + val)
       if (val === true) {
         this.sync = true
         this.show = true
