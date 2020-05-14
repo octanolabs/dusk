@@ -30,15 +30,18 @@ const downloadCompleted = async function(clientId, version) {
   try {
     for (let n in CLIENTS) {
       if (CLIENTS[n].id === clientId) {
-        CLIENTS[n].downloaded = CLIENTS[n].downloaded + 1
         for (let x in CLIENTS[n].releases) {
           const release = CLIENTS[n].releases[x]
           if (release.version === version) {
+            CLIENTS[n].downloaded = CLIENTS[n].downloaded + 1
             CLIENTS[n].releases[x].status = 1
           }
         }
       }
     }
+    let downloading = Downloader.get()
+    downloading.status = false
+    Downloader.set(downloading)
     return
   } catch (e) {
     consola.error(new Error(e))
@@ -207,8 +210,8 @@ export default {
   },
   async download(clientId, version) {
     try {
-      const { status } = Downloader.get()
-      if (status !== true) {
+      const state = Downloader.get()
+      if (state.status !== true) {
         for (let i in CLIENTS) {
           const client = CLIENTS[i]
           if (client.id === clientId) {
@@ -235,6 +238,7 @@ export default {
                   }
                 )
                 Downloader.emitter.on('download-complete', function() {
+                  consola.info('calling downloadCompleted()')
                   downloadCompleted(client.id, release.version)
                 })
                 return
@@ -247,8 +251,5 @@ export default {
       consola.error(new Error(e))
       return
     }
-  },
-  initDownloading(data) {
-    Downloader.set(data)
   }
 }

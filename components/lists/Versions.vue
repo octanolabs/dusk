@@ -43,11 +43,11 @@
         <v-list-item-avatar
           v-if="(item.status === 1 && !isDownloading) || isDownloading"
         >
-          <v-icon v-if="isDownloading" class="secondary">
-            mdi-cloud-sync-outline
-          </v-icon>
           <v-icon v-if="item.status === 1" class="primary">
             mdi-cloud-check-outline
+          </v-icon>
+          <v-icon v-else class="secondary">
+            mdi-cloud-sync-outline
           </v-icon>
         </v-list-item-avatar>
         <v-list-item-avatar v-else @click.stop="downloadRelease(item)">
@@ -57,7 +57,7 @@
           >
             mdi-cloud-download-outline
           </v-icon>
-          <v-icon v-if="item.status === -1" class="secondary">
+          <v-icon v-else-if="item.status === -1" class="secondary">
             mdi-cloud-alert
           </v-icon>
         </v-list-item-avatar>

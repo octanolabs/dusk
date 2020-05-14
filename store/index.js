@@ -64,6 +64,7 @@ export const actions = {
         clientId: payload.clientId,
         version: payload.version
       })
+
       commit('INIT_DOWNLOADING', {
         client: payload.clientName,
         version: payload.version,
@@ -90,20 +91,8 @@ export const actions = {
   },
   async downloadComplete({ commit }) {
     // reset download state
-    const downloading = {
-      client: null,
-      version: null,
-      status: false,
-      download: {
-        percent: 0,
-        transferred: 0,
-        total: 0
-      }
-    }
-
     try {
-      await axios.post('/api/resetdownload', { downloading })
-      commit('INIT_DOWNLOADING', downloading)
+      await axios.post('/api/resetdownload')
     } catch (error) {
       consola.error(new Error(error))
     }

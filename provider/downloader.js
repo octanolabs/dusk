@@ -23,28 +23,31 @@ const emptyCache = function() {
 
 const downloadRelease = async function(url, path, info) {
   try {
-    CACHE = emptyCache()
-    const stream = await download(url, path, {
-      isStream: true
-    }).on('downloadProgress', progress => {
-      if (progress) {
-        if (progress.percent === 1) {
-          downloader.emit('download-complete')
-        } else {
-          CACHE = {
-            client: info.name,
-            version: info.version,
-            status: true,
-            error: false,
-            download: progress
+    if (CACHE.status !== true) {
+      let staging = emptyCache()
+
+      staging.client = info.name
+      staging.version = info.version
+      staging.status = true
+      CACHE = staging
+
+      const stream = await download(url, path, {
+        isStream: true
+      }).on('downloadProgress', progress => {
+        if (progress) {
+          if (progress.percent === 1) {
+            consola.info('emitting download-complete')
+            downloader.emit('download-complete')
+          } else {
+            CACHE.download = progress
           }
         }
-      }
-    }).on('error', error => {
-      CACHE.status = false
-      CACHE.error = error
-      consola.error(new Error(error))
-    })
+      }).on('error', error => {
+        CACHE.status = false
+        CACHE.error = error
+        consola.error(new Error(error))
+      })
+    }
     return
   } catch (e) {
     consola.error(new Error(e))

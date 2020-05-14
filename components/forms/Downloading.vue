@@ -18,7 +18,7 @@
       </v-flex>
       <v-list two-line>
         <v-list-item>
-          <v-list-item-content>
+          <v-list-item-content v-if="show">
             <v-list-item-title v-if="show && !sync">
               Download complete
             </v-list-item-title>
@@ -51,7 +51,9 @@ export default {
   },
   computed: {
     status() {
-      return this.$store.state.downloading.status
+      return this.$store.state.downloading
+        ? this.$store.state.downloading.status
+        : false
     },
     downloading() {
       return this.$store.state.downloading
@@ -74,7 +76,6 @@ export default {
         const t = this
         setTimeout(function() {
           t.show = false
-          t.$store.dispatch('downloadComplete')
         }, 5000)
       }
     }
@@ -87,7 +88,7 @@ export default {
         if (t.sync === true) {
           t.poll()
         }
-      }, 500)
+      }, 1000)
     }
   }
 }
