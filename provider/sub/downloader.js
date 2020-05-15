@@ -37,6 +37,8 @@ const downloadRelease = async function(url, path, info) {
       }).on('downloadProgress', progress => {
         if (progress) {
           if (progress.percent === 1) {
+            consola.info('emitting download-complete: ' + path)
+            consola.info(url)
             downloader.emit('download-complete', {
               url,
               path,
@@ -48,6 +50,8 @@ const downloadRelease = async function(url, path, info) {
       }).on('error', error => {
         CACHE.status = false
         CACHE.error = error
+        consola.error('emitting download-error: ' + path)
+        consola.error(error)
         downloader.emit('download-error', {
           url,
           path,

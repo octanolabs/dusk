@@ -10,8 +10,9 @@ import consola from 'consola'
 import path from 'path'
 import cmpver from 'compare-versions'
 
-import Platform from './platform'
-import Downloader from './downloader'
+import Platform from './lib/platform'
+import Downloader from './sub/downloader'
+import Hasher from './sub/hasher'
 // promisify fs functions so we can async/await them later.
 const stat = promisify(fs.stat)
 const readdir = promisify(fs.readdir)
@@ -28,7 +29,7 @@ let NETWORKS = {
   mainnet: {}
 }
 
-const downloadCompleted = async function(clientId, version) {
+const downloadCompleted = async function(clientId, version, success) {
   try {
     for (let n in CLIENTS) {
       if (CLIENTS[n].id === clientId) {
@@ -36,8 +37,7 @@ const downloadCompleted = async function(clientId, version) {
           const release = CLIENTS[n].releases[x]
           if (cmpver(release.version, version) === 0) {
             if (CLIENTS[n].releases[x].status !== 1) {
-              CLIENTS[n].downloaded = CLIENTS[n].downloaded + 1
-              CLIENTS[n].releases[x].status = 1
+              CLIENTS[n].releases[x].status = success ? 1 : -1
             }
           }
         }
@@ -110,7 +110,6 @@ const parseClient = async function(json) {
     const platform = await os.platform()
     const build = await Platform.parse(arch, platform)
     client.platform = build
-    client.downloaded = 0
     let releases = []
     for(let y in client.releases) {
       let release = client.releases[y]
@@ -233,19 +232,46 @@ export default {
                 } catch (e) {
                   await mkdir(downloadPath, { recursive: true })
                 }
+
                 await Downloader.helpers.download(
                   release.download.url,
                   downloadPath,
                   {
                     name: client.name,
-                    version: release.version
+                    version: release.version,
+                    sha256: release.download.sha256,
+                    id: client.id
                   }
                 )
-                Downloader.emitter.on('download-complete', function() {
-                  consola.info('calling downloadCompleted()')
-                  downloadCompleted(client.id, release.version)
+                Downloader.emitter.on('download-complete', function(downloader) {
+                  consola.info('calling hasher')
+                  const basename = path.basename(release.download.url)
+                  const filepath = path.join(downloadPath, basename)
+                  Hasher.helpers.sha256sum(filepath)
+                  Hasher.emitter.on('sha256-complete', function(hasher) {
+                    consola.info('hasher.hash: ' + hasher.hash)
+                    consola.info('sha256: ' + downloader.info.sha256)
+                    downloadCompleted(
+                      client.id,
+                      release.version,
+                      hasher.hash === downloader.info.sha256
+                    )
+                  })
+                  Hasher.emitter.on('sha256-error', function() {
+                    downloadCompleted(
+                      client.id,
+                      release.version,
+                      false
+                    )
+                  })
                 })
-                return
+                Downloader.emitter.on('download-error', function() {
+                  downloadCompleted(
+                    client.id,
+                    release.version,
+                    false
+                  )
+                })
               }
             }
           }

@@ -1,6 +1,6 @@
 <template>
   <v-bottom-sheet :value="show" hide-overlay persistent inset flat>
-    <v-sheet class="text-center" height="100px" flat>
+    <v-sheet class="text-center" height="100px" style="min-height:100px;" flat>
       <v-flex style="position:relative">
         <v-btn
           v-if="show && !sync"
@@ -88,7 +88,7 @@ export default {
         if (t.sync === true) {
           t.poll()
         }
-      }, 1000)
+      }, 500)
     }
   }
 }

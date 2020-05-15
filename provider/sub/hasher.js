@@ -21,6 +21,14 @@ const sha256sum = async function(filepath) {
         })
       }
     })
+    input.on('error', error => {
+      consola.error('emitting sha256-error: ' + filepath)
+      consola.error(error)
+      hasher.emit('sha256-error', {
+        path: filepath,
+        error: error
+      })
+    })
   } catch (e) {
     consola.error(new Error(e))
   }

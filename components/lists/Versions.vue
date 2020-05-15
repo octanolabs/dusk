@@ -23,16 +23,12 @@
           </v-list-item>
         </v-list>
         <v-card-actions>
-          <v-chip label outlined color="primary">
-            {{ releases.length }} versions available
-          </v-chip>
           <v-chip
-            :color="downloaded > 0 ? 'primary' : 'secondary'"
             label
             outlined
-            class="ml-2"
+            :color="releases.length > 0 ? 'primary' : 'secondary'"
           >
-            {{ downloaded }} versions downloaded
+            {{ releases.length }} release(s) available
           </v-chip>
         </v-card-actions>
       </div>
@@ -102,9 +98,6 @@ export default {
   computed: {
     isDownloading() {
       return this.$store.state.downloading.status
-    },
-    downloaded() {
-      return this.client.downloaded
     },
     releases() {
       return this.client.releases || []
