@@ -1,4 +1,4 @@
-import Platform from '../provider/platform'
+import Platform from '../provider/lib/platform'
 
 test('platform', async (done) => {
   try {
