@@ -3,7 +3,7 @@ import os from 'os'
 import { promisify } from 'util'
 import consola from 'consola'
 import disk from 'diskusage'
-import Platform from './platform'
+import Platform from './lib/platform'
 
 const readFile = promisify(fs.readFile)
 
