@@ -11,13 +11,14 @@ const sha256sum = async function(filepath) {
     const hash = crypto.createHash('sha256')
     const input = fs.createReadStream(filepath)
     input.on('readable', () => {
-      // Only one element is going to be produced by the
-      // hash stream.
       const data = input.read()
       if (data)
         hash.update(data)
       else {
-        hasher.emit('sha256-complete', hash.digest('hex'))
+        hasher.emit('sha256-complete', {
+          path: filepath,
+          hash: hash.digest('hex')
+        })
       }
     })
   } catch (e) {

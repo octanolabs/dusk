@@ -1,15 +1,16 @@
 import Hasher from '../provider/sub/hasher'
 
 // sha256sum test/data/system.js
-const testHash =
+const hash =
   'f3127fade30df49b898823ca5f99947148f103290da4ee84e327c899b440c73e'
 
-test('sha256sum', async (done) => {
+test('sha256-complete', async (done) => {
   try {
-    const filepath = 'test/data/system.js'
-    await Hasher.helpers.sha256sum(filepath)
-    Hasher.emitter.on('sha256-complete', async function(digest) {
-      await expect(digest).toBe(testHash)
+    const path = 'test/data/system.js'
+    await Hasher.helpers.sha256sum(path)
+    Hasher.emitter.on('sha256-complete', async function(hasher) {
+      await expect(hasher.hash).toBe(hash)
+      await expect(hasher.path).toBe(path)
       done()
     })
   } catch (e) {
