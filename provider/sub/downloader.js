@@ -1,6 +1,7 @@
 import consola from 'consola'
 import download from 'download'
 import EventEmitter from 'events'
+import fs from 'fs'
 
 class Downloader extends EventEmitter { }
 let downloader = new Downloader()
@@ -36,16 +37,23 @@ const downloadRelease = async function(url, path, info) {
       }).on('downloadProgress', progress => {
         if (progress) {
           if (progress.percent === 1) {
-            consola.info('emitting download-complete')
-            downloader.emit('download-complete')
-          } else {
-            CACHE.download = progress
+            downloader.emit('download-complete', {
+              url,
+              path,
+              info
+            })
           }
+          CACHE.download = progress
         }
       }).on('error', error => {
         CACHE.status = false
         CACHE.error = error
-        consola.error(new Error(error))
+        downloader.emit('download-error', {
+          url,
+          path,
+          info,
+          error: error
+        })
       })
     }
     return
