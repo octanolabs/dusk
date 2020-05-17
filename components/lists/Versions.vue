@@ -14,9 +14,6 @@
             <v-list-item-content>
               <v-list-item-title>
                 {{ client.name }}
-                <v-chip small color="primary" outlined label class="ml-3">
-                  {{ client.platform }}
-                </v-chip>
               </v-list-item-title>
               <v-list-item-subtitle>{{ client.desc }}</v-list-item-subtitle>
             </v-list-item-content>
@@ -24,6 +21,16 @@
         </v-list>
         <v-card-actions>
           <v-chip
+            small
+            outlined
+            label
+            class="mr-3"
+            :color="releases.length > 0 ? 'primary' : 'secondary'"
+          >
+            {{ client.platform }}
+          </v-chip>
+          <v-chip
+            small
             label
             outlined
             :color="releases.length > 0 ? 'primary' : 'secondary'"
