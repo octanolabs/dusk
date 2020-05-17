@@ -17,3 +17,17 @@ test('sha256-complete', async (done) => {
     done(e)
   }
 })
+
+test('sha256-error', async (done) => {
+  try {
+    const path = 'test/data/noexist'
+    await Hasher.helpers.sha256sum(path)
+    Hasher.emitter.on('sha256-error', async function(hasher) {
+      await expect(hasher.error)
+      await expect(hasher.path).toBe(path)
+      done()
+    })
+  } catch (e) {
+    done(e)
+  }
+})
