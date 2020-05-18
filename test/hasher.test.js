@@ -7,10 +7,13 @@ const hash =
 test('sha256-complete', async (done) => {
   try {
     const path = 'test/data/system.js'
-    await Hasher.helpers.sha256sum(path)
+    await Hasher.helpers.sha256sum(path, {
+      id: 'test'
+    })
     Hasher.emitter.on('sha256-complete', async function(hasher) {
       await expect(hasher.hash).toBe(hash)
       await expect(hasher.path).toBe(path)
+      await expect(hasher.info.id).toBe('test')
       done()
     })
   } catch (e) {

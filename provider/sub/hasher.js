@@ -6,7 +6,7 @@ import EventEmitter from 'events'
 class Hasher extends EventEmitter { }
 let hasher = new Hasher()
 
-const sha256sum = async function(filepath) {
+const sha256sum = async function(filepath, info) {
   try {
     const hash = crypto.createHash('sha256')
     const input = fs.createReadStream(filepath)
@@ -17,14 +17,16 @@ const sha256sum = async function(filepath) {
       else {
         hasher.emit('sha256-complete', {
           path: filepath,
-          hash: hash.digest('hex')
+          hash: hash.digest('hex'),
+          info
         })
       }
     })
     input.on('error', error => {
       hasher.emit('sha256-error', {
         path: filepath,
-        error: error
+        error,
+        info
       })
     })
   } catch (e) {
@@ -34,8 +36,8 @@ const sha256sum = async function(filepath) {
 
 export default {
   helpers: {
-    sha256sum(filepath) {
-      sha256sum(filepath)
+    sha256sum(filepath, info) {
+      sha256sum(filepath, info)
     }
   },
   emitter: hasher
