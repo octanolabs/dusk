@@ -1,14 +1,17 @@
 import consola from 'consola'
-import download from 'download'
+import dl from 'download'
 import EventEmitter from 'events'
 import fs from 'fs'
 
+// event emitter
 class Downloader extends EventEmitter { }
 let downloader = new Downloader()
 
+// downloader 'cache'
 let CACHE = {}
 
-const emptyCache = function() {
+// return new downloader cache
+const newCache = function() {
   return {
     client: null,
     version: null,
@@ -22,23 +25,24 @@ const emptyCache = function() {
   }
 }
 
-const downloadRelease = async function(url, path, info) {
+const download = async function(url, path, info) {
   try {
     if (CACHE.status !== true) {
-      let staging = emptyCache()
+      let staging = newCache()
 
-      staging.client = info.name
-      staging.version = info.version
+      if (info) {
+        staging.client = info.name
+        staging.version = info.version
+      }
+
       staging.status = true
       CACHE = staging
 
-      const stream = await download(url, path, {
+      const stream = await dl(url, path, {
         isStream: true
       }).on('downloadProgress', progress => {
         if (progress) {
           if (progress.percent === 1) {
-            consola.info('emitting download-complete: ' + path)
-            consola.info(url)
             downloader.emit('download-complete', {
               url,
               path,
@@ -47,22 +51,17 @@ const downloadRelease = async function(url, path, info) {
           }
           CACHE.download = progress
         }
-      }).on('error', error => {
-        CACHE.status = false
-        CACHE.error = error
-        consola.error('emitting download-error: ' + path)
-        consola.error(error)
-        downloader.emit('download-error', {
-          url,
-          path,
-          info,
-          error: error
-        })
       })
     }
-    return
-  } catch (e) {
-    consola.error(new Error(e))
+  } catch (error) {
+    CACHE.status = false
+    CACHE.error = error
+    downloader.emit('download-error', {
+      url,
+      path,
+      info,
+      error
+    })
   }
 }
 
@@ -71,11 +70,11 @@ export default {
     return CACHE
   },
   set(data) {
-    CACHE = data || emptyCache()
+    CACHE = data || newCache()
   },
   helpers: {
     download(url, path, info) {
-      downloadRelease(url, path, info)
+      download(url, path, info)
     }
   },
   emitter: downloader
