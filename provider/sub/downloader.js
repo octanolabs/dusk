@@ -43,11 +43,14 @@ const download = async function(url, path, info) {
       }).on('downloadProgress', progress => {
         if (progress) {
           if (progress.percent === 1) {
-            downloader.emit('download-complete', {
-              url,
-              path,
-              info
-            })
+            // delay a little then emit complete event
+            setTimeout(function() {
+              downloader.emit('download-complete', {
+                url,
+                path,
+                info
+              })
+            }, 1000)
           }
           CACHE.download = progress
         }
