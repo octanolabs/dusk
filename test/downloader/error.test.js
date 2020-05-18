@@ -1,5 +1,6 @@
 import Downloader from '../../provider/sub/downloader'
 
+// this file does not exist
 const testUrl =
   'https://raw.githubusercontent.com/octanolabs/dusk/develop/test/data/system2.js'
 
@@ -11,7 +12,7 @@ const testInfo = {
 test('download-error', async (done) => {
   try {
     const url = testUrl
-    const path = 'test/data/persist/con'
+    const path = 'test/data/persist/error'
     Downloader.emitter.on('download-error', function(downloader) {
       expect(downloader.url).toBe(url)
       expect(downloader.path).toBe(path)
