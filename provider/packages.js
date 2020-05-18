@@ -13,6 +13,7 @@ import cmpver from 'compare-versions'
 import Platform from './lib/platform'
 import Downloader from './sub/downloader'
 import Hasher from './sub/hasher'
+
 // promisify fs functions so we can async/await them later.
 const stat = promisify(fs.stat)
 const readdir = promisify(fs.readdir)
@@ -29,7 +30,15 @@ let NETWORKS = {
   mainnet: {}
 }
 
-const downloadCompleted = async function(clientId, version, success) {
+/* downloadCompleted
+ * loop through CLIENTS to find matching clientId
+ * loop through releases to find matching version
+ * update status:
+ * -1: error
+ *  0: available for downloaded
+ *  1: downloaded & verified (available for use)
+ */
+const downloadCompleted = async function(clientId, version, success, error) {
   try {
     for (let n in CLIENTS) {
       if (CLIENTS[n].id === clientId) {
@@ -38,6 +47,7 @@ const downloadCompleted = async function(clientId, version, success) {
           if (cmpver(release.version, version) === 0) {
             if (CLIENTS[n].releases[x].status !== 1) {
               CLIENTS[n].releases[x].status = success ? 1 : -1
+              CLIENTS[n].releases[x].error = success ? null : error
             }
           }
         }
@@ -53,6 +63,11 @@ const downloadCompleted = async function(clientId, version, success) {
   }
 }
 
+/* loadPackages
+ * loop through a packages directory
+ * load packages data
+ * load accompaning package data (e.g client.json)
+ */
 const loadPackages = async function(pkgs) {
   try {
     const ls = await readdir(pkgs)
@@ -103,6 +118,12 @@ const loadPackages = async function(pkgs) {
   }
 }
 
+/* parseClient
+ * parse packages client.json
+ * set platform
+ * filter releases by platform
+ * set status
+ */
 const parseClient = async function(json) {
   try {
     let client = json
@@ -159,6 +180,47 @@ const getPackageData = async function(localPath, remotePath) {
   }
 }
 
+/* Event Listeners
+ * Downloader events (complete, error)
+ * Hasher events (complete, error)
+ */
+
+// download comppleted
+Downloader.emitter.on('download-complete', function(downloader) {
+  const basename = path.basename(downloader.url)
+  const filepath = path.join(downloader.path, basename)
+  Hasher.helpers.sha256sum(filepath, downloader.info)
+})
+
+// download error
+Downloader.emitter.on('download-error', function(downloader) {
+  downloadCompleted(
+    downloader.info.id,
+    downloader.info.version,
+    false,
+    downloader.error
+  )
+})
+
+// hasher completed
+Hasher.emitter.on('sha256-complete', function(hasher) {
+  downloadCompleted(
+    hasher.info.id,
+    hasher.info.version,
+    hasher.hash === hasher.info.sha256
+  )
+})
+
+// hasher error
+Hasher.emitter.on('sha256-error', function(hasher) {
+  downloadCompleted(
+    hasher.info.id,
+    hasher.info.version,
+    false,
+    hasher.error
+  )
+})
+
 export default {
   // clear all caches
   clear() {
@@ -214,25 +276,34 @@ export default {
   async download(clientId, version) {
     try {
       const state = Downloader.get()
+      // is a download already in progress?
       if (state.status !== true) {
+        // nope? ok continue
+        // loop through clients for a matching clientId
         for (let i in CLIENTS) {
           const client = CLIENTS[i]
           if (client.id === clientId) {
+            // clientId found
+            // loop through releases for a matching version
             for (let x in client.releases) {
               const release = client.releases[x]
               if (release.version === version) {
-                const downloadPath = path.join('persist/binaries', client.name, release.version)
+                // release found, set download path
+                const downloadPath =
+                  path.join('persist/binaries', client.name, release.version)
+                // does download path already exist?
                 try {
-                  // persist/binaries/go-ubiq/3.0.1/gubiq
                   const downloadPathAccessErr = await access(downloadPath, fs.constants.W_OK)
                   if (downloadPathAccessErr) {
                     consola.error(new Error(downloadPathAccessErr))
                     return
                   }
                 } catch (e) {
+                  // nope, create download path
                   await mkdir(downloadPath, { recursive: true })
                 }
 
+                // init download
                 await Downloader.helpers.download(
                   release.download.url,
                   downloadPath,
@@ -243,35 +314,6 @@ export default {
                     id: client.id
                   }
                 )
-                Downloader.emitter.on('download-complete', function(downloader) {
-                  consola.info('calling hasher')
-                  const basename = path.basename(release.download.url)
-                  const filepath = path.join(downloadPath, basename)
-                  Hasher.helpers.sha256sum(filepath)
-                  Hasher.emitter.on('sha256-complete', function(hasher) {
-                    consola.info('hasher.hash: ' + hasher.hash)
-                    consola.info('sha256: ' + downloader.info.sha256)
-                    downloadCompleted(
-                      client.id,
-                      release.version,
-                      hasher.hash === downloader.info.sha256
-                    )
-                  })
-                  Hasher.emitter.on('sha256-error', function() {
-                    downloadCompleted(
-                      client.id,
-                      release.version,
-                      false
-                    )
-                  })
-                })
-                Downloader.emitter.on('download-error', function() {
-                  downloadCompleted(
-                    client.id,
-                    release.version,
-                    false
-                  )
-                })
               }
             }
           }
