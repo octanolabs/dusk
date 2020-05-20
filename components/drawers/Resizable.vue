@@ -11,7 +11,7 @@
     :clipped="side === 'left'"
     :width="width"
     :value="show"
-    :app="app && expanded"
+    app
     fixed
   >
     <v-tooltip :left="left" :right="right">
@@ -80,7 +80,7 @@ export default {
   data: () => {
     return {
       shown: false,
-      width: '285px',
+      width: '305px',
       borderSize: 4
     }
   },
@@ -102,9 +102,9 @@ export default {
   methods: {
     toggle(e) {
       const el = this.$refs.drawer.$el
-      let w = 285
+      let w = 305
       if (this.expanded) {
-        w = 20
+        w = 1
       }
       el.style.width = w + 'px'
       el.style.transition = 'initial'
@@ -161,27 +161,15 @@ export default {
 }
 </script>
 <style>
+.v-navigation-drawer {
+  overflow-y: visible !important;
+  overflow-x: visible !important;
+}
+
 .resizable-drawer {
-  min-width: 20px !important;
+  min-width: 1px !important;
   background-color: rgba(0, 0, 0, 0) !important;
   pointer-events: none !important;
-}
-
-.resizable-drawer-left > .v-navigation-drawer__border {
-  margin-right: 20px !important;
-}
-
-.resizable-drawer-right > .v-navigation-drawer__border {
-  margin-left: 20px !important;
-}
-
-.resizable-drawer-left {
-  padding-right: 20px !important;
-}
-
-.resizable-drawer-right {
-  padding-left: 20px;
-  margin-left: -20px !important;
 }
 
 .resizable-drawer-content {
@@ -201,6 +189,7 @@ export default {
   min-width: 10px !important;
   padding: 0 !important;
   margin: 0 !important;
+  margin-left: -20px !important;
   opacity: 0.5 !important;
   text-align: center !important;
   overflow: hidden !important;
@@ -222,5 +211,9 @@ export default {
 .drawer-handle.right {
   left: 0 !important;
   border-radius: 20px 0 0 20px !important;
+}
+
+.v-navigation-drawer__border {
+  z-index: 20 !important;
 }
 </style>
