@@ -20,6 +20,7 @@ const readdir = promisify(fs.readdir)
 const mkdir = promisify(fs.mkdir)
 const readJson = promisify(jf.readFile)
 const access = promisify(fs.access)
+const chmod = promisify(fs.chmod)
 
 // caches
 let PACKAGES = []
@@ -109,7 +110,7 @@ const loadPackages = async function(pkgs) {
               // ignore if err, not get caught in try/catch.
               fs.stat(binPath, async function(err, binStat) {
                 if (binStat && !err && binStat.isFile()) {
-                  const binPathAccessErr = await access(binPath, fs.constants.R_OK)
+                  const binPathAccessErr = await access(binPath, fs.constants.X_OK)
                   if (!binPathAccessErr) {
                     Hasher.helpers.sha256sum(binPath, {
                       name: client.name,
@@ -222,10 +223,15 @@ const getPackageData = async function(localPath, remotePath) {
  */
 
 // download comppleted
-Downloader.emitter.on('download-complete', function(downloader) {
-  const basename = path.basename(downloader.url)
-  const filepath = path.join(downloader.path, basename)
-  Hasher.helpers.sha256sum(filepath, downloader.info)
+Downloader.emitter.on('download-complete', async function(downloader) {
+  try {
+    const basename = path.basename(downloader.url)
+    const filepath = path.join(downloader.path, basename)
+    await chmod(filepath, 0o765)
+    Hasher.helpers.sha256sum(filepath, downloader.info)
+  } catch (e) {
+    consola.error(new Error(e))
+  }
 })
 
 // download error
