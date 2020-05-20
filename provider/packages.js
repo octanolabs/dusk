@@ -227,7 +227,7 @@ Downloader.emitter.on('download-complete', async function(downloader) {
   try {
     const basename = path.basename(downloader.url)
     const filepath = path.join(downloader.path, basename)
-    await chmod(filepath, 0o765)
+    await chmod(filepath, 0o755)
     Hasher.helpers.sha256sum(filepath, downloader.info)
   } catch (e) {
     consola.error(new Error(e))
