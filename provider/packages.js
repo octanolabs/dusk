@@ -144,7 +144,6 @@ const loadPackages = async function(pkgs) {
             }
           }
         }
-        return
       } else {
         consola.error('path not found: ' + packagePath)
       }
