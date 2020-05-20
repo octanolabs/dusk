@@ -1,0 +1,77 @@
+{
+  "name": "core-geth",
+  "id": "cgeth",
+  "desc": "A highly configurable Go implementation of the Ethereum protocol.",
+  "icon": "static/ethereumclassiclabs.jpg",
+  "releases": [
+    {
+      "version": "1.11.2",
+      "maxHeight": 0,
+      "tag": "Tropicana Halo",
+      "note": "Updates Mordor and Kotti bootnodes. Fixes minor issue with Clique snapshot loop condition. Fixes recurrent sync issue occurring on Kotti (in the wake of the intentional fork revision there).",
+      "darwin-amd64": {
+        "url": "https://github.com/etclabscore/core-geth/releases/download/v1.11.3/core-geth-osx-v1.11.3.zip",
+        "sha256": "99bc654f2980efdf4391fc4fe585821975c5881d469ab6145fbddc499d494435",
+        "size": 12143628
+      },
+      "linux-amd64": {
+        "url": "https://github.com/etclabscore/core-geth/releases/download/v1.11.3/core-geth-linux-v1.11.3.zip",
+        "sha256": "160f22cd7bbae212156eca3b7f11e79e23f01d7d3fd89165ed3f8f34aa849b3a",
+        "size": 18161393
+      },
+      "linux-arm64": {
+        "url": "https://github.com/etclabscore/core-geth/releases/download/v1.11.3/core-geth-arm-v1.11.3.zip",
+        "sha256": "c147431ebde618e857d5c5d21f6db6582df3a2cc371fb5a55cf97fe3b69f2707",
+        "size": 16984469
+      }
+    }
+  ],
+  "networks": [
+    {
+      "networkId": 1,
+      "chainId": 61,
+      "testnet": false,
+      "name": "Ethereum Classic",
+      "icon": "static/ethereumclassiclabs.jpg",
+      "engine": "ethash",
+      "explorer": "",
+      "ethstats": "",
+      "minVer": "1.11.2"
+    },
+    {
+      "networkId": 6,
+      "chainId": 6,
+      "testnet": true,
+      "name": "Kotti",
+      "icon": "static/ethereumclassiclabs.jpg",
+      "engine": "clique",
+      "explorer": "",
+      "ethstats": "",
+      "flag": "--kotti",
+      "minVer": "1.11.2"
+    },
+    {
+      "networkId": 7,
+      "chainId": 63,
+      "testnet": true,
+      "name": "Mordor",
+      "icon": "static/ethereumclassiclabs.jpg",
+      "engine": "ethash",
+      "explorer": "",
+      "ethstats": "",
+      "flag": "--mordor",
+      "minVer": "1.11.2"
+    }
+  ],
+  "defaultOptions": {
+    "network": 1,
+    "port": 30388,
+    "maxpeers": "25",
+    "cache": 16,
+    "syncmode": "fast",
+    "gcmode": "full",
+    "rpc": false,
+    "rpcApi": ["db", "eth", "net", "web3"],
+    "rpcPort": 8588
+  }
+}

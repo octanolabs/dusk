@@ -1,0 +1,11 @@
+{
+  "id": "etc",
+  "name": "core-geth",
+  "version": 1,
+  "type": "geth",
+  "icon": "static/ethereumclassiclabs.jpg",
+  "client": {
+    "local": "client.json",
+    "remote": "octanolabs/dusk/develop/packages/octano/core-geth/client.json"
+  }
+}
