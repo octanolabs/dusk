@@ -79,16 +79,51 @@ const loadPackages = async function(pkgs) {
         pkg.path = packagePath.substr(8) + '/' // octano/packageid
         PACKAGES.push(pkg)
         if (pkg.client) {
+          // fetch client data
           const clientData = await getPackageData (
             path.join(packagePath, pkg.client.local),
             'https://github.com/' + pkg.client.remote
           )
+          // parse client data
           const client = await parseClient(clientData)
           client.duskpkg = {
             path: packagePath.substr(8) + '/',
             id: client.id
           }
+
+          // push client to CLIENTS cache
           CLIENTS.push(client)
+
+          // check if client releases already exist locally
+          // validate hashes
+          // update release status in CLIENTS cache
+          if (client.releases.length > 0) {
+            for (let release of client.releases) {
+              // check if bin already exists
+              const basename = path.basename(release.download.url)
+              const releaseDir =
+                path.join('persist/binaries', client.name, release.version)
+              const binPath = path.join(releaseDir, basename)
+
+              // use standard (non-promisified) fs.stat, we want to simply
+              // ignore if err, not get caught in try/catch.
+              fs.stat(binPath, async function(err, binStat) {
+                if (binStat && !err && binStat.isFile()) {
+                  const binPathAccessErr = await access(binPath, fs.constants.R_OK)
+                  if (!binPathAccessErr) {
+                    Hasher.helpers.sha256sum(binPath, {
+                      name: client.name,
+                      version: release.version,
+                      sha256: release.download.sha256,
+                      id: client.id
+                    })
+                  }
+                }
+              })
+            }
+          }
+
+          // add client networks to NETWORKS cache
           if (client.networks && client.networks.length > 0) {
             for (let n of client.networks) {
               let type = 'mainnet'
@@ -135,6 +170,7 @@ const parseClient = async function(json) {
     for(let y in client.releases) {
       let release = client.releases[y]
       if (release[build]){
+        // update releases
         const r = {
           version: release.version,
           status: 0,
