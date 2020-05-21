@@ -1,7 +1,7 @@
 {
   "id": "gubiq",
   "name": "go-ubiq",
-  "_v": 1,
+  "version": 1,
   "type": "geth",
   "icon": "static/networks/ubiq.svg",
   "client": {
