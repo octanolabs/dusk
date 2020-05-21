@@ -12,17 +12,23 @@
       "darwin-amd64": {
         "url": "https://github.com/etclabscore/core-geth/releases/download/v1.11.3/core-geth-osx-v1.11.3.zip",
         "sha256": "99bc654f2980efdf4391fc4fe585821975c5881d469ab6145fbddc499d494435",
-        "size": 12143628
+        "size": 12143628,
+        "extract": true,
+        "bin": "geth"
       },
       "linux-amd64": {
         "url": "https://github.com/etclabscore/core-geth/releases/download/v1.11.3/core-geth-linux-v1.11.3.zip",
         "sha256": "160f22cd7bbae212156eca3b7f11e79e23f01d7d3fd89165ed3f8f34aa849b3a",
-        "size": 18161393
+        "size": 18161393,
+        "extract": true,
+        "bin": "geth"
       },
       "linux-arm64": {
         "url": "https://github.com/etclabscore/core-geth/releases/download/v1.11.3/core-geth-arm-v1.11.3.zip",
         "sha256": "c147431ebde618e857d5c5d21f6db6582df3a2cc371fb5a55cf97fe3b69f2707",
-        "size": 16984469
+        "size": 16984469,
+        "extract": true,
+        "bin": "geth"
       }
     }
   ],

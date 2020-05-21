@@ -1,4 +1,5 @@
 import consola from 'consola'
+import decompress from 'decompress'
 import dl from 'download'
 import EventEmitter from 'events'
 import fs from 'fs'
@@ -78,6 +79,9 @@ export default {
   helpers: {
     download(url, path, info) {
       download(url, path, info)
+    },
+    async extract(file, path) {
+      return await decompress(file, path)
     }
   },
   emitter: downloader

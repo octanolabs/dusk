@@ -116,7 +116,8 @@ const loadPackages = async function(pkgs) {
                       name: client.name,
                       version: release.version,
                       sha256: release.download.sha256,
-                      id: client.id
+                      id: client.id,
+                      extract: false // we should never need to extract here.
                     })
                   }
                 }
@@ -227,7 +228,10 @@ Downloader.emitter.on('download-complete', async function(downloader) {
     const basename = path.basename(downloader.url)
     const filepath = path.join(downloader.path, basename)
     await chmod(filepath, 0o755)
-    Hasher.helpers.sha256sum(filepath, downloader.info)
+    Hasher.helpers.sha256sum(
+      filepath,
+      downloader.info
+    )
   } catch (e) {
     consola.error(new Error(e))
   }
@@ -244,12 +248,23 @@ Downloader.emitter.on('download-error', function(downloader) {
 })
 
 // hasher completed
-Hasher.emitter.on('sha256-complete', function(hasher) {
-  downloadCompleted(
-    hasher.info.id,
-    hasher.info.version,
-    hasher.hash === hasher.info.sha256
-  )
+Hasher.emitter.on('sha256-complete', async function(hasher) {
+  try {
+    const pass = hasher.hash === hasher.info.sha256
+    consola.info(hasher)
+    if (pass && hasher.info.extract === true) {
+      const bindir = path.dirname(hasher.path) + '/'
+      const files = Downloader.helpers.extract(hasher.path, bindir)
+    }
+
+    downloadCompleted(
+      hasher.info.id,
+      hasher.info.version,
+      pass
+    )
+  } catch (e) {
+    consola.error(new Error(e))
+  }
 })
 
 // hasher error
@@ -352,7 +367,9 @@ export default {
                     name: client.name,
                     version: release.version,
                     sha256: release.download.sha256,
-                    id: client.id
+                    id: client.id,
+                    extract: release.download.extract || false,
+                    bin: release.download.bin || null
                   }
                 )
               }
