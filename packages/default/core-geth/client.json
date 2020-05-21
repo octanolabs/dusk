@@ -1,6 +1,6 @@
 {
   "name": "core-geth",
-  "id": "cgeth",
+  "id": "getc",
   "desc": "A highly configurable Go implementation of the Ethereum protocol.",
   "icon": "static/ethereumclassiclabs.jpg",
   "releases": [
