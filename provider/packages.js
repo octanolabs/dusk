@@ -133,9 +133,9 @@ const loadPackages = async function(pkgs) {
                 type = 'testnet'
               }
               if (NETWORKS[type][n.networkId]) {
-                NETWORKS[type][n.networkId].clients.push(client.id)
+                NETWORKS[type][n.networkId].clients.push(client.name)
               } else {
-                n.clients = [ client.id ]
+                n.clients = [ client.name ]
                 n.duskpkg = {
                   path: packagePath.substr(8) + '/',
                   id: client.id
@@ -178,6 +178,7 @@ const parseClient = async function(json) {
           maxHeight: release.maxHeight,
           tag: release.tag,
           note: release.note,
+          info: release.info,
           download: release[build]
         }
         releases.push(r)

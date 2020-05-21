@@ -24,7 +24,7 @@
             small
             outlined
             label
-            class="mr-3"
+            class="mr-1"
             :color="releases.length > 0 ? 'primary' : 'secondary'"
           >
             {{ client.platform }}
@@ -74,13 +74,7 @@
           <v-list-item-action-text>
             {{ humanFileSize(item.download.size, true) }}
           </v-list-item-action-text>
-          <a
-            :href="
-              'https://github.com/ubiq/go-ubiq/releases/tag/v' + item.version
-            "
-            target="_blank"
-            style="text-decoration:none;"
-          >
+          <a :href="item.info" target="_blank" style="text-decoration:none;">
             <v-icon color="grey lighten-1">
               mdi-information-outline
             </v-icon>
