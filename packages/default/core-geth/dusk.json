@@ -6,6 +6,6 @@
   "icon": "static/ethereumclassiclabs.jpg",
   "client": {
     "local": "client.json",
-    "remote": "octanolabs/dusk/develop/packages/octano/core-geth/client.json"
+    "remote": "octanolabs/dusk/develop/packages/default/core-geth/client.json"
   }
 }

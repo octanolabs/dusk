@@ -31,7 +31,7 @@ export default {
   },
   computed: {
     packages() {
-      return this.$store.state.packages.octano || []
+      return this.$store.state.packages.default || []
     },
     custom() {
       return this.$store.state.packages.custom || []

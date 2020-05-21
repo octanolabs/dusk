@@ -77,7 +77,7 @@ const loadPackages = async function(pkgs) {
       const duskpkg = await stat(packagePath)
       if (duskpkg.isDirectory()) {
         let pkg = await readJson(path.join(packagePath, 'dusk.json'))
-        pkg.path = packagePath.substr(8) + '/' // octano/packageid
+        pkg.path = packagePath.substr(8) + '/' // default/packageid
         PACKAGES.push(pkg)
         if (pkg.client) {
           // fetch client data
@@ -251,7 +251,6 @@ Downloader.emitter.on('download-error', function(downloader) {
 Hasher.emitter.on('sha256-complete', async function(hasher) {
   try {
     const pass = hasher.hash === hasher.info.sha256
-    consola.info(hasher)
     if (pass && hasher.info.extract === true) {
       const bindir = path.dirname(hasher.path) + '/'
       const files = Downloader.helpers.extract(hasher.path, bindir)
@@ -288,7 +287,7 @@ export default {
   // return caches
   get() {
     return {
-      octano: PACKAGES,
+      default: PACKAGES,
       custom: CUSTOM,
       clients: CLIENTS,
       networks: NETWORKS
@@ -301,15 +300,15 @@ export default {
       const pkgs = await stat(rootPath)
       if (pkgs.isDirectory()) {
         // set paths
-        const octanoPath = path.join(rootPath, 'octano')
+        const defaultPath = path.join(rootPath, 'default')
         const customPath = path.join(rootPath, 'custom')
-        // check packages/octano directory exists
-        const octano = await stat(octanoPath)
-        if (octano.isDirectory()) {
+        // check packages/default directory exists
+        const defaultStat = await stat(defaultPath)
+        if (defaultStat.isDirectory()) {
           // load packages
-          await loadPackages(octanoPath)
+          await loadPackages(defaultPath)
         } else {
-          consola.error('octano packages path not found: ' + octanoPath)
+          consola.error('default packages path not found: ' + defaultPath)
         }
         // check packages/custom directory exists
         const custom = await stat(customPath)
