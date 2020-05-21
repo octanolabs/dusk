@@ -1,11 +1,10 @@
 {
-  "id": "gubiq",
   "name": "go-ubiq",
   "version": 1,
   "type": "geth",
   "icon": "static/networks/ubiq.svg",
   "client": {
     "local": "client.json",
-    "remote": "octanolabs/dusk/develop/packages/default/gubiq/client.json"
+    "remote": "octanolabs/dusk/develop/packages/default/go-ubiq/client.json"
   }
 }

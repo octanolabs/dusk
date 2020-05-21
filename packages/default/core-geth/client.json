@@ -1,6 +1,5 @@
 {
   "name": "core-geth",
-  "id": "getc",
   "desc": "A highly configurable Go implementation of the Ethereum protocol.",
   "icon": "static/ethereumclassiclabs.jpg",
   "releases": [
@@ -9,6 +8,7 @@
       "maxHeight": 0,
       "tag": "Tropicana Halo",
       "note": "Updates Mordor and Kotti bootnodes. Fixes minor issue with Clique snapshot loop condition. Fixes recurrent sync issue occurring on Kotti (in the wake of the intentional fork revision there).",
+      "info": "https://github.com/etclabscore/core-geth/releases/tag/v1.11.3",
       "darwin-amd64": {
         "url": "https://github.com/etclabscore/core-geth/releases/download/v1.11.3/core-geth-osx-v1.11.3.zip",
         "sha256": "99bc654f2980efdf4391fc4fe585821975c5881d469ab6145fbddc499d494435",
