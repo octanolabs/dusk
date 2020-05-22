@@ -55,7 +55,7 @@
         </v-list-item>
       </template>
     </v-list>
-    <span style="position:absolute;bottom:0;width:100%;padding-right:15px;">
+    <span style="position:absolute;bottom:0;width:100%;">
       <v-list>
         <v-list-item>
           <v-list-item-content>
