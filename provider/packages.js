@@ -78,6 +78,7 @@ const loadPackages = async function(pkgs) {
       if (duskpkg.isDirectory()) {
         let pkg = await readJson(path.join(packagePath, 'dusk.json'))
         pkg.path = packagePath.substr(8) + '/' // default/packageid
+        pkg.enabled = true // TODO
         PACKAGES.push(pkg)
         if (pkg.client) {
           // fetch client data

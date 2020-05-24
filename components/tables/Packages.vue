@@ -10,6 +10,9 @@
       </v-avatar>
       {{ item.name }}
     </template>
+    <template v-slot:item.enabled="{ item }">
+      <v-simple-checkbox :value="item.enabled"></v-simple-checkbox>
+    </template>
   </v-data-table>
 </template>
 
@@ -25,15 +28,16 @@ export default {
   },
   data() {
     return {
+      expanded: [],
       headers: [
         {
           text: this.$t('packages.name'),
           align: 'start',
           value: 'name'
         },
-        { text: this.$t('packages.id'), value: 'id' },
         { text: this.$t('packages.type'), value: 'type' },
-        { text: this.$t('packages.version'), value: 'version' }
+        { text: this.$t('packages.version'), value: 'version' },
+        { text: 'enabled', align: 'end', value: 'enabled' }
       ]
     }
   }
