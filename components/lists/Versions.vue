@@ -127,8 +127,7 @@ export default {
     async downloadRelease(release) {
       try {
         await this.$store.dispatch('download', {
-          clientId: this.client.id,
-          clientName: this.client.name,
+          client: this.client.name,
           version: release.version
         })
       } catch (e) {

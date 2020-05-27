@@ -32,17 +32,17 @@ let NETWORKS = {
 }
 
 /* downloadCompleted
- * loop through CLIENTS to find matching clientId
+ * loop through CLIENTS to find matching clientName
  * loop through releases to find matching version
  * update status:
  * -1: error
  *  0: available for downloaded
  *  1: downloaded & verified (available for use)
  */
-const downloadCompleted = async function(clientId, version, success, error) {
+const downloadCompleted = async function(clientName, version, success, error) {
   try {
     for (let n in CLIENTS) {
-      if (CLIENTS[n].id === clientId) {
+      if (CLIENTS[n].name === clientName) {
         for (let x in CLIENTS[n].releases) {
           const release = CLIENTS[n].releases[x]
           if (cmpver(release.version, version) === 0) {
@@ -78,7 +78,6 @@ const loadPackages = async function(pkgs) {
       if (duskpkg.isDirectory()) {
         let pkg = await readJson(path.join(packagePath, 'dusk.json'))
         pkg.path = packagePath.substr(8) + '/' // default/packageid
-        pkg.enabled = true // TODO
         PACKAGES.push(pkg)
         if (pkg.client) {
           // fetch client data
@@ -90,7 +89,7 @@ const loadPackages = async function(pkgs) {
           const client = await parseClient(clientData)
           client.duskpkg = {
             path: packagePath.substr(8) + '/',
-            id: client.id
+            id: client.name
           }
 
           // push client to CLIENTS cache
@@ -117,7 +116,6 @@ const loadPackages = async function(pkgs) {
                       name: client.name,
                       version: release.version,
                       sha256: release.download.sha256,
-                      id: client.id,
                       extract: false // we should never need to extract here.
                     })
                   }
@@ -139,7 +137,7 @@ const loadPackages = async function(pkgs) {
                 n.clients = [ client.name ]
                 n.duskpkg = {
                   path: packagePath.substr(8) + '/',
-                  id: client.id
+                  id: client.name
                 }
                 NETWORKS[type][n.networkId] = n
               }
@@ -242,7 +240,7 @@ Downloader.emitter.on('download-complete', async function(downloader) {
 // download error
 Downloader.emitter.on('download-error', function(downloader) {
   downloadCompleted(
-    downloader.info.id,
+    downloader.info.name,
     downloader.info.version,
     false,
     downloader.error
@@ -259,7 +257,7 @@ Hasher.emitter.on('sha256-complete', async function(hasher) {
     }
 
     downloadCompleted(
-      hasher.info.id,
+      hasher.info.name,
       hasher.info.version,
       pass
     )
@@ -271,7 +269,7 @@ Hasher.emitter.on('sha256-complete', async function(hasher) {
 // hasher error
 Hasher.emitter.on('sha256-error', function(hasher) {
   downloadCompleted(
-    hasher.info.id,
+    hasher.info.name,
     hasher.info.version,
     false,
     hasher.error
@@ -330,17 +328,17 @@ export default {
   downloading() {
     return Downloader.get()
   },
-  async download(clientId, version) {
+  async download(clientName, version) {
     try {
       const state = Downloader.get()
       // is a download already in progress?
       if (state.status !== true) {
         // nope? ok continue
-        // loop through clients for a matching clientId
+        // loop through clients for a matching clientName
         for (let i in CLIENTS) {
           const client = CLIENTS[i]
-          if (client.id === clientId) {
-            // clientId found
+          if (client.name === clientName) {
+            // clientName found
             // loop through releases for a matching version
             for (let x in client.releases) {
               const release = client.releases[x]
@@ -368,7 +366,6 @@ export default {
                     name: client.name,
                     version: release.version,
                     sha256: release.download.sha256,
-                    id: client.id,
                     extract: release.download.extract || false,
                     bin: release.download.bin || null
                   }
