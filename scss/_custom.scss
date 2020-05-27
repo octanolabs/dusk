@@ -60,6 +60,16 @@ pre {
   max-width: 640px !important;
 }
 
+.v-card--raised {
+  border-color: $primary !important;
+  color: $primary !important;
+}
+
+.grayscale {
+  -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
+  filter: grayscale(100%);
+}
+
 .custom-highlight-row {
   background-color: $primary;
 }
