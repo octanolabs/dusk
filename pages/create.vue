@@ -36,6 +36,7 @@
               selectedNetwork = network.networkId
               selectedNetworkType = 'mainnet'
               selectedClient = false
+              selectedClientVersion = false
               filterClientsByNetwork()
             "
           >
@@ -90,6 +91,7 @@
                     selectedNetwork = network.networkId
                     selectedNetworkType = 'testnet'
                     selectedClient = false
+                    selectedClientVersion = false
                     filterClientsByNetwork()
                   "
                 >
@@ -150,26 +152,74 @@
                 outlined
                 style="display:inline-block;"
                 hover
-                ripple
                 :raised="selectedClient === client.name"
                 class="ma-1"
-                @click.stop="selectedClient = client.name"
               >
-                <v-avatar tile color="#111" size="180">
-                  <img
-                    :src="
-                      require('~/packages' + client.duskpkg.path + client.icon)
-                    "
-                    height="140"
-                    style="max-height:140px"
-                  />
-                </v-avatar>
-                <v-card-text class="text-center">
-                  {{ client.name }}
-                </v-card-text>
+                <v-menu
+                  bottom
+                  origin="center center"
+                  transition="scale-transition"
+                >
+                  <template v-slot:activator="{ on }">
+                    <v-list two-line>
+                      <v-list-item v-on="on">
+                        <v-list-item-avatar tile color="#111">
+                          <img
+                            :src="
+                              require('~/packages' +
+                                client.duskpkg.path +
+                                client.icon)
+                            "
+                          />
+                        </v-list-item-avatar>
+                        <v-list-item-content>
+                          <v-list-item-title>
+                            {{ client.name }}
+                          </v-list-item-title>
+                          <v-list-item-subtitle>
+                            {{ selectedClientVersion }}
+                          </v-list-item-subtitle>
+                        </v-list-item-content>
+                        <v-list-item-action>
+                          <v-icon color="grey lighten-1">mdi-menu-down</v-icon>
+                        </v-list-item-action>
+                      </v-list-item>
+                    </v-list>
+                  </template>
+                  <v-list>
+                    <template v-for="(item, i) in client.releases">
+                      <v-list-item
+                        v-if="item.status > 0"
+                        :key="i"
+                        @click="
+                          selectedClient = client.name
+                          selectedClientVersion = item.version
+                        "
+                      >
+                        <v-list-item-title>
+                          {{ item.version }}
+                        </v-list-item-title>
+                      </v-list-item>
+                    </template>
+                  </v-list>
+                </v-menu>
               </v-card>
             </v-row>
           </v-card-text>
+        </v-card>
+      </v-slide-y-transition>
+    </v-flex>
+    <v-flex shrink>
+      <v-slide-y-transition>
+        <v-card
+          v-show="!!selectedClient && !!selectedClientVersion"
+          class="px-1 py-2 mt-2"
+        >
+          <v-card-title class="py-1">
+            <v-icon class="mx-1">mdi-cogs</v-icon>
+            Configure your client
+          </v-card-title>
+          <v-card-text></v-card-text>
         </v-card>
       </v-slide-y-transition>
     </v-flex>
@@ -185,7 +235,9 @@ export default {
       selectedNetwork: false,
       selectedNetworkType: 'mainnet',
       selectedClient: false,
+      selectedClientVersion: false,
       availableClients: [],
+      availableReleases: [],
       breadcrumbs: [
         {
           text: 'Instances',
