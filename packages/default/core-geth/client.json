@@ -1,7 +1,7 @@
 {
   "name": "core-geth",
   "desc": "A highly configurable Go implementation of the Ethereum protocol.",
-  "icon": "static/ethereumclassiclabs.jpg",
+  "icon": "static/logo.png",
   "releases": [
     {
       "version": "1.11.2",

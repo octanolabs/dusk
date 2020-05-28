@@ -2,7 +2,7 @@
   "name": "core-geth",
   "version": 1,
   "type": "geth",
-  "icon": "static/ethereumclassiclabs.jpg",
+  "icon": "static/logo.png",
   "client": {
     "local": "client.json",
     "remote": "octanolabs/dusk/develop/packages/default/core-geth/client.json"
