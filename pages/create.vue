@@ -16,7 +16,10 @@
               </v-list-item-subtitle>
             </v-list-item-content>
             <v-list-item-action>
-              <v-switch v-model="showTestnets"></v-switch>
+              <v-switch
+                v-model="showTestnets"
+                :disabled="showTestnetsDisabled"
+              ></v-switch>
             </v-list-item-action>
           </v-list-item>
         </v-list>
@@ -37,6 +40,7 @@
               selectedNetworkType = 'mainnet'
               selectedClient = false
               selectedClientVersion = false
+              showTestnetsDisabled = false
               filterClientsByNetwork()
             "
           >
@@ -92,6 +96,7 @@
                     selectedNetworkType = 'testnet'
                     selectedClient = false
                     selectedClientVersion = false
+                    showTestnetsDisabled = true
                     filterClientsByNetwork()
                   "
                 >
@@ -234,6 +239,7 @@ export default {
   data() {
     return {
       showTestnets: false,
+      showTestnetsDisabled: false,
       selectedNetwork: false,
       selectedNetworkType: 'mainnet',
       selectedClient: false,
