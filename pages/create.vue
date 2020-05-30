@@ -157,13 +157,13 @@
               >
                 <v-menu
                   bottom
-                  origin="center center"
+                  origin="bottom center"
                   transition="scale-transition"
                 >
                   <template v-slot:activator="{ on }">
-                    <v-list two-line>
+                    <v-list two-line class="pa-0" style="background-color:#111">
                       <v-list-item v-on="on">
-                        <v-list-item-avatar tile color="#111">
+                        <v-list-item-avatar color="#111">
                           <img
                             :src="
                               require('~/packages' +
@@ -176,8 +176,10 @@
                           <v-list-item-title>
                             {{ client.name }}
                           </v-list-item-title>
-                          <v-list-item-subtitle>
-                            {{ selectedClientVersion }}
+                          <v-list-item-subtitle
+                            v-if="selectedClient === client.name"
+                          >
+                            v{{ selectedClientVersion }}
                           </v-list-item-subtitle>
                         </v-list-item-content>
                         <v-list-item-action>
