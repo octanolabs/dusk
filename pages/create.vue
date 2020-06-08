@@ -225,8 +225,29 @@
           <v-card-title class="py-1">
             <v-icon class="mx-1">mdi-cogs</v-icon>
             Configure your client
+            <v-spacer />
+            <v-list>
+              <v-list-item>
+                <v-list-item-content>
+                  <v-list-item-subtitle>
+                    show advanced
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+                <v-list-item-action>
+                  <v-switch
+                    v-model="showAdvanced"
+                    :disabled="showAdvancedDisabled"
+                  ></v-switch>
+                </v-list-item-action>
+              </v-list-item>
+            </v-list>
           </v-card-title>
-          <v-card-text></v-card-text>
+          <v-card-text>
+            <geth-settings
+              :client="selectedClient"
+              :version="selectedClientVersion"
+            />
+          </v-card-text>
         </v-card>
       </v-slide-y-transition>
     </v-flex>
@@ -234,12 +255,19 @@
 </template>
 
 <script>
+import GethSettings from '~/components/forms/gethSettings'
+
 export default {
   middleware: 'auth',
+  components: {
+    GethSettings
+  },
   data() {
     return {
       showTestnets: false,
       showTestnetsDisabled: false,
+      showAdvanced: false,
+      showAdvancedDisabled: false,
       selectedNetwork: false,
       selectedNetworkType: 'mainnet',
       selectedClient: false,
