@@ -41,6 +41,7 @@
               selectedClient = false
               selectedClientVersion = false
               showTestnetsDisabled = false
+              selectedEngine = network.engine
               filterClientsByNetwork()
             "
           >
@@ -97,6 +98,7 @@
                     selectedClient = false
                     selectedClientVersion = false
                     showTestnetsDisabled = true
+                    selectedEngine = network.engine
                     filterClientsByNetwork()
                   "
                 >
@@ -218,37 +220,36 @@
     </v-flex>
     <v-flex shrink>
       <v-slide-y-transition>
-        <v-card
-          v-show="!!selectedClient && !!selectedClientVersion"
-          class="px-1 py-2 mt-2"
-        >
-          <v-card-title class="py-1">
-            <v-icon class="mx-1">mdi-cogs</v-icon>
-            Configure your client
-            <v-spacer />
-            <v-list>
-              <v-list-item>
-                <v-list-item-content>
-                  <v-list-item-subtitle>
-                    show advanced
-                  </v-list-item-subtitle>
-                </v-list-item-content>
-                <v-list-item-action>
-                  <v-switch
-                    v-model="showAdvanced"
-                    :disabled="showAdvancedDisabled"
-                  ></v-switch>
-                </v-list-item-action>
-              </v-list-item>
-            </v-list>
-          </v-card-title>
-          <v-card-text>
-            <geth-settings
-              :client="selectedClient"
-              :version="selectedClientVersion"
-            />
-          </v-card-text>
-        </v-card>
+        <v-flex v-show="!!selectedClient && !!selectedClientVersion">
+          <v-card class="px-1 py-2 mt-2">
+            <v-card-title class="py-1">
+              <v-icon class="mx-1">mdi-cogs</v-icon>
+              Configure your client
+              <v-spacer />
+              <v-list>
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-subtitle>
+                      show advanced
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
+                  <v-list-item-action>
+                    <v-switch
+                      v-model="showAdvanced"
+                      :disabled="showAdvancedDisabled"
+                    ></v-switch>
+                  </v-list-item-action>
+                </v-list-item>
+              </v-list>
+            </v-card-title>
+          </v-card>
+          <geth-settings
+            :client="selectedClient"
+            :engine="selectedEngine"
+            :version="selectedClientVersion"
+            :showAdvanced="showAdvanced"
+          />
+        </v-flex>
       </v-slide-y-transition>
     </v-flex>
   </v-container>
@@ -264,6 +265,7 @@ export default {
   },
   data() {
     return {
+      selectedEngine: '',
       showTestnets: false,
       showTestnetsDisabled: false,
       showAdvanced: false,
