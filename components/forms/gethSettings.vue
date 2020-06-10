@@ -185,7 +185,7 @@
                     <v-checkbox
                       v-for="mod in rpcModules"
                       :key="mod"
-                      v-model="config.rpcApi"
+                      v-model="config.rpcapi"
                       :label="mod === 'ENGINE' ? engine : mod"
                       :value="mod"
                       class="mr-4 my-0 pb-0"
@@ -203,12 +203,79 @@
                   <v-list-item-content>
                     <v-list-item-title>WS-RPC</v-list-item-title>
                     <v-list-item-subtitle>
-                      Enable the Web Sockets RPC server
+                      Enable the WS-RPC server
                     </v-list-item-subtitle>
                   </v-list-item-content>
                   <v-list-item-action>
                     <v-switch v-model="config.ws"></v-switch>
                   </v-list-item-action>
+                </v-list-item>
+                <v-list-item v-if="showAdvanced && config.ws">
+                  <v-list-item-content>
+                    <v-list-item-title>ADDRESS</v-list-item-title>
+                    <v-list-item-subtitle>
+                      WS-RPC server listening interface
+                    </v-list-item-subtitle>
+                    <v-text-field
+                      v-model="config.wsaddr"
+                      name="wsaddr"
+                      outlined
+                      dense
+                      :rules="[rules.required]"
+                      hide-details="auto"
+                    ></v-text-field>
+                  </v-list-item-content>
+                </v-list-item>
+                <v-list-item v-if="showAdvanced && config.ws">
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      PORT
+                    </v-list-item-title>
+                    <v-list-item-subtitle>
+                      WS-RPC server listening port
+                    </v-list-item-subtitle>
+                    <v-spacer />
+                    <v-text-field
+                      v-model="config.wsport"
+                      name="wsport"
+                      outlined
+                      dense
+                      :rules="[rules.required]"
+                      hide-details="auto"
+                    ></v-text-field>
+                  </v-list-item-content>
+                </v-list-item>
+                <v-list-item v-if="showAdvanced && config.ws">
+                  <v-list-item-content>
+                    <v-list-item-title>ORIGINS</v-list-item-title>
+                    <v-list-item-subtitle>
+                      Origins from which to accept websockets requests
+                    </v-list-item-subtitle>
+                    <v-text-field
+                      v-model="config.wsorigins"
+                      name="wsorigins"
+                      outlined
+                      dense
+                      hide-details="auto"
+                    ></v-text-field>
+                  </v-list-item-content>
+                </v-list-item>
+                <v-list-item v-if="config.ws">
+                  <v-list-item-content>
+                    <v-list-item-title>API's</v-list-item-title>
+                    <v-list-item-subtitle>
+                      API's offered over the WS-RPC interface
+                    </v-list-item-subtitle>
+                    <v-checkbox
+                      v-for="mod in rpcModules"
+                      :key="mod"
+                      v-model="config.wsapi"
+                      :label="mod === 'ENGINE' ? engine : mod"
+                      :value="mod"
+                      class="mr-4 my-0 pb-0"
+                      hide-details
+                    ></v-checkbox>
+                  </v-list-item-content>
                 </v-list-item>
               </v-list>
             </v-row>
@@ -275,10 +342,14 @@ export default {
         rpc: false,
         rpcport: 8588,
         rpcaddr: 'localhost',
-        rpcApi: ['eth', 'net', 'rpc', 'web3'],
+        rpcapi: ['eth', 'net', 'rpc', 'web3'],
         rpcvhosts: 'localhost',
         rpccorsdomain: '',
-        ws: false
+        ws: false,
+        wsport: 8589,
+        wsaddr: 'localhost',
+        wsapi: ['eth', 'net', 'rpc', 'web3'],
+        wsorigins: ''
       },
       rpcModules: [
         'admin',
