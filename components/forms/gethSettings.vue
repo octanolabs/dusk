@@ -14,16 +14,16 @@
                     <v-list-item-subtitle>
                       Data directory for the databases and keystore
                     </v-list-item-subtitle>
-                  </v-list-item-content>
-                  <v-list-item-actions style="width:300px;">
                     <v-text-field
                       v-model="config.datadir"
                       class="ma-0 pa-0"
-                      label="datadir"
                       name="datadir"
+                      outlined
+                      dense
                       :rules="[rules.required]"
+                      hide-details="auto"
                     ></v-text-field>
-                  </v-list-item-actions>
+                  </v-list-item-content>
                 </v-list-item>
               </v-list>
             </v-row>
@@ -87,8 +87,103 @@
                     label="Node name"
                     name="ethstats"
                     outlined
+                    dense
                     :rules="[rules.required]"
                   ></v-text-field>
+                </v-list-item>
+              </v-list>
+            </v-row>
+          </v-card>
+          <v-card class="mb-1">
+            <v-row no-gutters>
+              <v-list two-line class="w-100">
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title>Port</v-list-item-title>
+                    <v-list-item-subtitle>
+                      Network listening port
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
+                  <v-list-item-action>
+                    <v-text-field
+                      v-model="config.port"
+                      name="port"
+                      outlined
+                      dense
+                      :rules="[rules.required]"
+                      hide-details="auto"
+                    ></v-text-field>
+                  </v-list-item-action>
+                </v-list-item>
+              </v-list>
+            </v-row>
+          </v-card>
+          <v-card class="mb-1">
+            <v-row no-gutters>
+              <v-list two-line class="w-100">
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title>Max. Peers</v-list-item-title>
+                    <v-list-item-subtitle>
+                      Maximum number of network peers (network disabled if set
+                      to 0)
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
+                  <v-list-item-action>
+                    <v-text-field
+                      v-model="config.maxpeers"
+                      name="maxpeers"
+                      outlined
+                      dense
+                      :rules="[rules.required]"
+                      hide-details="auto"
+                    ></v-text-field>
+                  </v-list-item-action>
+                </v-list-item>
+              </v-list>
+            </v-row>
+          </v-card>
+          <v-card v-if="showAdvanced" class="mb-1">
+            <v-row no-gutters>
+              <v-list two-line class="w-100">
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      NAT
+                    </v-list-item-title>
+                    <v-list-item-subtitle>
+                      NAT port mapping mechanism
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
+                  <v-list-item-action>
+                    <v-combobox
+                      v-model="config.nat"
+                      :items="natOptions"
+                      outlined
+                      dense
+                      hide-details="auto"
+                    ></v-combobox>
+                  </v-list-item-action>
+                </v-list-item>
+              </v-list>
+            </v-row>
+          </v-card>
+          <v-card v-if="showAdvanced" class="mb-1">
+            <v-row no-gutters>
+              <v-list two-line class="w-100">
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      Nodiscover
+                    </v-list-item-title>
+                    <v-list-item-subtitle>
+                      Disables the peer discovery mechanism (manual peer
+                      addition)
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
+                  <v-list-item-action>
+                    <v-switch v-model="config.nodiscover"></v-switch>
+                  </v-list-item-action>
                 </v-list-item>
               </v-list>
             </v-row>
@@ -109,7 +204,7 @@
                     <v-switch v-model="config.rpc"></v-switch>
                   </v-list-item-action>
                 </v-list-item>
-                <v-list-item v-if="showAdvanced && config.rpc">
+                <v-list-item v-if="config.rpc">
                   <v-list-item-content>
                     <v-list-item-title>ADDRESS</v-list-item-title>
                     <v-list-item-subtitle>
@@ -125,7 +220,7 @@
                     ></v-text-field>
                   </v-list-item-content>
                 </v-list-item>
-                <v-list-item v-if="showAdvanced && config.rpc">
+                <v-list-item v-if="config.rpc">
                   <v-list-item-content>
                     <v-list-item-title>
                       PORT
@@ -210,7 +305,7 @@
                     <v-switch v-model="config.ws"></v-switch>
                   </v-list-item-action>
                 </v-list-item>
-                <v-list-item v-if="showAdvanced && config.ws">
+                <v-list-item v-if="config.ws">
                   <v-list-item-content>
                     <v-list-item-title>ADDRESS</v-list-item-title>
                     <v-list-item-subtitle>
@@ -226,7 +321,7 @@
                     ></v-text-field>
                   </v-list-item-content>
                 </v-list-item>
-                <v-list-item v-if="showAdvanced && config.ws">
+                <v-list-item v-if="config.ws">
                   <v-list-item-content>
                     <v-list-item-title>
                       PORT
@@ -339,6 +434,10 @@ export default {
         fullsync: false,
         archive: false,
         ethstats: false,
+        port: 30388,
+        maxpeers: 25,
+        nat: 'any',
+        nodiscover: false,
         rpc: false,
         rpcport: 8588,
         rpcaddr: 'localhost',
@@ -351,6 +450,7 @@ export default {
         wsapi: ['eth', 'net', 'rpc', 'web3'],
         wsorigins: ''
       },
+      natOptions: ['any', 'none', 'upnp', 'pmp', 'extip'],
       rpcModules: [
         'admin',
         'debug',
@@ -360,7 +460,7 @@ export default {
         'personal',
         'rpc',
         'txpool',
-        'ENGINE',
+        'ENGINE', // placeholder for ethash, ubqhash, clique
         'web3'
       ],
       instanceName: '',
