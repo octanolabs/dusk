@@ -11,7 +11,12 @@
       {{ item.name }}
     </template>
     <template v-slot:item.clients="{ item }">
-      <v-chip v-for="client in item.clients" :key="client.id" label>
+      <v-chip
+        v-for="client in item.clients"
+        :key="client.id"
+        class="mr-1"
+        label
+      >
         {{ client }}
       </v-chip>
     </template>
