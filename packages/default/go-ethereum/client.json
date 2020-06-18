@@ -59,13 +59,43 @@
   "networks": [
     {
       "networkId": 1,
-      "chainId": 8,
+      "chainId": 1,
       "testnet": false,
       "name": "Ethereum",
       "icon": "static/networks/ethereum.svg",
       "engine": "ethash",
       "explorer": "https://etherscan.io",
       "ethstats": "https://ethstats.net"
+    },
+    {
+      "networkId": 3,
+      "chainId": 3,
+      "testnet": true,
+      "name": "Ropsten",
+      "icon": "static/networks/ethereum.svg",
+      "engine": "ethash",
+      "explorer": "",
+      "ethstats": ""
+    },
+    {
+      "networkId": 4,
+      "chainId": 4,
+      "testnet": true,
+      "name": "Rinkeby",
+      "icon": "static/networks/ethereum.svg",
+      "engine": "clique",
+      "explorer": "",
+      "ethstats": ""
+    },
+    {
+      "networkId": 5,
+      "chainId": 5,
+      "testnet": true,
+      "name": "Goerli",
+      "icon": "static/networks/ethereum.svg",
+      "engine": "clique",
+      "explorer": "",
+      "ethstats": ""
     }
   ],
   "defaultOptions": {
