@@ -65,17 +65,42 @@
       "icon": "static/networks/ethereum.svg",
       "engine": "ethash",
       "explorer": "https://etherscan.io",
-      "ethstats": "https://ethstats.net",
+      "ethstats": "https://ethstats.net"
     }
   ],
   "defaultOptions": {
+    "fullsync": false,
+    "archive": false,
+    "ethstats": false,
     "port": 30303,
-    "maxpeers": "25",
-    "cache": 16,
-    "syncmode": "fast",
-    "gcmode": "full",
-    "rpc": false,
-    "rpcApi": ["db", "eth", "net", "web3"],
-    "rpcPort": 8545
+    "maxpeers": 50,
+    "nat": "any",
+    "nodiscover": false,
+    "ethstats": {
+      "enable": false,
+      "nodename": ""
+    },
+    "http": {
+      "enable": false,
+      "port": 8545,
+      "addr": "localhost",
+      "api": ["eth", "net", "web3"],
+      "vhosts": "localhost",
+      "corsdomain": ""
+    },
+    "ws": {
+      "enable": false,
+      "port": 8546,
+      "addr": "localhost",
+      "api": ["eth", "net", "web3"],
+      "origins": ""
+    },
+    "graphql": {
+      "enable": false,
+      "port": 8547,
+      "addr": "localhost",
+      "vhosts": "localhost",
+      "corsdomain": ""
+    }
   }
 }
