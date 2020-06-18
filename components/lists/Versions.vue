@@ -4,7 +4,7 @@
       <div>
         <v-list>
           <v-list-item>
-            <v-list-item-avatar>
+            <v-list-item-avatar tile>
               <img
                 v-if="client.icon"
                 :src="require('~/packages' + client.duskpkg.path + client.icon)"
