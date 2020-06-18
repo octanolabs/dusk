@@ -63,7 +63,7 @@
       "chainId": 1,
       "testnet": false,
       "name": "Ethereum",
-      "icon": "static/networks/ethereum.svg",
+      "icon": "static/networks/ethereum.png",
       "engine": "ethash",
       "explorer": "https://etherscan.io",
       "ethstats": "https://ethstats.net"
@@ -74,7 +74,7 @@
       "chainId": 3,
       "testnet": true,
       "name": "Ropsten",
-      "icon": "static/networks/ethereum.svg",
+      "icon": "static/networks/ethereum.png",
       "engine": "ethash",
       "explorer": "",
       "ethstats": ""
@@ -85,7 +85,7 @@
       "chainId": 4,
       "testnet": true,
       "name": "Rinkeby",
-      "icon": "static/networks/ethereum.svg",
+      "icon": "static/networks/ethereum.png",
       "engine": "clique",
       "explorer": "",
       "ethstats": ""
@@ -96,7 +96,7 @@
       "chainId": 5,
       "testnet": true,
       "name": "Goerli",
-      "icon": "static/networks/ethereum.svg",
+      "icon": "static/networks/ethereum.png",
       "engine": "clique",
       "explorer": "",
       "ethstats": ""
