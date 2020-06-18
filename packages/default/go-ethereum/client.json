@@ -58,6 +58,7 @@
   ],
   "networks": [
     {
+      "id": "eth",
       "networkId": 1,
       "chainId": 1,
       "testnet": false,
@@ -68,6 +69,7 @@
       "ethstats": "https://ethstats.net"
     },
     {
+      "id": "ropsten",
       "networkId": 3,
       "chainId": 3,
       "testnet": true,
@@ -78,6 +80,7 @@
       "ethstats": ""
     },
     {
+      "id": "rinkeby",
       "networkId": 4,
       "chainId": 4,
       "testnet": true,
@@ -88,6 +91,7 @@
       "ethstats": ""
     },
     {
+      "id": "goerli",
       "networkId": 5,
       "chainId": 5,
       "testnet": true,

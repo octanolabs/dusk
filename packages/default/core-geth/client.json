@@ -34,6 +34,7 @@
   ],
   "networks": [
     {
+      "id": "etc",
       "networkId": 1,
       "chainId": 61,
       "testnet": false,
@@ -41,10 +42,10 @@
       "icon": "static/networks/etc.svg",
       "engine": "ethash",
       "explorer": "",
-      "ethstats": "",
-      "minVer": "1.11.2"
+      "ethstats": ""
     },
     {
+      "id": "kotti",
       "networkId": 6,
       "chainId": 6,
       "testnet": true,
@@ -52,11 +53,10 @@
       "icon": "static/networks/etc.svg",
       "engine": "clique",
       "explorer": "",
-      "ethstats": "",
-      "flag": "--kotti",
-      "minVer": "1.11.2"
+      "ethstats": ""
     },
     {
+      "id": "mordor"
       "networkId": 7,
       "chainId": 63,
       "testnet": true,
@@ -64,9 +64,7 @@
       "icon": "static/networks/etc.svg",
       "engine": "ethash",
       "explorer": "",
-      "ethstats": "",
-      "flag": "--mordor",
-      "minVer": "1.11.2"
+      "ethstats": ""
     }
   ],
   "defaultOptions": {

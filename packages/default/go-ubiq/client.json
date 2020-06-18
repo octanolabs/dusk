@@ -58,6 +58,7 @@
   ],
   "networks": [
     {
+      "id": "ubq",
       "networkId": 88,
       "chainId": 8,
       "testnet": false,
