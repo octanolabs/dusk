@@ -1,0 +1,10 @@
+{
+  "name": "go-ethereum",
+  "version": 1,
+  "type": "geth",
+  "icon": "static/mascot.png",
+  "client": {
+    "local": "client.json",
+    "remote": "octanolabs/dusk/develop/packages/default/go-ethereum/client.json"
+  }
+}
