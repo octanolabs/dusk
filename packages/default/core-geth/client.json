@@ -56,7 +56,7 @@
       "ethstats": ""
     },
     {
-      "id": "mordor"
+      "id": "mordor",
       "networkId": 7,
       "chainId": 63,
       "testnet": true,
