@@ -131,15 +131,15 @@ const loadPackages = async function(pkgs) {
               if (n.testnet) {
                 type = 'testnet'
               }
-              if (NETWORKS[type][n.networkId]) {
-                NETWORKS[type][n.networkId].clients.push(client.name)
+              if (NETWORKS[type][n.id]) {
+                NETWORKS[type][n.id].clients.push(client.name)
               } else {
                 n.clients = [ client.name ]
                 n.duskpkg = {
                   path: packagePath.substr(8) + '/',
                   id: client.name
                 }
-                NETWORKS[type][n.networkId] = n
+                NETWORKS[type][n.id] = n
               }
             }
           }

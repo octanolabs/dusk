@@ -33,10 +33,10 @@
             style="display:inline-block;"
             hover
             ripple
-            :raised="selectedNetwork === network.networkId"
+            :raised="selectedNetwork === network.id"
             class="ma-1"
             @click.stop="
-              selectedNetwork = network.networkId
+              selectedNetwork = network.id
               selectedNetworkType = 'mainnet'
               selectedClient = false
               selectedClientVersion = false
@@ -53,8 +53,7 @@
                 height="140"
                 style="max-height:140px"
                 :class="{
-                  grayscale:
-                    selectedNetwork && selectedNetwork !== network.networkId
+                  grayscale: selectedNetwork && selectedNetwork !== network.id
                 }"
               />
             </v-avatar>
@@ -90,10 +89,10 @@
                   style="min-width:182px;display:inline-block;"
                   hover
                   ripple
-                  :raised="selectedNetwork === network.networkId"
+                  :raised="selectedNetwork === network.id"
                   class="ma-1"
                   @click.stop="
-                    selectedNetwork = network.networkId
+                    selectedNetwork = network.id
                     selectedNetworkType = 'testnet'
                     selectedClient = false
                     selectedClientVersion = false
@@ -113,8 +112,7 @@
                       style="max-height:140px"
                       :class="{
                         grayscale:
-                          selectedNetwork &&
-                          selectedNetwork !== network.networkId
+                          selectedNetwork && selectedNetwork !== network.id
                       }"
                     />
                   </v-avatar>
@@ -164,8 +162,8 @@
               >
                 <v-menu
                   bottom
-                  origin="bottom center"
-                  transition="scale-transition"
+                  transition="slide-y-transition"
+                  origin="top center"
                 >
                   <template v-slot:activator="{ on }">
                     <v-list two-line class="pa-0" style="background-color:#111">
@@ -206,7 +204,7 @@
                         "
                       >
                         <v-list-item-title>
-                          {{ item.version }}
+                          v{{ item.version }} - {{ item.tag }}
                         </v-list-item-title>
                       </v-list-item>
                     </template>

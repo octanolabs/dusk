@@ -101,7 +101,7 @@ export default {
           name: 'ubiq1',
           clientId: 'gubiq',
           network: {
-            id: 88,
+            id: 'ubq',
             type: 'mainnet'
           },
           version: '3.0.1',
