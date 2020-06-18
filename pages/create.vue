@@ -51,7 +51,7 @@
                   require('~/packages' + network.duskpkg.path + network.icon)
                 "
                 height="140"
-                style="max-height:140px"
+                style="max-height:140px;max-width:140px;"
                 :class="{
                   grayscale: selectedNetwork && selectedNetwork !== network.id
                 }"
@@ -109,7 +109,7 @@
                           network.icon)
                       "
                       height="140"
-                      style="max-height:140px"
+                      style="max-height:140px;max-width:140px;"
                       :class="{
                         grayscale:
                           selectedNetwork && selectedNetwork !== network.id
@@ -168,7 +168,7 @@
                   <template v-slot:activator="{ on }">
                     <v-list two-line class="pa-0" style="background-color:#111">
                       <v-list-item v-on="on">
-                        <v-list-item-avatar color="#111">
+                        <v-list-item-avatar tile>
                           <img
                             :src="
                               require('~/packages' +
