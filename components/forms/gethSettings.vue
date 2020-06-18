@@ -201,17 +201,17 @@
                     </v-list-item-subtitle>
                   </v-list-item-content>
                   <v-list-item-action>
-                    <v-switch v-model="config.rpc"></v-switch>
+                    <v-switch v-model="config.http.enable"></v-switch>
                   </v-list-item-action>
                 </v-list-item>
-                <v-list-item v-if="config.rpc">
+                <v-list-item v-if="config.http.enable">
                   <v-list-item-content>
                     <v-list-item-title>ADDRESS</v-list-item-title>
                     <v-list-item-subtitle>
                       HTTP-RPC server listening interface
                     </v-list-item-subtitle>
                     <v-text-field
-                      v-model="config.rpcaddr"
+                      v-model="config.http.addr"
                       name="rpcaddr"
                       outlined
                       dense
@@ -220,7 +220,7 @@
                     ></v-text-field>
                   </v-list-item-content>
                 </v-list-item>
-                <v-list-item v-if="config.rpc">
+                <v-list-item v-if="config.http.enable">
                   <v-list-item-content>
                     <v-list-item-title>
                       PORT
@@ -230,7 +230,7 @@
                     </v-list-item-subtitle>
                     <v-spacer />
                     <v-text-field
-                      v-model="config.rpcport"
+                      v-model="config.http.port"
                       name="rpcport"
                       outlined
                       dense
@@ -239,7 +239,7 @@
                     ></v-text-field>
                   </v-list-item-content>
                 </v-list-item>
-                <v-list-item v-if="showAdvanced && config.rpc">
+                <v-list-item v-if="showAdvanced && config.http.enable">
                   <v-list-item-content>
                     <v-list-item-title>CORS DOMAIN</v-list-item-title>
                     <v-list-item-subtitle>
@@ -247,7 +247,7 @@
                       origin requests (browser enforced)
                     </v-list-item-subtitle>
                     <v-text-field
-                      v-model="config.rpccorsdomain"
+                      v-model="config.http.corsdomain"
                       name="rpccorsdomain"
                       outlined
                       dense
@@ -255,7 +255,7 @@
                     ></v-text-field>
                   </v-list-item-content>
                 </v-list-item>
-                <v-list-item v-if="showAdvanced && config.rpc">
+                <v-list-item v-if="showAdvanced && config.http.enable">
                   <v-list-item-content>
                     <v-list-item-title>VHOSTS</v-list-item-title>
                     <v-list-item-subtitle>
@@ -263,7 +263,7 @@
                       accept requests (server enforced).
                     </v-list-item-subtitle>
                     <v-text-field
-                      v-model="config.rpcvhosts"
+                      v-model="config.http.vhosts"
                       name="rpcvhosts"
                       outlined
                       dense
@@ -271,7 +271,7 @@
                     ></v-text-field>
                   </v-list-item-content>
                 </v-list-item>
-                <v-list-item v-if="config.rpc">
+                <v-list-item v-if="config.http.enable">
                   <v-list-item-content>
                     <v-list-item-title>API's</v-list-item-title>
                     <v-list-item-subtitle>
@@ -280,7 +280,7 @@
                     <v-checkbox
                       v-for="mod in rpcModules"
                       :key="mod"
-                      v-model="config.rpcapi"
+                      v-model="config.http.api"
                       :label="mod === 'ENGINE' ? engine : mod"
                       :value="mod"
                       class="mr-4 my-0 pb-0"
@@ -302,17 +302,17 @@
                     </v-list-item-subtitle>
                   </v-list-item-content>
                   <v-list-item-action>
-                    <v-switch v-model="config.ws"></v-switch>
+                    <v-switch v-model="config.ws.enable"></v-switch>
                   </v-list-item-action>
                 </v-list-item>
-                <v-list-item v-if="config.ws">
+                <v-list-item v-if="config.ws.enable">
                   <v-list-item-content>
                     <v-list-item-title>ADDRESS</v-list-item-title>
                     <v-list-item-subtitle>
                       WS-RPC server listening interface
                     </v-list-item-subtitle>
                     <v-text-field
-                      v-model="config.wsaddr"
+                      v-model="config.ws.addr"
                       name="wsaddr"
                       outlined
                       dense
@@ -321,7 +321,7 @@
                     ></v-text-field>
                   </v-list-item-content>
                 </v-list-item>
-                <v-list-item v-if="config.ws">
+                <v-list-item v-if="config.ws.enable">
                   <v-list-item-content>
                     <v-list-item-title>
                       PORT
@@ -331,7 +331,7 @@
                     </v-list-item-subtitle>
                     <v-spacer />
                     <v-text-field
-                      v-model="config.wsport"
+                      v-model="config.ws.port"
                       name="wsport"
                       outlined
                       dense
@@ -340,14 +340,14 @@
                     ></v-text-field>
                   </v-list-item-content>
                 </v-list-item>
-                <v-list-item v-if="showAdvanced && config.ws">
+                <v-list-item v-if="showAdvanced && config.ws.enable">
                   <v-list-item-content>
                     <v-list-item-title>ORIGINS</v-list-item-title>
                     <v-list-item-subtitle>
                       Origins from which to accept websockets requests
                     </v-list-item-subtitle>
                     <v-text-field
-                      v-model="config.wsorigins"
+                      v-model="config.ws.origins"
                       name="wsorigins"
                       outlined
                       dense
@@ -355,7 +355,7 @@
                     ></v-text-field>
                   </v-list-item-content>
                 </v-list-item>
-                <v-list-item v-if="config.ws">
+                <v-list-item v-if="config.ws.enable">
                   <v-list-item-content>
                     <v-list-item-title>API's</v-list-item-title>
                     <v-list-item-subtitle>
@@ -364,12 +364,96 @@
                     <v-checkbox
                       v-for="mod in rpcModules"
                       :key="mod"
-                      v-model="config.wsapi"
+                      v-model="config.ws.api"
                       :label="mod === 'ENGINE' ? engine : mod"
                       :value="mod"
                       class="mr-4 my-0 pb-0"
                       hide-details
                     ></v-checkbox>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list>
+            </v-row>
+          </v-card>
+          <v-card class="mb-1">
+            <v-row no-gutters>
+              <v-list two-line class="w-100">
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title>GraphQL</v-list-item-title>
+                    <v-list-item-subtitle>
+                      Enable the GraphQL server
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
+                  <v-list-item-action>
+                    <v-switch v-model="config.graphql.enable"></v-switch>
+                  </v-list-item-action>
+                </v-list-item>
+                <v-list-item v-if="config.graphql.enable">
+                  <v-list-item-content>
+                    <v-list-item-title>ADDRESS</v-list-item-title>
+                    <v-list-item-subtitle>
+                      GraphQL server listening interface
+                    </v-list-item-subtitle>
+                    <v-text-field
+                      v-model="config.graphql.addr"
+                      name="graphqladdr"
+                      outlined
+                      dense
+                      :rules="[rules.required]"
+                      hide-details="auto"
+                    ></v-text-field>
+                  </v-list-item-content>
+                </v-list-item>
+                <v-list-item v-if="config.graphql.enable">
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      PORT
+                    </v-list-item-title>
+                    <v-list-item-subtitle>
+                      GraphQL server listening port
+                    </v-list-item-subtitle>
+                    <v-spacer />
+                    <v-text-field
+                      v-model="config.graphql.port"
+                      name="graphqlport"
+                      outlined
+                      dense
+                      :rules="[rules.required]"
+                      hide-details="auto"
+                    ></v-text-field>
+                  </v-list-item-content>
+                </v-list-item>
+                <v-list-item v-if="showAdvanced && config.graphql.enable">
+                  <v-list-item-content>
+                    <v-list-item-title>CORS DOMAIN</v-list-item-title>
+                    <v-list-item-subtitle>
+                      Comma separated list of domains from which to accept cross
+                      origin requests (browser enforced)
+                    </v-list-item-subtitle>
+                    <v-text-field
+                      v-model="config.graphql.corsdomain"
+                      name="graphqlcorsdomain"
+                      outlined
+                      dense
+                      hide-details="auto"
+                    ></v-text-field>
+                  </v-list-item-content>
+                </v-list-item>
+                <v-list-item v-if="showAdvanced && config.graphql.enable">
+                  <v-list-item-content>
+                    <v-list-item-title>VHOSTS</v-list-item-title>
+                    <v-list-item-subtitle>
+                      Comma separated list of virtual hostnames from which to
+                      accept requests (server enforced).
+                    </v-list-item-subtitle>
+                    <v-text-field
+                      v-model="config.graphql.vhosts"
+                      name="graphqlvhosts"
+                      outlined
+                      dense
+                      hide-details="auto"
+                    ></v-text-field>
                   </v-list-item-content>
                 </v-list-item>
               </v-list>
@@ -438,17 +522,28 @@ export default {
         maxpeers: 25,
         nat: 'any',
         nodiscover: false,
-        rpc: false,
-        rpcport: 8588,
-        rpcaddr: 'localhost',
-        rpcapi: ['eth', 'net', 'rpc', 'web3'],
-        rpcvhosts: 'localhost',
-        rpccorsdomain: '',
-        ws: false,
-        wsport: 8589,
-        wsaddr: 'localhost',
-        wsapi: ['eth', 'net', 'rpc', 'web3'],
-        wsorigins: ''
+        http: {
+          enable: false,
+          port: 8588,
+          addr: 'localhost',
+          api: ['eth', 'net', 'web3'],
+          vhosts: 'localhost',
+          corsdomain: ''
+        },
+        ws: {
+          enable: false,
+          port: 8589,
+          addr: 'localhost',
+          api: ['eth', 'net', 'web3'],
+          origins: ''
+        },
+        graphql: {
+          enable: false,
+          port: 8690,
+          addr: 'localhost',
+          vhosts: 'localhost',
+          corsdomain: ''
+        }
       },
       natOptions: ['any', 'none', 'upnp', 'pmp', 'extip'],
       rpcModules: [
@@ -458,7 +553,6 @@ export default {
         'miner',
         'net',
         'personal',
-        'rpc',
         'txpool',
         'ENGINE', // placeholder for ethash, ubqhash, clique
         'web3'
