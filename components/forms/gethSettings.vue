@@ -566,7 +566,7 @@ export default {
         },
         http: {
           enable: false,
-          port: opts?.http?.port || 8545,
+          port: opts?.http?.port || 8588,
           addr: opts?.http?.addr || 'localhost',
           api: opts?.http?.api || ['eth', 'net', 'web3'],
           vhosts: opts?.http?.vhosts || 'localhost',
@@ -574,14 +574,14 @@ export default {
         },
         ws: {
           enable: false,
-          port: opts?.ws?.port || 8546,
+          port: opts?.ws?.port || 8589,
           addr: opts?.ws?.addr || 'localhost',
           api: opts?.ws?.api || ['eth', 'net', 'web3'],
           origins: opts?.ws?.origins || ''
         },
         graphql: {
           enable: false,
-          port: opts?.graphql?.port || 8547,
+          port: opts?.graphql?.port || 8590,
           addr: opts?.graphql?.addr || 'localhost',
           vhosts: opts?.graphql?.vhosts || 'localhost',
           corsdomain: opts?.graphql?.corsdomain || ''

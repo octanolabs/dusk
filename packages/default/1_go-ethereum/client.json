@@ -103,38 +103,15 @@
     }
   ],
   "defaultOptions": {
-    "fullsync": false,
-    "archive": false,
-    "ethstats": false,
     "port": 30303,
-    "maxpeers": 50,
-    "nat": "any",
-    "nodiscover": false,
-    "ethstats": {
-      "enable": false,
-      "nodename": ""
-    },
     "http": {
-      "enable": false,
-      "port": 8545,
-      "addr": "localhost",
-      "api": ["eth", "net", "web3"],
-      "vhosts": "localhost",
-      "corsdomain": ""
+      "port": 8545
     },
     "ws": {
-      "enable": false,
-      "port": 8546,
-      "addr": "localhost",
-      "api": ["eth", "net", "web3"],
-      "origins": ""
+      "port": 8546
     },
     "graphql": {
-      "enable": false,
-      "port": 8547,
-      "addr": "localhost",
-      "vhosts": "localhost",
-      "corsdomain": ""
+      "port": 8547
     }
   }
 }
