@@ -246,6 +246,7 @@
             :client="selectedClient"
             :engine="selectedEngine"
             :version="selectedClientVersion"
+            :network="selectedNetwork"
             :show-advanced="showAdvanced"
             :default-options="defaultOptions"
           />

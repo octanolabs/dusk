@@ -513,10 +513,16 @@ export default {
         return '3.0.1'
       }
     },
+    network: {
+      type: String,
+      default() {
+        return 'ubq'
+      }
+    },
     engine: {
       type: String,
       default() {
-        return 'ethash'
+        return 'ubqhash'
       }
     },
     defaultOptions: {
@@ -548,7 +554,7 @@ export default {
         'web3'
       ],
       instanceName: '',
-      testInstanceName: new RegExp(/^([a-z]{4,32})$/),
+      testInstanceName: new RegExp(/^([a-z0-9._-]{4,32})$/),
       spin: false,
       rules: {
         required: (value) => !!value || this.$t('login.required'),
@@ -561,6 +567,9 @@ export default {
   computed: {
     rightDrawer() {
       return this.$store.state.drawers?.right || false
+    },
+    homedir() {
+      return this.$store.state.system?.userInfo?.homedir || ''
     }
   },
   watch: {
@@ -573,7 +582,9 @@ export default {
   },
   methods: {
     setDefaults(opts) {
+      this.instanceName = this.network + '_' + this.client + '_' + this.version
       this.config = {
+        datadir: this.homedir + '/.dusk/' + this.client + '/' + this.network, // TODO - OSX
         fullsync: opts?.fullsync || false,
         archive: opts?.archive || false,
         port: opts?.port || 30388,
@@ -582,7 +593,7 @@ export default {
         nodiscover: opts?.nodiscover || false,
         ethstats: {
           enable: false,
-          nodename: ''
+          nodename: 'dusk_v' + this.$store.state.version
         },
         http: {
           enable: false,
