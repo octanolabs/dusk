@@ -17,12 +17,16 @@ export const state = () => ({
   },
   system: {},
   packages: {},
+  instances: {},
   version: '0.0.1'
 })
 
 export const mutations = {
   SET_USER(state, authed) {
     state.authenticated = authed
+  },
+  SET_INSTANCES(state, data) {
+    state.instances = data
   },
   SET_SYSTEMINFO(state, data) {
     state.system = data
@@ -39,14 +43,19 @@ export const mutations = {
 }
 
 export const actions = {
+  async instances({ commit }) {
+    try {
+      const { data } = await axios.get('/api/instances')
+      commit('SET_INSTANCES', data.info)
+    } catch (error) {
+      consola.error(new Error(error))
+    }
+  },
   async system({ commit }) {
     try {
       const { data } = await axios.get('/api/system')
       commit('SET_SYSTEMINFO', data.info)
     } catch (error) {
-      if (error.response && error.response.status === 401) {
-        consola.error(new Error('Bad credentials'))
-      }
       consola.error(new Error(error))
     }
   },
@@ -61,12 +70,12 @@ export const actions = {
   async download({ commit }, payload) {
     try {
       await axios.post('/api/download', {
-        clientId: payload.clientId,
+        client: payload.client,
         version: payload.version
       })
 
       commit('INIT_DOWNLOADING', {
-        client: payload.clientName,
+        client: payload.client,
         version: payload.version,
         status: true,
         download: {
