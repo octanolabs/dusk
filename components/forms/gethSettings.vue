@@ -3,6 +3,31 @@
     <v-col :cols="12" class="px-0 py-2">
       <v-row no-gutters>
         <v-col :cols="6" class="pa-0 pr-1">
+          <v-card class="mb-1">
+            <v-row no-gutters>
+              <v-list two-line class="w-100">
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      Instance Name
+                    </v-list-item-title>
+                    <v-list-item-subtitle>
+                      Unique identifier for this instance.
+                    </v-list-item-subtitle>
+                    <v-text-field
+                      v-model="instanceName"
+                      class="ma-0 pa-0"
+                      name="instanceName"
+                      outlined
+                      dense
+                      :rules="[rules.required, rules.minlen]"
+                      hide-details="auto"
+                    ></v-text-field>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list>
+            </v-row>
+          </v-card>
           <v-card v-if="showAdvanced" class="mb-1">
             <v-row no-gutters>
               <v-list two-line class="w-100">
@@ -62,34 +87,6 @@
                   <v-list-item-action>
                     <v-switch v-model="config.archive"></v-switch>
                   </v-list-item-action>
-                </v-list-item>
-              </v-list>
-            </v-row>
-          </v-card>
-          <v-card class="mb-1">
-            <v-row no-gutters>
-              <v-list two-line class="w-100">
-                <v-list-item>
-                  <v-list-item-content>
-                    <v-list-item-title>Ethstats</v-list-item-title>
-                    <v-list-item-subtitle>
-                      Relay node statistics
-                    </v-list-item-subtitle>
-                  </v-list-item-content>
-                  <v-list-item-action>
-                    <v-switch v-model="config.ethstats.enable"></v-switch>
-                  </v-list-item-action>
-                </v-list-item>
-                <v-list-item v-if="config.ethstats.enable" dense>
-                  <v-text-field
-                    v-model="config.ethstats.nodename"
-                    class="input-group--focused"
-                    label="Node name"
-                    name="ethstats"
-                    outlined
-                    dense
-                    :rules="[rules.required]"
-                  ></v-text-field>
                 </v-list-item>
               </v-list>
             </v-row>
@@ -190,6 +187,34 @@
           </v-card>
         </v-col>
         <v-col :cols="6" class="pa-0 pl-1">
+          <v-card class="mb-1">
+            <v-row no-gutters>
+              <v-list two-line class="w-100">
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title>Ethstats</v-list-item-title>
+                    <v-list-item-subtitle>
+                      Relay node statistics
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
+                  <v-list-item-action>
+                    <v-switch v-model="config.ethstats.enable"></v-switch>
+                  </v-list-item-action>
+                </v-list-item>
+                <v-list-item v-if="config.ethstats.enable" dense>
+                  <v-text-field
+                    v-model="config.ethstats.nodename"
+                    class="input-group--focused"
+                    label="Node name"
+                    name="ethstats"
+                    outlined
+                    dense
+                    :rules="[rules.required]"
+                  ></v-text-field>
+                </v-list-item>
+              </v-list>
+            </v-row>
+          </v-card>
           <v-card class="mb-1">
             <v-row no-gutters>
               <v-list two-line class="w-100">
@@ -461,25 +486,15 @@
           </v-card>
         </v-col>
       </v-row>
+      <v-row no-gutters>
+        <v-fab-transition>
+          <v-btn type="submit" color="primary" class="saveSettingsButton" fab>
+            <v-icon v-if="spin === true">mdi-cog mdi-spin</v-icon>
+            <v-icon v-else>mdi-content-save-settings</v-icon>
+          </v-btn>
+        </v-fab-transition>
+      </v-row>
     </v-col>
-    <v-row class="px-4">
-      <v-text-field
-        v-model="instanceName"
-        label="instance name"
-        name="instanceName"
-        :rules="[rules.required, rules.minlen]"
-      ></v-text-field>
-    </v-row>
-    <v-row class="px-4">
-      <v-spacer />
-      <v-btn color="primary" type="submit" :disabled="spin">
-        <v-icon v-if="spin === true">mdi-cog mdi-spin</v-icon>
-        <span v-else>
-          <v-icon>mdi-content-save-settings</v-icon>
-          {{ $t('account.save') }}
-        </span>
-      </v-btn>
-    </v-row>
   </form>
 </template>
 
@@ -541,6 +556,11 @@ export default {
           this.testInstanceName.test(value) ||
           this.$t('account.username.minlen')
       }
+    }
+  },
+  computed: {
+    rightDrawer() {
+      return this.$store.state.drawers?.right || false
     }
   },
   watch: {
