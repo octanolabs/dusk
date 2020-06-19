@@ -174,7 +174,6 @@ const parseClient = async function(json) {
         const r = {
           version: release.version,
           status: 0,
-          maxHeight: release.maxHeight,
           tag: release.tag,
           note: release.note,
           info: release.info,

@@ -201,6 +201,7 @@
                         @click="
                           selectedClient = client.name
                           selectedClientVersion = item.version
+                          defaultOptions = client.defaultOptions
                         "
                       >
                         <v-list-item-title>
@@ -245,7 +246,8 @@
             :client="selectedClient"
             :engine="selectedEngine"
             :version="selectedClientVersion"
-            :showAdvanced="showAdvanced"
+            :show-advanced="showAdvanced"
+            :default-options="defaultOptions"
           />
         </v-flex>
       </v-slide-y-transition>
@@ -274,6 +276,7 @@ export default {
       selectedClientVersion: false,
       availableClients: [],
       availableReleases: [],
+      defaultOptions: null,
       breadcrumbs: [
         {
           text: 'Instances',

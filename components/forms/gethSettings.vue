@@ -77,12 +77,12 @@
                     </v-list-item-subtitle>
                   </v-list-item-content>
                   <v-list-item-action>
-                    <v-switch v-model="config.ethstats"></v-switch>
+                    <v-switch v-model="config.ethstats.enable"></v-switch>
                   </v-list-item-action>
                 </v-list-item>
-                <v-list-item dense v-if="config.ethstats">
+                <v-list-item v-if="config.ethstats.enable" dense>
                   <v-text-field
-                    v-model="config.ethstatsname"
+                    v-model="config.ethstats.nodename"
                     class="input-group--focused"
                     label="Node name"
                     name="ethstats"
@@ -504,6 +504,12 @@ export default {
         return 'ethash'
       }
     },
+    defaultOptions: {
+      type: Object,
+      default() {
+        return null
+      }
+    },
     showAdvanced: {
       type: Boolean,
       default() {
@@ -513,38 +519,7 @@ export default {
   },
   data() {
     return {
-      config: {
-        datadir: '',
-        fullsync: false,
-        archive: false,
-        ethstats: false,
-        port: 30388,
-        maxpeers: 25,
-        nat: 'any',
-        nodiscover: false,
-        http: {
-          enable: false,
-          port: 8588,
-          addr: 'localhost',
-          api: ['eth', 'net', 'web3'],
-          vhosts: 'localhost',
-          corsdomain: ''
-        },
-        ws: {
-          enable: false,
-          port: 8589,
-          addr: 'localhost',
-          api: ['eth', 'net', 'web3'],
-          origins: ''
-        },
-        graphql: {
-          enable: false,
-          port: 8690,
-          addr: 'localhost',
-          vhosts: 'localhost',
-          corsdomain: ''
-        }
-      },
+      config: {},
       natOptions: ['any', 'none', 'upnp', 'pmp', 'extip'],
       rpcModules: [
         'admin',
@@ -568,8 +543,51 @@ export default {
       }
     }
   },
+  watch: {
+    defaultOptions(opts) {
+      this.setDefaults(opts)
+    }
+  },
+  created() {
+    this.setDefaults(null)
+  },
   methods: {
-    saveInstance() {}
+    setDefaults(opts) {
+      this.config = {
+        fullsync: opts?.fullsync || false,
+        archive: opts?.archive || false,
+        port: opts?.port || 30388,
+        maxpeers: opts?.maxpeers || 50,
+        nat: opts?.nat || 'any',
+        nodiscover: opts?.nodiscover || false,
+        ethstats: {
+          enable: false,
+          nodename: ''
+        },
+        http: {
+          enable: false,
+          port: opts?.http?.port || 8545,
+          addr: opts?.http?.addr || 'localhost',
+          api: opts?.http?.api || ['eth', 'net', 'web3'],
+          vhosts: opts?.http?.vhosts || 'localhost',
+          corsdomain: opts?.http?.corsdomain || ''
+        },
+        ws: {
+          enable: false,
+          port: opts?.ws?.port || 8546,
+          addr: opts?.ws?.addr || 'localhost',
+          api: opts?.ws?.api || ['eth', 'net', 'web3'],
+          origins: opts?.ws?.origins || ''
+        },
+        graphql: {
+          enable: false,
+          port: opts?.graphql?.port || 8547,
+          addr: opts?.graphql?.addr || 'localhost',
+          vhosts: opts?.graphql?.vhosts || 'localhost',
+          corsdomain: opts?.graphql?.corsdomain || ''
+        }
+      }
+    }
   }
 }
 </script>
