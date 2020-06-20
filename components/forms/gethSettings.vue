@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="saveSettings">
+  <form @submit.prevent="saveInstance">
     <v-col :cols="12" class="px-0 py-2">
       <v-row no-gutters>
         <v-col :cols="6" class="pa-0 pr-1">
@@ -15,7 +15,7 @@
                       Unique identifier for this instance.
                     </v-list-item-subtitle>
                     <v-text-field
-                      v-model="instanceName"
+                      v-model="instance.name"
                       class="ma-0 pa-0"
                       name="instanceName"
                       outlined
@@ -519,6 +519,12 @@ export default {
         return 'ubq'
       }
     },
+    networkType: {
+      type: String,
+      default() {
+        return 'mainnet'
+      }
+    },
     engine: {
       type: String,
       default() {
@@ -540,6 +546,7 @@ export default {
   },
   data() {
     return {
+      instance: {},
       config: {},
       natOptions: ['any', 'none', 'upnp', 'pmp', 'extip'],
       rpcModules: [
@@ -553,9 +560,10 @@ export default {
         'ENGINE', // placeholder for ethash, ubqhash, clique
         'web3'
       ],
-      instanceName: '',
       testInstanceName: new RegExp(/^([a-z0-9._-]{4,32})$/),
       spin: false,
+      formError: null,
+      snackbar: false,
       rules: {
         required: (value) => !!value || this.$t('login.required'),
         minlen: (value) =>
@@ -582,7 +590,15 @@ export default {
   },
   methods: {
     setDefaults(opts) {
-      this.instanceName = this.network + '_' + this.client + '_' + this.version
+      this.instance = {
+        name: this.network + '_' + this.client + '_' + this.version,
+        client: this.client,
+        version: this.version,
+        network: {
+          id: this.network,
+          type: this.networkType
+        }
+      }
       this.config = {
         datadir: this.homedir + '/.dusk/' + this.client + '/' + this.network, // TODO - OSX
         fullsync: opts?.fullsync || false,
@@ -617,6 +633,21 @@ export default {
           vhosts: opts?.graphql?.vhosts || 'localhost',
           corsdomain: opts?.graphql?.corsdomain || ''
         }
+      }
+    },
+    async saveInstance() {
+      try {
+        this.spin = true
+        const i = this.instance
+        i.config = this.config
+        await this.$store.dispatch('addNewInstance', i)
+        this.spin = false
+        this.$router.push({ path: '/' })
+      } catch (e) {
+        this.formError = this.$t('login.error')
+        this.snackbar = true
+        this.formPassword = ''
+        this.spin = false
       }
     }
   }

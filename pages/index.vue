@@ -90,23 +90,11 @@ export default {
     return {
       headers: [
         { text: 'name', value: 'name' },
-        { text: 'client', value: 'clientId' },
+        { text: 'client', value: 'client' },
         { text: 'version', value: 'version' },
         { text: 'network', value: 'network' },
         { text: 'status', value: 'status' },
         { text: '', align: 'end', value: 'menu' }
-      ],
-      instances: [
-        {
-          name: 'ubiq1',
-          clientId: 'gubiq',
-          network: {
-            id: 'ubq',
-            type: 'mainnet'
-          },
-          version: '3.0.1',
-          status: 1
-        }
       ],
       breadcrumbs: [
         {
@@ -115,6 +103,11 @@ export default {
           to: '/'
         }
       ]
+    }
+  },
+  computed: {
+    instances() {
+      return this.$store.state.instances
     }
   },
   methods: {

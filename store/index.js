@@ -1,5 +1,6 @@
 import axios from 'axios'
 import consola from 'consola'
+import sha256 from 'crypto-js/sha256'
 
 export const state = () => ({
   drawers: {
@@ -17,7 +18,7 @@ export const state = () => ({
   },
   system: {},
   packages: {},
-  instances: {},
+  instances: [],
   version: '0.0.1'
 })
 
@@ -39,6 +40,9 @@ export const mutations = {
   },
   INIT_DOWNLOADING(state, data) {
     state.downloading = data
+  },
+  ADD_INSTANCE(state, data) {
+    state.instances.push(data)
   }
 }
 
@@ -47,6 +51,16 @@ export const actions = {
     try {
       const { data } = await axios.get('/api/instances')
       commit('SET_INSTANCES', data.info)
+    } catch (error) {
+      consola.error(new Error(error))
+    }
+  },
+  async addNewInstance({ commit }, instance) {
+    try {
+      instance.timestamp = Date.now()
+      instance.status = 0
+      instance.id = await sha256(instance.timestamp)
+      commit('ADD_INSTANCE', instance)
     } catch (error) {
       consola.error(new Error(error))
     }

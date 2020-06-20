@@ -247,6 +247,7 @@
             :engine="selectedEngine"
             :version="selectedClientVersion"
             :network="selectedNetwork"
+            :network-type="selectedNetworkType"
             :show-advanced="showAdvanced"
             :default-options="defaultOptions"
           />
