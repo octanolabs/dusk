@@ -47,7 +47,7 @@
                   <v-subtitle>error</v-subtitle>
                 </v-flex>
               </template>
-              <template v-slot:item.menu>
+              <template v-slot:item.menu="{ item }">
                 <v-menu bottom left>
                   <template v-slot:activator="{ on }">
                     <v-btn icon v-on="on">
@@ -55,26 +55,40 @@
                     </v-btn>
                   </template>
                   <v-list>
-                    <v-list-item link to="/dashboard">
+                    <v-list-item
+                      :disabled="item.status !== 1"
+                      to="/dashboard"
+                      link
+                    >
                       <v-list-item-title>
                         <v-icon>mdi-desktop-mac-dashboard</v-icon>
                         Dashboard
                       </v-list-item-title>
                     </v-list-item>
-                    <v-list-item link to="/dashboard">
+                    <v-list-item
+                      :disabled="item.status === 1"
+                      to="/dashboard"
+                      link
+                    >
                       <v-list-item-title>
                         <v-icon>mdi-cogs</v-icon>
                         Configure
                       </v-list-item-title>
                     </v-list-item>
-                    <v-list-item link>
+                    <v-list-item v-if="item.status === 1" link>
                       <v-list-item-title>
                         <v-icon>mdi-stop-circle</v-icon>
                         Stop
                       </v-list-item-title>
                     </v-list-item>
+                    <v-list-item v-else link>
+                      <v-list-item-title>
+                        <v-icon>mdi-play-circle</v-icon>
+                        Start
+                      </v-list-item-title>
+                    </v-list-item>
                     <v-divider />
-                    <v-list-item link disabled>
+                    <v-list-item link :disabled="item.status === 1">
                       <v-list-item-title color="secondary">
                         <v-icon color="secondary">mdi-delete</v-icon>
                         Destroy Instance
