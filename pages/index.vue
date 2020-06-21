@@ -35,8 +35,16 @@
               </template>
               <template v-slot:item.status="{ item }">
                 <v-flex v-if="item.status === 1" color="primary">
-                  <v-icon color="primary">mdi-play-circle</v-icon>
+                  <v-icon color="primary">mdi-rocket-launch</v-icon>
                   <v-subtitle>running</v-subtitle>
+                </v-flex>
+                <v-flex v-else-if="item.status === 0" color="primary">
+                  <v-icon color="primary">mdi-rocket</v-icon>
+                  <v-subtitle>ready</v-subtitle>
+                </v-flex>
+                <v-flex v-else color="secondary">
+                  <v-icon color="primary">mdi-fire</v-icon>
+                  <v-subtitle>error</v-subtitle>
                 </v-flex>
               </template>
               <template v-slot:item.menu>
