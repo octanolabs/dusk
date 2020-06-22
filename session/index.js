@@ -1,3 +1,5 @@
+import os from 'os'
+import path from 'path'
 import consola from 'consola'
 import express from 'express'
 import storage from 'node-persist'
@@ -16,13 +18,15 @@ router.use((req, res, next) => {
   next()
 })
 
+const DUSKDIR = path.join(os.homedir(), '.dusk')
+const STORE = path.join(path.join(DUSKDIR, 'persist'), 'store')
 const DEFAULT_SALT_ROUNDS = 12
 const ONE_HOUR = 3600
 
 const start = async function() {
   try {
     await storage.init({
-      dir: 'persist'
+      dir: STORE
     })
     const user = await storage.getItem('user')
     if (!user) {

@@ -22,6 +22,10 @@ const readJson = promisify(jf.readFile)
 const access = promisify(fs.access)
 const chmod = promisify(fs.chmod)
 
+// paths
+const DUSKDIR = path.join(os.homedir(), '.dusk')
+const BIN = path.join(path.join(DUSKDIR, 'persist'), 'bin')
+
 // caches
 let PACKAGES = []
 let CUSTOM = []
@@ -103,7 +107,7 @@ const loadPackages = async function(pkgs) {
               // check if bin already exists
               const basename = path.basename(release.download.url)
               const releaseDir =
-                path.join('persist/binaries', client.name, release.version)
+                path.join(BIN, client.name, release.version)
               const binPath = path.join(releaseDir, basename)
 
               // use standard (non-promisified) fs.stat, we want to simply
@@ -344,7 +348,7 @@ export default {
               if (release.version === version) {
                 // release found, set download path
                 const downloadPath =
-                  path.join('persist/binaries', client.name, release.version)
+                  path.join(BIN, client.name, release.version)
                 // does download path already exist?
                 try {
                   const downloadPathAccessErr = await access(downloadPath, fs.constants.W_OK)

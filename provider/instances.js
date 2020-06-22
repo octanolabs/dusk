@@ -1,5 +1,10 @@
+import os from 'os'
+import path from 'path'
 import consola from 'consola'
 import storage from 'node-persist'
+
+const DUSKDIR = path.join(os.homedir(), '.dusk')
+const STORE = path.join(path.join(DUSKDIR, 'persist'), 'store')
 
 let CACHE = []
 
@@ -10,7 +15,7 @@ export default {
   async set() {
     try {
       await storage.init({
-        dir: 'persist'
+        dir: STORE
       })
       // read from disk
       const instances = await storage.getItem('instances')
