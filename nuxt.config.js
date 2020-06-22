@@ -8,7 +8,7 @@ module.exports = {
    ** Headers of the page
    */
   head: {
-    titleTemplate: '%s - ' + process.env.npm_package_name,
+    titleTemplate: 'octano dusk',
     title: process.env.npm_package_name || '',
     meta: [
       { charset: 'utf-8' },
