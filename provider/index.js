@@ -44,6 +44,9 @@ const providers = {
     },
     add(instance) {
       return instances.helpers.add(instance)
+    },
+    remove(instanceId) {
+      return instances.helpers.remove(instanceId)
     }
   }
 }

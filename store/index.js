@@ -71,6 +71,17 @@ export const actions = {
       consola.error(new Error(error))
     }
   },
+  async removeInstance({ commit }, instanceId) {
+    try {
+      const res = await axios.post('/api/instance/remove', instanceId)
+      if (res.data.success && res.data.info) {
+        commit('SET_INSTANCES', res.data.info)
+        return true
+      }
+    } catch (error) {
+      consola.error(new Error(error))
+    }
+  },
   async system({ commit }) {
     try {
       const { data } = await axios.get('/api/system')

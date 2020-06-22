@@ -29,6 +29,14 @@ export default {
         consola.error(new Error(e))
         return null
       }
+    },
+    async remove(id) {
+      try {
+        return await removeInstance(id)
+      } catch (e) {
+        consola.error(new Error(e))
+        return null
+      }
     }
   }
 }
@@ -41,6 +49,23 @@ async function addInstance(instance) {
       return true
     }
     return false
+  } catch (e) {
+    consola.error(new Error(e))
+    return null
+  }
+}
+
+async function removeInstance(id) {
+  try {
+    if (id) {
+      const filtered = CACHE.filter(function(value, index, arr) {
+        return value.id !== id
+      })
+      await storage.setItem('instances', filtered)
+      CACHE = filtered
+      return { success: true, info: CACHE }
+    }
+    return { success: false }
   } catch (e) {
     consola.error(new Error(e))
     return null

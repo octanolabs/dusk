@@ -85,7 +85,11 @@
                       </v-list-item-title>
                     </v-list-item>
                     <v-divider />
-                    <v-list-item link :disabled="item.status === 1">
+                    <v-list-item
+                      link
+                      :disabled="item.status === 1"
+                      @click.stop="destroyInstance(item.id)"
+                    >
                       <v-list-item-title color="secondary">
                         <v-icon color="secondary">mdi-delete</v-icon>
                         Destroy Instance
@@ -131,6 +135,10 @@ export default {
     },
     getNetworkName(id, type) {
       return this.$store.state.packages.networks[type][id].name || ''
+    },
+    destroyInstance(instanceId) {
+      this.$store.dispatch('removeInstance', { id: instanceId })
+      this.$store.dispatch('instances')
     }
   }
 }

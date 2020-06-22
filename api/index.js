@@ -66,13 +66,17 @@ router.post('/instance/add', async (req, res) => {
   if (!req.body.id || !req.body.name) {
     res.status(401).json({ message: 'Bad params' })
   } else {
-    consola.log(req.body)
-    const status = await providers.instances.add(req.body)
-    if (status) {
-      res.json({success: true})
-    } else {
-      res.json({success: false})
-    }
+    const success = await providers.instances.add(req.body)
+    res.json({success: success})
+  }
+})
+
+router.post('/instance/remove', async (req, res) => {
+  if (!req.body.id) {
+    res.status(401).json({ message: 'Bad params' })
+  } else {
+    const rm = await providers.instances.remove(req.body.id)
+    res.json({ success: rm.success, info: rm.info })
   }
 })
 
