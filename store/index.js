@@ -59,7 +59,10 @@ export const actions = {
     try {
       instance.timestamp = Date.now()
       instance.status = 0
-      instance.id = await sha256(instance.timestamp)
+      instance.id = await sha256(instance.name + instance.timestamp.toString())
+        .toString()
+        .substr(0, 8)
+      // const res = await axios.post('/api/instance/add', instance)
       commit('ADD_INSTANCE', instance)
     } catch (error) {
       consola.error(new Error(error))
