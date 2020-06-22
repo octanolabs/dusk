@@ -1,8 +1,5 @@
 <template>
   <v-container>
-    <v-row>
-      <v-breadcrumbs :items="breadcrumbs"></v-breadcrumbs>
-    </v-row>
     <v-tabs>
       <v-tab :key="0">Instances</v-tab>
       <v-tab-item :key="0">
@@ -117,13 +114,6 @@ export default {
         { text: 'network', value: 'network' },
         { text: 'status', value: 'status' },
         { text: '', align: 'end', value: 'menu' }
-      ],
-      breadcrumbs: [
-        {
-          text: 'Instances',
-          disabled: true,
-          to: '/'
-        }
       ]
     }
   },

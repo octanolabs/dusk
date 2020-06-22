@@ -33,6 +33,7 @@ export default {
   created() {
     this.$store.dispatch('system')
     this.$store.dispatch('packages')
+    this.$store.dispatch('instances')
     const t = this
     setInterval(function() {
       t.$store.dispatch('system')

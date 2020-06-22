@@ -49,7 +49,7 @@ export const mutations = {
 export const actions = {
   async instances({ commit }) {
     try {
-      const { data } = await axios.get('/api/instances')
+      const { data } = await axios.get('/api/instances/get')
       commit('SET_INSTANCES', data.info)
     } catch (error) {
       consola.error(new Error(error))
@@ -62,8 +62,11 @@ export const actions = {
       instance.id = await sha256(instance.name + instance.timestamp.toString())
         .toString()
         .substr(0, 8)
-      // const res = await axios.post('/api/instance/add', instance)
-      commit('ADD_INSTANCE', instance)
+      const res = await axios.post('/api/instance/add', instance)
+      if (res.data.success) {
+        commit('ADD_INSTANCE', instance)
+        return true
+      }
     } catch (error) {
       consola.error(new Error(error))
     }

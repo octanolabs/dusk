@@ -46,14 +46,32 @@ router.get('/downloading', (req, res) => {
 })
 
 router.post('/download', async (req, res) => {
-  if (!req.body.clientId || !req.body.version) {
+  if (!req.body.client || !req.body.version) {
     res.status(401).json({ message: 'Bad params' })
   } else {
-    const dl = await providers.packages.download(req.body.clientId, req.body.version)
+    const dl = await providers.packages.download(req.body.client, req.body.version)
     if (dl) {
       res.json({downloading: true})
     } else {
       res.json({downloading: false})
+    }
+  }
+})
+
+router.get('/instances/get', (req, res) => {
+  return res.json({ info: providers.instances.get() })
+})
+
+router.post('/instance/add', async (req, res) => {
+  if (!req.body.id || !req.body.name) {
+    res.status(401).json({ message: 'Bad params' })
+  } else {
+    consola.log(req.body)
+    const status = await providers.instances.add(req.body)
+    if (status) {
+      res.json({success: true})
+    } else {
+      res.json({success: false})
     }
   }
 })

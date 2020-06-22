@@ -3,6 +3,7 @@ import NanoTimer from 'nanotimer'
 
 import system from './system.js'
 import packages from './packages.js'
+import instances from './instances.js'
 
 const providers = {
   system: {
@@ -31,6 +32,18 @@ const providers = {
     },
     initDownloading(data) {
       packages.initDownloading(data)
+    }
+  },
+  instances: {
+    timer: new NanoTimer(),
+    set() {
+      instances.set()
+    },
+    get() {
+      return instances.get()
+    },
+    add(instance) {
+      return instances.helpers.add(instance)
     }
   }
 }
