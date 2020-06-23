@@ -65,7 +65,6 @@ export const actions = {
       const res = await axios.post('/api/instance/add', instance)
       if (res.data.success) {
         commit('ADD_INSTANCE', instance)
-        return true
       }
     } catch (error) {
       consola.error(new Error(error))
@@ -73,10 +72,10 @@ export const actions = {
   },
   async removeInstance({ commit }, instanceId) {
     try {
-      const res = await axios.post('/api/instance/remove', instanceId)
-      if (res.data.success && res.data.info) {
-        commit('SET_INSTANCES', res.data.info)
-        return true
+      const { data } = await axios.post('/api/instance/remove', instanceId)
+      consola.log(data)
+      if (data.success && data.info) {
+        commit('SET_INSTANCES', data.info)
       }
     } catch (error) {
       consola.error(new Error(error))

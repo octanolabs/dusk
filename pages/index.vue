@@ -190,7 +190,6 @@ export default {
     },
     destroyInstance(instanceId) {
       this.$store.dispatch('removeInstance', { id: instanceId })
-      this.$store.dispatch('instances')
     }
   }
 }
