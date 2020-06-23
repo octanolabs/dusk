@@ -88,7 +88,10 @@
                     <v-list-item
                       link
                       :disabled="item.status === 1"
-                      @click.stop="destroyInstance(item.id)"
+                      @click.stop="
+                        selectedInstance = item
+                        destroyInstanceDialog = true
+                      "
                     >
                       <v-list-item-title color="secondary">
                         <v-icon color="secondary">mdi-delete</v-icon>
@@ -101,6 +104,52 @@
             </v-data-table>
           </v-card-text>
         </v-card>
+        <v-dialog v-model="destroyInstanceDialog" width="500" persistent>
+          <v-card>
+            <v-card-title primary-title>Destroy Instance</v-card-title>
+            <v-card-text>
+              <p>
+                Are you sure you want to destroy
+                <strong>{{ selectedInstance.name }}?</strong>
+                <br />
+                Enter <code class="elevation-0">{{ selectedInstance.id }}</code>
+                to confirm.
+              </p>
+              <v-text-field
+                v-model="confirmDestroy"
+                class="input-group--focused"
+                label="confirm"
+                name="confirm"
+                outlined
+                dense
+              ></v-text-field>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                color="primary"
+                @click.stop="
+                  selectedInstance = {}
+                  destroyInstanceDialog = false
+                "
+              >
+                No
+              </v-btn>
+              <v-btn
+                color="secondary"
+                text
+                :disabled="confirmDestroy !== selectedInstance.id"
+                @click.stop="
+                  destroyInstance(selectedInstance.id)
+                  selectedInstance = {}
+                  destroyInstanceDialog = false
+                "
+              >
+                Yes
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </v-tab-item>
     </v-tabs>
   </v-container>
@@ -111,6 +160,9 @@ export default {
   middleware: 'auth',
   data() {
     return {
+      destroyInstanceDialog: false,
+      confirmDestroy: '',
+      selectedInstance: {},
       headers: [
         { text: 'name', value: 'name' },
         { text: 'client', value: 'client' },
