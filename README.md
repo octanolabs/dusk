@@ -38,7 +38,14 @@ and..
 serverurl=unix:///var/run/supervisor.sock
 ```
 
-Restart supervisord
+last..
+
+```
+[include]
+files = /home/dusk/.dusk/supervisor/*.conf
+```
+
+Restart supervisor
 
 ``` bash
 $ sudo service supervisor restart
