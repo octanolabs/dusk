@@ -38,8 +38,8 @@
             @click.stop="
               selectedNetwork = network.id
               selectedNetworkType = 'mainnet'
-              selectedClient = false
-              selectedClientVersion = false
+              selectedClient = null
+              selectedClientVersion = null
               showTestnetsDisabled = false
               selectedEngine = network.engine
               filterClientsByNetwork()
@@ -94,8 +94,8 @@
                   @click.stop="
                     selectedNetwork = network.id
                     selectedNetworkType = 'testnet'
-                    selectedClient = false
-                    selectedClientVersion = false
+                    selectedClient = null
+                    selectedClientVersion = null
                     showTestnetsDisabled = true
                     selectedEngine = network.engine
                     filterClientsByNetwork()
