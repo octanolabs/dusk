@@ -2,9 +2,9 @@
   <v-app dark>
     <left-drawer v-if="authed" />
     <right-drawer v-if="authed" />
-    <v-content>
+    <v-main>
       <nuxt />
-    </v-content>
+    </v-main>
     <downloading />
   </v-app>
 </template>
