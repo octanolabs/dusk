@@ -73,7 +73,6 @@ export const actions = {
   async removeInstance({ commit }, instanceId) {
     try {
       const { data } = await axios.post('/api/instance/remove', instanceId)
-      consola.log(data)
       if (data.success && data.info) {
         commit('SET_INSTANCES', data.info)
       }

@@ -8,7 +8,7 @@
         </h1>
       </div>
       <v-card>
-        <form v-if="!authenticated" @submit.prevent="login">
+        <form v-if="!authenticated" autocomplete="off" @submit.prevent="login">
           <v-card-text>
             <v-text-field
               v-model="formUsername"
