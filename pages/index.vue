@@ -72,13 +72,21 @@
                         Configure
                       </v-list-item-title>
                     </v-list-item>
-                    <v-list-item v-if="item.status === 1" link>
+                    <v-list-item
+                      v-if="item.status === 1"
+                      link
+                      @click.stop="stopInstance(item.id)"
+                    >
                       <v-list-item-title>
                         <v-icon>mdi-stop-circle</v-icon>
                         Stop
                       </v-list-item-title>
                     </v-list-item>
-                    <v-list-item v-else link>
+                    <v-list-item
+                      v-else
+                      link
+                      @click.stop="startInstance(item.id)"
+                    >
                       <v-list-item-title>
                         <v-icon>mdi-play-circle</v-icon>
                         Start
@@ -190,6 +198,12 @@ export default {
     },
     destroyInstance(instanceId) {
       this.$store.dispatch('removeInstance', { id: instanceId })
+    },
+    startInstance(instanceId) {
+      this.$store.dispatch('startInstance', { id: instanceId })
+    },
+    stopInstance(instanceId) {
+      this.$store.dispatch('stopInstance', { id: instanceId })
     }
   }
 }

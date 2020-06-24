@@ -55,7 +55,7 @@ export const actions = {
       consola.error(new Error(error))
     }
   },
-  async addNewInstance({ commit }, instance) {
+  async addInstance({ commit }, instance) {
     try {
       instance.timestamp = Date.now()
       instance.status = 0
@@ -73,6 +73,26 @@ export const actions = {
   async removeInstance({ commit }, instanceId) {
     try {
       const { data } = await axios.post('/api/instance/remove', instanceId)
+      if (data.success && data.info) {
+        commit('SET_INSTANCES', data.info)
+      }
+    } catch (error) {
+      consola.error(new Error(error))
+    }
+  },
+  async startInstance({ commit }, instanceId) {
+    try {
+      const { data } = await axios.post('/api/instance/start', instanceId)
+      if (data.success && data.info) {
+        commit('SET_INSTANCES', data.info)
+      }
+    } catch (error) {
+      consola.error(new Error(error))
+    }
+  },
+  async stopInstance({ commit }, instanceId) {
+    try {
+      const { data } = await axios.post('/api/instance/stop', instanceId)
       if (data.success && data.info) {
         commit('SET_INSTANCES', data.info)
       }
