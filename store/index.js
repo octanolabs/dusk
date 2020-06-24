@@ -58,7 +58,6 @@ export const actions = {
   async addInstance({ commit }, instance) {
     try {
       instance.timestamp = Date.now()
-      instance.status = 0
       instance.id = await sha256(instance.name + instance.timestamp.toString())
         .toString()
         .substr(0, 8)

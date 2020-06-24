@@ -30,12 +30,12 @@
                 </v-avatar>
                 {{ getNetworkName(item.network.id, item.network.type) }}
               </template>
-              <template v-slot:item.status="{ item }">
-                <v-flex v-if="item.status === 1" color="primary">
+              <template v-slot:item.supervisor="{ item }">
+                <v-flex v-if="item.supervisor.state === 20" color="primary">
                   <v-icon color="primary">mdi-rocket-launch</v-icon>
                   running
                 </v-flex>
-                <v-flex v-else-if="item.status === 0" color="primary">
+                <v-flex v-else-if="item.supervisor.state === 0" color="primary">
                   <v-icon color="primary">mdi-rocket</v-icon>
                   ready
                 </v-flex>
@@ -53,7 +53,7 @@
                   </template>
                   <v-list>
                     <v-list-item
-                      :disabled="item.status !== 1"
+                      :disabled="item.supervisor.state !== 20"
                       to="/dashboard"
                       link
                     >
@@ -63,7 +63,7 @@
                       </v-list-item-title>
                     </v-list-item>
                     <v-list-item
-                      :disabled="item.status === 1"
+                      :disabled="item.supervisor.state === 20"
                       to="/dashboard"
                       link
                     >
@@ -73,7 +73,7 @@
                       </v-list-item-title>
                     </v-list-item>
                     <v-list-item
-                      v-if="item.status === 1"
+                      v-if="item.supervisor.state === 20"
                       link
                       @click.stop="stopInstance(item.id)"
                     >
@@ -95,7 +95,7 @@
                     <v-divider />
                     <v-list-item
                       link
-                      :disabled="item.status === 1"
+                      :disabled="item.supervisor.state === 20"
                       @click.stop="
                         selectedInstance = item
                         destroyInstanceDialog = true
@@ -176,7 +176,7 @@ export default {
         { text: 'client', value: 'client' },
         { text: 'version', value: 'version' },
         { text: 'network', value: 'network' },
-        { text: 'status', value: 'status' },
+        { text: 'status', value: 'supervisor' },
         { text: '', align: 'end', value: 'menu' }
       ]
     }

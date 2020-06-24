@@ -7,7 +7,10 @@ import xmlrpc from 'xmlrpc'
 const DUSKDIR = path.join(os.homedir(), '.dusk')
 const STORE = path.join(path.join(DUSKDIR, 'persist'), 'store')
 
-let SV = null
+const SV = xmlrpc.createClient({
+  socketPath: '/var/run/supervisor.sock',
+  path: '/RPC2',
+})
 let CACHE = []
 
 export default {
@@ -21,13 +24,15 @@ export default {
       })
       // read from disk
       const instances = await storage.getItem('instances')
-      if (instances) {
-        CACHE = instances
-        SV = xmlrpc.createClient({
-          socketPath: '/var/run/supervisor.sock',
-          path: '/RPC2',
+      for (let i in instances) {
+        SV.methodCall('supervisor.getProcessInfo', [ instances[i].id ], function(err, info) {
+          if (!err) {
+            instances[i].supervisor = info
+            CACHE.push(instances[i])
+          } else {
+            consola.error(new Error(err))
+          }
         })
-        consola.log(supervisor.getAllProcessInfo())
       }
     } catch (e) {
       consola.error(new Error(e))
@@ -50,7 +55,22 @@ export default {
         return null
       }
     },
-
+    async start(id) {
+      try {
+        return await supervisor.startProcessGroup(id)
+      } catch (e) {
+        consola.error(new Error(e))
+        return null
+      }
+    },
+    async stop(id) {
+      try {
+        return await supervisor.stopProcessGroup(id)
+      } catch (e) {
+        consola.error(new Error(e))
+        return null
+      }
+    },
   }
 }
 
@@ -85,6 +105,21 @@ async function removeInstance(id) {
   }
 }
 
+const getProcessInfo = async function(instanceId) {
+  try {
+    SV.methodCall('supervisor.getProcessInfo', [ instanceId ], function(err, info) {
+      if (err) consola.error(new Error(err))
+      return info
+    })
+  } catch (e) {
+    consola.error(new Error(e))
+  }
+}
+
+// http://supervisord.org/api.html
+
+// supervisor process states
+// http://supervisord.org/subprocess.html#process-states
 const supervisor = {
   reloadConfig() {
     SV.methodCall('supervisor.reloadConfig', [], function(err, changes) {
