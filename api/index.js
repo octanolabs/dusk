@@ -80,20 +80,20 @@ router.post('/instance/remove', async (req, res) => {
   }
 })
 
-router.post('/instance/start', async (req, res) => {
+router.post('/instance/start', (req, res) => {
   if (!req.body.id) {
     res.status(401).json({ message: 'Bad params' })
   } else {
-    const i = await providers.instances.start(req.body.id)
+    const i = providers.instances.start(req.body.id)
     res.json({ success: i.success, info: i.info })
   }
 })
 
-router.post('/instance/stop', async (req, res) => {
+router.post('/instance/stop', (req, res) => {
   if (!req.body.id) {
     res.status(401).json({ message: 'Bad params' })
   } else {
-    const i = await providers.instances.stop(req.body.id)
+    const i = providers.instances.stop(req.body.id)
     res.json({ success: i.success, info: i.info })
   }
 })

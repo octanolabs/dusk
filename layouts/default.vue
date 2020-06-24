@@ -38,6 +38,7 @@ export default {
     setInterval(function() {
       t.$store.dispatch('system')
       t.$store.dispatch('packages')
+      t.$store.dispatch('instances')
     }, 10000)
   },
   methods: {

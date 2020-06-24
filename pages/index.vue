@@ -31,13 +31,30 @@
                 {{ getNetworkName(item.network.id, item.network.type) }}
               </template>
               <template v-slot:item.supervisor="{ item }">
-                <v-flex v-if="item.supervisor.state === 20" color="primary">
+                <v-flex v-if="item.supervisor.state === 0" color="primary">
+                  <v-icon color="secondary">mdi-rocket</v-icon>
+                  stopped
+                </v-flex>
+                <v-flex
+                  v-else-if="item.supervisor.state === 10"
+                  color="primary"
+                >
+                  <v-icon color="primary">mdi-cog mdi-spin</v-icon>
+                  starting
+                </v-flex>
+                <v-flex
+                  v-else-if="item.supervisor.state === 20"
+                  color="primary"
+                >
                   <v-icon color="primary">mdi-rocket-launch</v-icon>
                   running
                 </v-flex>
-                <v-flex v-else-if="item.supervisor.state === 0" color="primary">
-                  <v-icon color="primary">mdi-rocket</v-icon>
-                  ready
+                <v-flex
+                  v-else-if="item.supervisor.state === 40"
+                  color="secondary"
+                >
+                  <v-icon color="primary">mdi-cog mdi-spin</v-icon>
+                  stopping
                 </v-flex>
                 <v-flex v-else color="secondary">
                   <v-icon color="primary">mdi-fire</v-icon>
@@ -75,18 +92,14 @@
                     <v-list-item
                       v-if="item.supervisor.state === 20"
                       link
-                      @click.stop="stopInstance(item.id)"
+                      @click="stopInstance(item.id)"
                     >
                       <v-list-item-title>
                         <v-icon>mdi-stop-circle</v-icon>
                         Stop
                       </v-list-item-title>
                     </v-list-item>
-                    <v-list-item
-                      v-else
-                      link
-                      @click.stop="startInstance(item.id)"
-                    >
+                    <v-list-item v-else link @click="startInstance(item.id)">
                       <v-list-item-title>
                         <v-icon>mdi-play-circle</v-icon>
                         Start

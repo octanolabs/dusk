@@ -11,7 +11,26 @@ const SV = xmlrpc.createClient({
   socketPath: '/var/run/supervisor.sock',
   path: '/RPC2',
 })
+
 let CACHE = []
+
+async function updateCacheStates() {
+  try {
+    for (let i in CACHE) {
+      SV.methodCall('supervisor.getProcessInfo', [ CACHE[i].id ], function(err, info) {
+        if (!err) {
+          CACHE[i].supervisor = info
+          if (i === CACHE.length - 1) {
+            return
+          }
+        }
+      })
+    }
+  } catch (e) {
+    consola.error(new Error(err))
+    return null
+  }
+}
 
 export default {
   get() {
@@ -19,20 +38,24 @@ export default {
   },
   async set() {
     try {
-      await storage.init({
-        dir: STORE
-      })
-      // read from disk
-      const instances = await storage.getItem('instances')
-      for (let i in instances) {
-        SV.methodCall('supervisor.getProcessInfo', [ instances[i].id ], function(err, info) {
-          if (!err) {
-            instances[i].supervisor = info
-            CACHE.push(instances[i])
-          } else {
-            consola.error(new Error(err))
-          }
+      if (CACHE.length > 0) {
+        await updateCacheStates()
+      } else {
+        await storage.init({
+          dir: STORE
         })
+        // read from disk
+        const instances = await storage.getItem('instances')
+        for (let i in instances) {
+          SV.methodCall('supervisor.getProcessInfo', [ instances[i].id ], function(err, info) {
+            if (!err) {
+              instances[i].supervisor = info
+              CACHE.push(instances[i])
+            } else {
+              consola.error(new Error(err))
+            }
+          })
+        }
       }
     } catch (e) {
       consola.error(new Error(e))
@@ -55,22 +78,38 @@ export default {
         return null
       }
     },
-    async start(id) {
-      try {
-        return await supervisor.startProcessGroup(id)
-      } catch (e) {
-        consola.error(new Error(e))
-        return null
-      }
+    start (instanceId) {
+      SV.methodCall('supervisor.startProcessGroup', [ instanceId ], async function(err, status) {
+        try {
+          if (!err) {
+            await updateCacheStates()
+            return { success: true, info: CACHE }
+          } else {
+            consola.error(new Error(err))
+            return { success: false, info: null }
+          }
+        } catch (e) {
+          consola.error(new Error(err))
+          return null
+        }
+      })
     },
-    async stop(id) {
-      try {
-        return await supervisor.stopProcessGroup(id)
-      } catch (e) {
-        consola.error(new Error(e))
-        return null
-      }
-    },
+    async stop (instanceId) {
+      SV.methodCall('supervisor.stopProcessGroup', [ instanceId ], async function(err, status) {
+        try {
+          if (!err) {
+            await updateCacheStates()
+            return { success: true, info: CACHE }
+          } else {
+            consola.error(new Error(err))
+            return { success: false, info: null }
+          }
+        } catch (e) {
+          consola.error(new Error(err))
+          return null
+        }
+      })
+    }
   }
 }
 
@@ -143,18 +182,6 @@ const supervisor = {
     SV.methodCall('supervisor.removeProcessGroup', [ instanceId ], function(err, success) {
       if (err) consola.error(new Error(err))
       return success
-    })
-  },
-  startProcessGroup (instanceId) {
-    SV.methodCall('supervisor.startProcessGroup', [ instanceId ], function(err, status) {
-      if (err) consola.error(new Error(err))
-      return status
-    })
-  },
-  stopProcessGroup (instanceId) {
-    SV.methodCall('supervisor.stopProcessGroup', [ instanceId ], function(err, status) {
-      if (err) consola.error(new Error(err))
-      return status
     })
   },
   tailProcessStdoutLog (instanceId, offset, length) {
