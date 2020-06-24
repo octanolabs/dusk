@@ -4,7 +4,6 @@ import NanoTimer from 'nanotimer'
 import system from './system.js'
 import packages from './packages.js'
 import instances from './instances.js'
-import supervisor from './supervisor.js'
 
 const providers = {
   system: {
@@ -48,15 +47,12 @@ const providers = {
     },
     remove(instanceId) {
       return instances.helpers.remove(instanceId)
-    }
-  },
-  supervisor: {
-    timer: new NanoTimer(),
-    set() {
-      supervisor.set()
     },
-    get() {
-      return supervisor.get()
+    start(instanceId) {
+      return instances.helpers.start(instanceId)
+    },
+    stop(instanceId) {
+      return instances.helpers.stop(instanceId)
     }
   }
 }
