@@ -29,6 +29,13 @@ export const mutations = {
   SET_INSTANCES(state, data) {
     state.instances = data
   },
+  SET_INSTANCE_STATE(state, instance) {
+    for (const i in state.instances) {
+      if (state.instances[i].id === instance.id) {
+        state.instances[i].supervisor.state = instance.status
+      }
+    }
+  },
   SET_SYSTEMINFO(state, data) {
     state.system = data
   },
@@ -81,9 +88,10 @@ export const actions = {
   },
   async startInstance({ commit }, instanceId) {
     try {
+      commit('SET_INSTANCE_STATE', { id: instanceId.id, status: 10 })
       const { data } = await axios.post('/api/instance/start', instanceId)
-      if (data.success && data.info) {
-        commit('SET_INSTANCES', data.info)
+      if (data.success && data.instances) {
+        commit('SET_INSTANCES', data.instances)
       }
     } catch (error) {
       consola.error(new Error(error))
@@ -91,9 +99,10 @@ export const actions = {
   },
   async stopInstance({ commit }, instanceId) {
     try {
+      commit('SET_INSTANCE_STATE', { id: instanceId.id, status: 40 })
       const { data } = await axios.post('/api/instance/stop', instanceId)
-      if (data.success && data.info) {
-        commit('SET_INSTANCES', data.info)
+      if (data.success && data.instances) {
+        commit('SET_INSTANCES', data.instances)
       }
     } catch (error) {
       consola.error(new Error(error))

@@ -53,7 +53,7 @@
                   v-else-if="item.supervisor.state === 40"
                   color="secondary"
                 >
-                  <v-icon color="primary">mdi-cog mdi-spin</v-icon>
+                  <v-icon color="secondary">mdi-cog mdi-spin</v-icon>
                   stopping
                 </v-flex>
                 <v-flex v-else color="secondary">

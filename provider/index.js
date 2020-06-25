@@ -49,11 +49,15 @@ const providers = {
     remove(instanceId) {
       return instances.helpers.remove(instanceId)
     },
-    start(instanceId) {
-      return instances.helpers.start(instanceId)
+    start(instanceId, cb) {
+      instances.helpers.start(instanceId, function(success, instances){
+        return cb(success, instances)
+      })
     },
-    stop(instanceId) {
-      return instances.helpers.stop(instanceId)
+    stop(instanceId, cb) {
+      instances.helpers.stop(instanceId, function(success, instances){
+        return cb(success, instances)
+      })
     }
   }
 }

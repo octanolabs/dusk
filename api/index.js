@@ -82,19 +82,21 @@ router.post('/instance/remove', async (req, res) => {
 
 router.post('/instance/start', (req, res) => {
   if (!req.body.id) {
-    res.status(401).json({ message: 'Bad params' })
+    return res.status(401).json({ message: 'Bad params' })
   } else {
-    const i = providers.instances.start(req.body.id)
-    res.json({ success: i.success, info: i.info })
+    providers.instances.start(req.body.id, function (success, instances) {
+      return res.json({ success, instances })
+    })
   }
 })
 
 router.post('/instance/stop', (req, res) => {
   if (!req.body.id) {
-    res.status(401).json({ message: 'Bad params' })
+    return res.status(401).json({ message: 'Bad params' })
   } else {
-    const i = providers.instances.stop(req.body.id)
-    res.json({ success: i.success, info: i.info })
+    providers.instances.stop(req.body.id, function (success, instances) {
+      return res.json({ success, instances })
+    })
   }
 })
 

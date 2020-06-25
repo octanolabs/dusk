@@ -3,6 +3,7 @@ import path from 'path'
 import consola from 'consola'
 import storage from 'node-persist'
 import xmlrpc from 'xmlrpc'
+import Loop from './lib/loop'
 
 const DUSKDIR = path.join(os.homedir(), '.dusk')
 const STORE = path.join(path.join(DUSKDIR, 'persist'), 'store')
@@ -14,22 +15,21 @@ const SV = xmlrpc.createClient({
 
 let CACHE = []
 
-async function updateCacheStates() {
-  try {
-    for (let i in CACHE) {
-      SV.methodCall('supervisor.getProcessInfo', [ CACHE[i].id ], function(err, info) {
-        if (!err) {
-          CACHE[i].supervisor = info
-          if (i === CACHE.length - 1) {
-            return
-          }
-        }
-      })
-    }
-  } catch (e) {
-    consola.error(new Error(err))
-    return null
-  }
+function updateCacheStates(oldCache, cb) {
+  const newCache = oldCache
+  Loop.sync(newCache.length, function(loop) {
+    const i = loop.iteration()
+    SV.methodCall('supervisor.getProcessInfo', [ newCache[i].id ], function(err, info) {
+      if (!err) {
+        newCache[i].supervisor = info
+        loop.next()
+      } else {
+        loop.next()
+      }
+    })
+  }, function() {
+    return cb(newCache)
+  })
 }
 
 export default {
@@ -39,7 +39,9 @@ export default {
   async set() {
     try {
       if (CACHE.length > 0) {
-        await updateCacheStates()
+        updateCacheStates(CACHE, function(newCache) {
+          CACHE = newCache
+        })
       } else {
         await storage.init({
           dir: STORE
@@ -78,35 +80,29 @@ export default {
         return null
       }
     },
-    start (instanceId) {
-      SV.methodCall('supervisor.startProcessGroup', [ instanceId ], async function(err, status) {
-        try {
-          if (!err) {
-            await updateCacheStates()
-            return { success: true, info: CACHE }
-          } else {
-            consola.error(new Error(err))
-            return { success: false, info: null }
-          }
-        } catch (e) {
+    start (instanceId, cb) {
+      SV.methodCall('supervisor.startProcessGroup', [ instanceId ], function(err, status) {
+        if (!err) {
+          updateCacheStates(CACHE, function(newCache) {
+            CACHE = newCache
+            return cb(true, newCache)
+          })
+        } else {
           consola.error(new Error(err))
-          return null
+          return cb(false, null)
         }
       })
     },
-    async stop (instanceId) {
-      SV.methodCall('supervisor.stopProcessGroup', [ instanceId ], async function(err, status) {
-        try {
-          if (!err) {
-            await updateCacheStates()
-            return { success: true, info: CACHE }
-          } else {
-            consola.error(new Error(err))
-            return { success: false, info: null }
-          }
-        } catch (e) {
+    stop (instanceId, cb) {
+      SV.methodCall('supervisor.stopProcessGroup', [ instanceId ], function(err, status) {
+        if (!err) {
+          updateCacheStates(CACHE, function(newCache) {
+            CACHE = newCache
+            return cb(true, newCache)
+          })
+        } else {
           consola.error(new Error(err))
-          return null
+          return cb(false, null)
         }
       })
     }
@@ -118,6 +114,7 @@ async function addInstance(instance) {
     if (instance) {
       CACHE.push(instance)
       await storage.setItem('instances', CACHE)
+
       return true
     }
     return false
@@ -152,6 +149,23 @@ const getProcessInfo = async function(instanceId) {
     })
   } catch (e) {
     consola.error(new Error(e))
+  }
+}
+
+/*
+[program:[instanceId]]
+command=[binpath] [params]
+user=[user]
+autostart=true
+autorestart=true
+stderr_logfile=[logdir]/[intanceId].err.log
+stdout_logfile=[logdir]/[intanceId].out.log
+*/
+const createSupervisorConfig = async function (instance) {
+  try {
+
+  } catch (e) {
+
   }
 }
 
