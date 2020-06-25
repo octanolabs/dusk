@@ -105,6 +105,15 @@ export default {
           return cb(false, null)
         }
       })
+    },
+    logs (instanceId, cb) {
+      SV.methodCall('supervisor.tailProcessStdoutLog', [ instanceId, 0, 4096 ], function(err, stdout) {
+        if (err) consola.error(new Error(err))
+        SV.methodCall('supervisor.tailProcessStderrLog', [ instanceId, 0, 4096 ], function(err, stderr) {
+          if (err) consola.error(new Error(err))
+          return cb({ stdout, stderr })
+        })
+      })
     }
   }
 }
@@ -196,18 +205,6 @@ const supervisor = {
     SV.methodCall('supervisor.removeProcessGroup', [ instanceId ], function(err, success) {
       if (err) consola.error(new Error(err))
       return success
-    })
-  },
-  tailProcessStdoutLog (instanceId, offset, length) {
-    SV.methodCall('supervisor.tailProcessStdoutLog', [ instanceId, offset, length ], function(err, log) {
-      if (err) consola.error(new Error(err))
-      return log
-    })
-  },
-  tailProcessStderrLog (instanceId, offset, length) {
-    SV.methodCall('supervisor.tailProcessStderrLog', [ instanceId, offset, length ], function(err, log) {
-      if (err) consola.error(new Error(err))
-      return log
     })
   }
 }

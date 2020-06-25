@@ -77,20 +77,24 @@
                       link
                     >
                       <v-list-item-title>
-                        <v-icon>mdi-desktop-mac-dashboard</v-icon>
-                        Dashboard
+                        <v-icon>mdi-information-outline</v-icon>
+                        Details
                       </v-list-item-title>
                     </v-list-item>
                     <v-list-item
-                      :disabled="item.supervisor.state === 20"
-                      to="/dashboard"
                       link
+                      @click="
+                        selectedInstance = item
+                        showLogsDialog = true
+                        getInstanceLogs(item.id)
+                      "
                     >
                       <v-list-item-title>
                         <v-icon>mdi-cogs</v-icon>
-                        Configure
+                        Logs
                       </v-list-item-title>
                     </v-list-item>
+                    <v-divider />
                     <v-list-item
                       v-if="item.supervisor.state === 20"
                       link
@@ -127,6 +131,38 @@
             </v-data-table>
           </v-card-text>
         </v-card>
+        <v-dialog
+          v-model="showLogsDialog"
+          width="800"
+          persistent
+          class="logs-dialog"
+        >
+          <v-card>
+            <v-btn
+              color="secondary"
+              fab
+              absolute
+              top
+              right
+              @click.stop="showLogsDialog = false"
+            >
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+            <v-card-title primary-title>
+              {{ selectedInstance.name }} logs
+            </v-card-title>
+            <v-divider></v-divider>
+            <v-card-text style="height: 600px;">
+              <v-skeleton-loader
+                v-if="!stderr"
+                class="mx-auto mt-6"
+                type="paragraph, sentences, paragraph, text, paragraph, sentences"
+                max-height="600"
+              ></v-skeleton-loader>
+              <pre v-else>{{ stderr }}</pre>
+            </v-card-text>
+          </v-card>
+        </v-dialog>
         <v-dialog v-model="destroyInstanceDialog" width="500" persistent>
           <v-card>
             <v-card-title primary-title>Destroy Instance</v-card-title>
@@ -186,6 +222,7 @@ export default {
       destroyInstanceDialog: false,
       confirmDestroy: '',
       selectedInstance: {},
+      showLogsDialog: false,
       headers: [
         { text: 'name', value: 'name' },
         { text: 'network', value: 'network' },
@@ -199,6 +236,12 @@ export default {
   computed: {
     instances() {
       return this.$store.state.instances
+    },
+    stdout() {
+      return this.$store.state.logs.stdout[0] || null
+    },
+    stderr() {
+      return this.$store.state.logs.stderr[0] || null
     }
   },
   methods: {
@@ -219,6 +262,9 @@ export default {
     },
     stopInstance(instanceId) {
       this.$store.dispatch('stopInstance', { id: instanceId })
+    },
+    getInstanceLogs(instanceId) {
+      this.$store.dispatch('getInstanceLogs', { id: instanceId })
     }
   }
 }

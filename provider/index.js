@@ -58,6 +58,11 @@ const providers = {
       instances.helpers.stop(instanceId, function(success, instances){
         return cb(success, instances)
       })
+    },
+    logs(instanceId, cb) {
+      instances.helpers.logs(instanceId, function(logs) {
+        return cb(logs)
+      })
     }
   }
 }

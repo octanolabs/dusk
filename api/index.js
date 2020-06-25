@@ -100,6 +100,16 @@ router.post('/instance/stop', (req, res) => {
   }
 })
 
+router.post('/instance/logs', (req, res) => {
+  if (!req.body.id) {
+    return res.status(401).json({ message: 'Bad params' })
+  } else {
+    providers.instances.logs(req.body.id, function (logs) {
+      return res.json({ logs: logs })
+    })
+  }
+})
+
 // Export the server middleware
 export default {
   path: '/api',

@@ -19,6 +19,10 @@ export const state = () => ({
   system: {},
   packages: {},
   instances: [],
+  logs: {
+    stdout: [],
+    stderr: []
+  },
   version: '0.0.1'
 })
 
@@ -35,6 +39,9 @@ export const mutations = {
         state.instances[i].supervisor.state = instance.status
       }
     }
+  },
+  SET_INSTANCE_LOGS(state, logs) {
+    state.logs = logs
   },
   SET_SYSTEMINFO(state, data) {
     state.system = data
@@ -103,6 +110,16 @@ export const actions = {
       const { data } = await axios.post('/api/instance/stop', instanceId)
       if (data.success && data.instances) {
         commit('SET_INSTANCES', data.instances)
+      }
+    } catch (error) {
+      consola.error(new Error(error))
+    }
+  },
+  async getInstanceLogs({ commit }, instanceId) {
+    try {
+      const { data } = await axios.post('/api/instance/logs', instanceId)
+      if (data.logs) {
+        commit('SET_INSTANCE_LOGS', data.logs)
       }
     } catch (error) {
       consola.error(new Error(error))
