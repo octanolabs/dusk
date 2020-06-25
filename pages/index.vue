@@ -64,9 +64,11 @@
               <template v-slot:item.menu="{ item }">
                 <v-menu bottom left>
                   <template v-slot:activator="{ on }">
-                    <v-btn icon v-on="on">
-                      <v-icon>mdi-dots-horizontal</v-icon>
-                    </v-btn>
+                    <v-flex style="text-align:right">
+                      <v-btn icon v-on="on" style="margin:auto 0 auto auto">
+                        <v-icon>mdi-dots-horizontal</v-icon>
+                      </v-btn>
+                    </v-flex>
                   </template>
                   <v-list>
                     <v-list-item
@@ -186,9 +188,9 @@ export default {
       selectedInstance: {},
       headers: [
         { text: 'name', value: 'name' },
+        { text: 'network', value: 'network' },
         { text: 'client', value: 'client' },
         { text: 'version', value: 'version' },
-        { text: 'network', value: 'network' },
         { text: 'status', value: 'supervisor' },
         { text: '', align: 'end', value: 'menu' }
       ]
