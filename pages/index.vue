@@ -144,7 +144,10 @@
               absolute
               top
               right
-              @click.stop="logs.showDialog = false"
+              @click.stop="
+                logs.showDialog = false
+                selectedInstance = {}
+              "
             >
               <v-icon>mdi-close</v-icon>
             </v-btn>
@@ -295,7 +298,19 @@ export default {
       this.$store.dispatch('stopInstance', { id: instanceId })
     },
     getInstanceLogs(instanceId) {
-      this.$store.dispatch('getInstanceLogs', { id: instanceId })
+      const self = this
+      const updateLogs = function(id) {
+        self.$store.dispatch('getInstanceLogs', { id })
+        if (
+          self.logs.showDialog &&
+          self.selectedInstance?.supervisor?.state === 20
+        ) {
+          setTimeout(function() {
+            updateLogs(id)
+          }, 1000)
+        }
+      }
+      updateLogs(instanceId)
     }
   }
 }
