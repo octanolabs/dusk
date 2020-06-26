@@ -85,7 +85,7 @@
                       link
                       @click="
                         selectedInstance = item
-                        showLogsDialog = true
+                        logs.showDialog = true
                         getInstanceLogs(item.id)
                       "
                     >
@@ -117,7 +117,7 @@
                       :disabled="item.supervisor.state === 20"
                       @click.stop="
                         selectedInstance = item
-                        destroyInstanceDialog = true
+                        destroy.showDialog = true
                       "
                     >
                       <v-list-item-title color="secondary">
@@ -132,7 +132,7 @@
           </v-card-text>
         </v-card>
         <v-dialog
-          v-model="showLogsDialog"
+          v-model="logs.showDialog"
           width="800"
           persistent
           class="logs-dialog"
@@ -144,7 +144,7 @@
               absolute
               top
               right
-              @click.stop="showLogsDialog = false"
+              @click.stop="logs.showDialog = false"
             >
               <v-icon>mdi-close</v-icon>
             </v-btn>
@@ -153,11 +153,7 @@
             </v-card-title>
             <v-divider></v-divider>
             <v-card-text style="height: 600px;" class="pa-0">
-              <v-tabs
-                v-model="tabsLogsDialog"
-                background-color="transparent"
-                grow
-              >
+              <v-tabs v-model="logs.tabs" background-color="transparent" grow>
                 <v-tab key="0">
                   stdout
                 </v-tab>
@@ -165,7 +161,7 @@
                   stderr
                 </v-tab>
               </v-tabs>
-              <v-tabs-items v-model="tabsLogsDialog" style="height:100%;">
+              <v-tabs-items v-model="logs.tabs" style="height:100%;">
                 <v-tab-item key="0" style="height:100%;">
                   <v-skeleton-loader
                     v-if="!stderr"
@@ -193,7 +189,7 @@
             </v-card-text>
           </v-card>
         </v-dialog>
-        <v-dialog v-model="destroyInstanceDialog" width="500" persistent>
+        <v-dialog v-model="destroy.showDialog" width="500" persistent>
           <v-card>
             <v-card-title primary-title>Destroy Instance</v-card-title>
             <v-card-text>
@@ -205,7 +201,7 @@
                 to confirm.
               </p>
               <v-text-field
-                v-model="confirmDestroy"
+                v-model="destroy.confirm"
                 class="input-group--focused"
                 label="confirm"
                 name="confirm"
@@ -219,7 +215,7 @@
                 color="primary"
                 @click.stop="
                   selectedInstance = {}
-                  destroyInstanceDialog = false
+                  destroy.showDialog = false
                 "
               >
                 No
@@ -227,11 +223,11 @@
               <v-btn
                 color="secondary"
                 text
-                :disabled="confirmDestroy !== selectedInstance.id"
+                :disabled="destroy.confirm !== selectedInstance.id"
                 @click.stop="
                   destroyInstance(selectedInstance.id)
                   selectedInstance = {}
-                  destroyInstanceDialog = false
+                  destroy.showDialog = false
                 "
               >
                 Yes
@@ -249,11 +245,15 @@ export default {
   middleware: 'auth',
   data() {
     return {
-      destroyInstanceDialog: false,
-      confirmDestroy: '',
       selectedInstance: {},
-      showLogsDialog: false,
-      tabsLogsDialog: null,
+      destroy: {
+        showDialog: false,
+        confirm: ''
+      },
+      logs: {
+        showDialog: false,
+        tabs: null
+      },
       headers: [
         { text: 'name', value: 'name' },
         { text: 'network', value: 'network' },
