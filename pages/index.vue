@@ -152,14 +152,44 @@
               {{ selectedInstance.name }} logs
             </v-card-title>
             <v-divider></v-divider>
-            <v-card-text style="height: 600px;">
-              <v-skeleton-loader
-                v-if="!stderr"
-                class="mx-auto mt-6"
-                type="paragraph, sentences, paragraph, text, paragraph, sentences"
-                max-height="600"
-              ></v-skeleton-loader>
-              <pre v-else>{{ stderr }}</pre>
+            <v-card-text style="height: 600px;" class="pa-0">
+              <v-tabs
+                v-model="tabsLogsDialog"
+                background-color="transparent"
+                grow
+              >
+                <v-tab key="0">
+                  stdout
+                </v-tab>
+                <v-tab key="1">
+                  stderr
+                </v-tab>
+              </v-tabs>
+              <v-tabs-items v-model="tabsLogsDialog" style="height:100%;">
+                <v-tab-item key="0" style="height:100%;">
+                  <v-skeleton-loader
+                    v-if="!stderr"
+                    class="mx-auto mt-6"
+                    type="paragraph, sentences, paragraph, text, paragraph, sentences"
+                    max-height="600"
+                  ></v-skeleton-loader>
+                  <pre
+                    v-else
+                    style="width:100%;height:100%;display:flex;flex-direction:column-reverse;"
+                  >
+                    {{ stderr }}
+                  </pre>
+                </v-tab-item>
+                <v-tab-item key="1" style="height:100%;">
+                  <v-skeleton-loader
+                    v-if="!stdout"
+                    class="mx-auto mt-6"
+                    type="paragraph, sentences, paragraph, text, paragraph, sentences"
+                    max-height="600"
+                  ></v-skeleton-loader>
+                  <pre v-else style="width:100%;height:100%;">{{ stdout }}</pre>
+                </v-tab-item>
+              </v-tabs-items>
             </v-card-text>
           </v-card>
         </v-dialog>
@@ -223,6 +253,7 @@ export default {
       confirmDestroy: '',
       selectedInstance: {},
       showLogsDialog: false,
+      tabsLogsDialog: null,
       headers: [
         { text: 'name', value: 'name' },
         { text: 'network', value: 'network' },

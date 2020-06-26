@@ -107,10 +107,18 @@ export default {
       })
     },
     logs (instanceId, cb) {
-      SV.methodCall('supervisor.tailProcessStdoutLog', [ instanceId, 0, 4096 ], function(err, stdout) {
+      SV.methodCall('supervisor.tailProcessStdoutLog', [ instanceId, 0, 10240 ], function(err, stdout) {
         if (err) consola.error(new Error(err))
-        SV.methodCall('supervisor.tailProcessStderrLog', [ instanceId, 0, 4096 ], function(err, stderr) {
+        if (stdout && stdout[0]) { // clean up logs
+          // remove first (probably incomplete) line
+          stdout[0] = stdout[0].substr(stdout[0].indexOf('\n'))
+        }
+        SV.methodCall('supervisor.tailProcessStderrLog', [ instanceId, 0, 10240 ], function(err, stderr) {
           if (err) consola.error(new Error(err))
+          if (stderr && stderr[0]) { // clean up logs
+            // remove first (probably incomplete) line 
+            stderr[0] = stderr[0].substr(stderr[0].indexOf('\n'))
+          }
           return cb({ stdout, stderr })
         })
       })
