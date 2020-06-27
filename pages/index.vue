@@ -167,7 +167,7 @@
               <v-tabs-items v-model="logs.tabs" style="height:100%;">
                 <v-tab-item key="0" style="height:100%;">
                   <v-skeleton-loader
-                    v-if="!stderr"
+                    v-if="!logs.returned"
                     class="mx-auto mt-6"
                     type="paragraph, sentences, paragraph, text, paragraph, sentences"
                     max-height="600"
@@ -181,7 +181,7 @@
                 </v-tab-item>
                 <v-tab-item key="1" style="height:100%;">
                   <v-skeleton-loader
-                    v-if="!stdout"
+                    v-if="!logs.returned"
                     class="mx-auto mt-6"
                     type="paragraph, sentences, paragraph, text, paragraph, sentences"
                     max-height="600"
@@ -255,7 +255,8 @@ export default {
       },
       logs: {
         showDialog: false,
-        tabs: null
+        tabs: null,
+        returned: false
       },
       headers: [
         { text: 'name', value: 'name' },
@@ -301,6 +302,9 @@ export default {
       const self = this
       const updateLogs = function(id) {
         self.$store.dispatch('getInstanceLogs', { id })
+        if (self.stdout || self.stderr) {
+          self.logs.returned = true
+        }
         if (
           self.logs.showDialog &&
           self.selectedInstance?.supervisor?.state === 20
