@@ -57,27 +57,49 @@
     </v-list>
     <span style="position:absolute;bottom:0;width:100%;">
       <v-list>
-        <v-list-item>
-          <v-list-item-content>
-            <v-list-item-title>
-              {{ $t('system.cpu') }}
-            </v-list-item-title>
-            <v-list-item-subtitle class="bg-transparent">
-              <v-sparkline
-                :value="cpuinfo"
-                :gradient="['#e76754', '#6fceb7', '#6fceb7']"
-                gradient-direction="bottom"
-                color="#e76754"
-                padding="1"
-                smooth="2"
-                type="bar"
-                height="100px"
-                auto-line-width
-                fill
-              ></v-sparkline>
-            </v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
+        <v-tooltip left>
+          <template v-slot:activator="{ on }">
+            <v-list-item v-on="on">
+              <v-list-item-content>
+                <v-list-item-title>
+                  {{ $t('system.cpu') }}
+                </v-list-item-title>
+                <v-list-item-subtitle class="bg-transparent">
+                  <v-sparkline
+                    :value="cpuinfo"
+                    :gradient="['#e76754', '#6fceb7', '#6fceb7']"
+                    gradient-direction="bottom"
+                    color="#e76754"
+                    padding="1"
+                    smooth="2"
+                    type="bar"
+                    height="100px"
+                    auto-line-width
+                    fill
+                  ></v-sparkline>
+                </v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+          </template>
+          <v-simple-table dense transparent>
+            <thead>
+              <tr>
+                <th>{{ $t('system.cpu') }}</th>
+                <th v-for="(cpu, index) of cpuinfo" :key="index">
+                  {{ index + 1 }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th>idle (%)</th>
+                <td v-for="(cpu, index) of cpuinfo" :key="index">
+                  <span :class="{}">{{ cpu }}</span>
+                </td>
+              </tr>
+            </tbody>
+          </v-simple-table>
+        </v-tooltip>
         <template v-for="key of Object.keys(available)">
           <v-tooltip v-if="available[key].total" :key="key" left>
             <template v-slot:activator="{ on }">
