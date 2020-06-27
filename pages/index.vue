@@ -30,6 +30,20 @@
                 </v-avatar>
                 {{ getNetworkName(item.network.id, item.network.type) }}
               </template>
+              <template v-slot:item.uptime="{ item }">
+                {{
+                  item.supervisor.state === 20
+                    ? item.supervisor.description.split(' ')[3]
+                    : '-'
+                }}
+              </template>
+              <template v-slot:item.stopped="{ item }">
+                {{
+                  item.supervisor.state === 0
+                    ? item.supervisor.description
+                    : '-'
+                }}
+              </template>
               <template v-slot:item.supervisor="{ item }">
                 <v-flex v-if="item.supervisor.state === 0" color="primary">
                   <v-icon color="secondary">mdi-rocket</v-icon>
@@ -264,6 +278,8 @@ export default {
         { text: 'client', value: 'client' },
         { text: 'version', value: 'version' },
         { text: 'status', value: 'supervisor' },
+        { text: 'uptime', value: 'uptime' },
+        { text: 'stopped at', value: 'stopped' },
         { text: '', align: 'end', value: 'menu' }
       ]
     }
