@@ -209,6 +209,14 @@
                         </v-list-item-title>
                       </v-list-item>
                     </template>
+                    <v-divider />
+                    <v-list-item @click="$router.push({ path: '/clients' })">
+                      <v-list-item-content>
+                        <v-list-item-subtitle>
+                          Go to client downloads..
+                        </v-list-item-subtitle>
+                      </v-list-item-content>
+                    </v-list-item>
                   </v-list>
                 </v-menu>
               </v-card>
@@ -277,7 +285,6 @@ export default {
       selectedClient: null,
       selectedClientVersion: null,
       availableClients: [],
-      availableReleases: [],
       defaultOptions: null,
       breadcrumbs: [
         {
