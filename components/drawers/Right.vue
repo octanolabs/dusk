@@ -18,6 +18,7 @@
       </v-list>
     </v-toolbar>
     <v-list dense class="pa-0">
+      <v-subheader class="ml-2">System</v-subheader>
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title>
@@ -36,6 +37,9 @@
           <v-list-item-subtitle>{{ system.release }}</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
+    </v-list>
+    <v-list two-line dense class="pa-0">
+      <v-subheader class="ml-2">Network Interfaces</v-subheader>
       <template v-for="key of Object.keys(networkInterfaces)">
         <v-list-item
           v-if="
@@ -46,9 +50,12 @@
         >
           <v-list-item-content>
             <v-list-item-title>
-              {{ system.networkInterfaces[key][0].address }}
+              {{ key }}
             </v-list-item-title>
             <v-list-item-subtitle>
+              {{ system.networkInterfaces[key][0].address }}
+            </v-list-item-subtitle>
+            <v-list-item-subtitle v-if="!!system.networkInterfaces[key][1]">
               {{ system.networkInterfaces[key][1].address }}
             </v-list-item-subtitle>
           </v-list-item-content>
