@@ -79,7 +79,7 @@
                 <v-menu bottom left>
                   <template v-slot:activator="{ on }">
                     <v-flex style="text-align:right">
-                      <v-btn icon v-on="on" style="margin:auto 0 auto auto">
+                      <v-btn icon style="margin:auto 0 auto auto" v-on="on">
                         <v-icon>mdi-dots-horizontal</v-icon>
                       </v-btn>
                     </v-flex>
@@ -323,7 +323,8 @@ export default {
         }
         if (
           self.logs.showDialog &&
-          self.selectedInstance?.supervisor?.state === 20
+          (self.selectedInstance?.supervisor?.state === 20 ||
+            self.logs.returned === false)
         ) {
           setTimeout(function() {
             updateLogs(id)
