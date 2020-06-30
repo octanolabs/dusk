@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="saveInstance">
+  <form @submit.prevent="saveInstance(config)">
     <v-col :cols="12" class="px-0 py-2">
       <v-row no-gutters>
         <v-col :cols="6" class="pa-0 pr-1">
@@ -635,12 +635,90 @@ export default {
         }
       }
     },
-    async saveInstance() {
+    async saveInstance(config) {
       try {
         this.spin = true
         const i = this.instance
-        i.config = this.config
-        await this.$store.dispatch('addNewInstance', i)
+        i.config = config
+        let flags =
+          '--datadir="' +
+          config.datadir +
+          '" --syncmode=' +
+          (config.fullsync ? '"full"' : '"fast"') +
+          ' --gcmode=' +
+          (config.archive ? '"archive"' : '"full"') +
+          ' --port ' +
+          config.port +
+          ' --maxpeers ' +
+          config.maxpeers +
+          ' --nat="' +
+          config.nat +
+          '"'
+        // check optional args
+        if (config.nodiscover) {
+          flags = flags + ' --nodiscover'
+        }
+        // ethstats
+        if (config.ethstats?.enable) {
+          flags =
+            flags +
+            ' --ethstats="' +
+            config.ethstats?.nodename +
+            ':jbs4lyfe@ubiq.darcr.us"' // TODO - add to network config
+        }
+        // http-rpc
+        if (config.http?.enable) {
+          flags =
+            flags +
+            ' --http --http.api="' +
+            config.http.api +
+            '" --http.addr="' +
+            config.http.addr +
+            '" --http.port ' +
+            config.http.port +
+            ' --http.vhosts="' +
+            config.http.vhosts +
+            '"'
+          if (config.http.corsdomain) {
+            flags =
+              flags + ' --http.corsdomain="' + config.http.corsdomain + '"'
+          }
+        }
+        // ws-rpc
+        if (config.ws?.enable) {
+          flags =
+            flags +
+            ' --ws --ws.api="' +
+            config.ws.api +
+            '" --ws.addr="' +
+            config.ws.addr +
+            '" --ws.port ' +
+            config.ws.port
+          if (config.ws.origins) {
+            flags = flags + ' --ws.origins="' + config.ws.origins + '"'
+          }
+        }
+        if (config.graphql?.enable) {
+          flags =
+            flags +
+            ' --graphql' +
+            ' --graphql.addr="' +
+            config.graphql.addr +
+            '" --graphql.port ' +
+            config.graphql.port +
+            ' --graphql.vhosts="' +
+            config.graphql.vhosts +
+            '"'
+          if (config.graphql.corsdomain) {
+            flags =
+              flags +
+              ' --graphql.corsdomain="' +
+              config.graphql.corsdomain +
+              '"'
+          }
+        }
+        i.flags = flags
+        await this.$store.dispatch('addInstance', i)
         this.spin = false
         this.$router.push({ path: '/' })
       } catch (e) {
