@@ -1,12 +1,21 @@
 import os from 'os'
+import fs from 'fs'
 import path from 'path'
 import consola from 'consola'
+import { promisify } from 'util'
 import storage from 'node-persist'
 import xmlrpc from 'xmlrpc'
 import Loop from './lib/loop'
 
 const DUSKDIR = path.join(os.homedir(), '.dusk')
 const STORE = path.join(path.join(DUSKDIR, 'persist'), 'store')
+const SVDIR = path.join(DUSKDIR, 'supervisor')
+const LOGDIR = path.join(SVDIR, 'logs')
+
+// promisify fs functions so we can async/await them later.
+const stat = promisify(fs.stat)
+const mkdir = promisify(fs.mkdir)
+const writeFile = promisify(fs.writeFile)
 
 const SV = xmlrpc.createClient({
   socketPath: '/var/run/supervisor.sock',
@@ -66,7 +75,9 @@ export default {
   helpers: {
     async add(instance) {
       try {
-        return await addInstance(instance)
+        addInstance(instance, function(info) {
+          return info
+        })
       } catch (e) {
         consola.error(new Error(e))
         return null
@@ -116,7 +127,7 @@ export default {
         SV.methodCall('supervisor.tailProcessStderrLog', [ instanceId, 0, 10240 ], function(err, stderr) {
           if (err) consola.error(new Error(err))
           if (stderr && stderr[0]) { // clean up logs
-            // remove first (probably incomplete) line 
+            // remove first (probably incomplete) line
             stderr[0] = stderr[0].substr(stderr[0].indexOf('\n'))
           }
           return cb({ stdout, stderr })
@@ -126,20 +137,46 @@ export default {
   }
 }
 
-async function addInstance(instance) {
-  try {
-    if (instance) {
-      CACHE.push(instance)
-      await storage.setItem('instances', CACHE)
-
-      return true
-    }
-    return false
-  } catch (e) {
-    consola.error(new Error(e))
-    return null
+function addInstance(instance, cb) {
+  if (instance) {
+    createSupervisorConfig(instance, function (config) {
+      // make sure LOGDIR has been created
+      fs.stat(LOGDIR, async function(logerr, logstat) {
+        try {
+          if (logerr) {
+            await mkdir(LOGDIR, { recursive: true })
+          }
+          const confPath = path.join(SVDIR, instance.id + '.conf')
+          // write to disk
+          const err = await writeFile(confPath, config)
+          if (err) {
+            consola.error(new Error(err))
+            return cb({ success: false })
+          } else {
+            CACHE.push(instance)
+            SV.methodCall('supervisor.reloadConfig', [], function(rl_err, changes) {
+              if (rl_err) consola.error(new Error(rl_err))
+              SV.methodCall('supervisor.addProcessGroup', [ instance.id ], function(apg_err, success) {
+                if (apg_err) consola.error(new Error(apg_err))
+                updateCacheStates(CACHE, async function(newCache) {
+                  CACHE = newCache
+                  await storage.setItem('instances', CACHE)
+                  return cb({ success: true, info: CACHE })
+                })
+              })
+            })
+          }
+        } catch (e) {
+          consola.error(new Error(e))
+          return cb({ success: false })
+        }
+      })
+    })
+  } else {
+    return cb({ success: false })
   }
 }
+
 
 async function removeInstance(id) {
   try {
@@ -158,32 +195,22 @@ async function removeInstance(id) {
   }
 }
 
-const getProcessInfo = async function(instanceId) {
-  try {
-    SV.methodCall('supervisor.getProcessInfo', [ instanceId ], function(err, info) {
-      if (err) consola.error(new Error(err))
-      return info
-    })
-  } catch (e) {
-    consola.error(new Error(e))
-  }
-}
-
-/*
-[program:[instanceId]]
-command=[binpath] [params]
-user=[user]
-autostart=true
-autorestart=true
-stderr_logfile=[logdir]/[intanceId].err.log
-stdout_logfile=[logdir]/[intanceId].out.log
-*/
-const createSupervisorConfig = async function (instance) {
-  try {
-
-  } catch (e) {
-
-  }
+const createSupervisorConfig = function (instance, cb) {
+  let err = '.err.log'
+  let out = '.out.log'
+  consola.log('createSupervisorConfig')
+  consola.log(instance)
+  const binpath = '/usr/bin/gubiq'
+  const user = os.userInfo()
+  let config =
+    '[program:' + instance.id + ']' + '\n' +
+    'command=' + binpath + instance.flags + '\n' +
+    'user=' + user.username + '\n' +
+    'autostart=true' + '\n' +
+    'autorestart=true' + '\n' +
+    'stderr_logfile=' + path.join(LOGDIR, instance.id + err) + '\n' +
+    'stdout_logfile=' + path.join(LOGDIR, instance.id + out)
+  return cb(config)
 }
 
 // http://supervisord.org/api.html
@@ -193,7 +220,7 @@ const createSupervisorConfig = async function (instance) {
 const supervisor = {
   reloadConfig() {
     SV.methodCall('supervisor.reloadConfig', [], function(err, changes) {
-      if (err) consola.error(new Error(err))
+      if (err) consola.error(new Estatrror(err))
       return changes
     })
   },
