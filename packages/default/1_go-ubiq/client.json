@@ -8,6 +8,7 @@
       "tag": "Andromeda patch",
       "note": "This patch release reverts the implementation of OpenRPC in Gubiq v3.0.0 where some RPC requests to eth_call were returning empty (\"0x\") results. A future release of Gubiq will re-add OpenRPC support after further investigation is complete.",
       "info": "https://github.com/ubiq/go-ubiq/releases/tag/v3.0.1",
+      "legacy-rpc": true,
       "darwin-amd64": {
         "url": "https://github.com/ubiq/go-ubiq/releases/download/v3.0.1/gubiq-darwin-amd64",
         "sha256": "340173ac5758054a558ca31257309e9cb2860534e239b711a0c14c7236189c78",
@@ -34,6 +35,7 @@
       "tag": "Andromeda",
       "note": "Please use the patched version Gubiq v3.0.1. This release is tagged for historical reasons.",
       "info": "https://github.com/ubiq/go-ubiq/releases/tag/v3.0.0",
+      "legacy-rpc": true,
       "darwin-amd64": {
         "url": "https://github.com/ubiq/go-ubiq/releases/download/v3.0.0/gubiq-darwin-amd64",
         "sha256": "8f0be7ac16c8ecc26b6bf8caa5b3ac4cc2bad746e86c8008aad9a7dec5da5acd",
