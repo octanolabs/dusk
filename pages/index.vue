@@ -71,7 +71,7 @@
                   stopping
                 </v-flex>
                 <v-flex v-else color="secondary">
-                  <v-icon color="primary">mdi-fire</v-icon>
+                  <v-icon color="secondary">mdi-fire</v-icon>
                   error
                 </v-flex>
               </template>
@@ -158,10 +158,7 @@
               absolute
               top
               right
-              @click.stop="
-                logs.showDialog = false
-                selectedInstance = {}
-              "
+              @click.stop="closeLogs()"
             >
               <v-icon>mdi-close</v-icon>
             </v-btn>
@@ -275,7 +272,7 @@ export default {
       headers: [
         { text: 'name', value: 'name' },
         { text: 'network', value: 'network' },
-        { text: 'client', value: 'client' },
+        { text: 'client', value: 'client.name' },
         { text: 'version', value: 'version' },
         { text: 'status', value: 'supervisor' },
         { text: 'uptime', value: 'uptime' },
@@ -332,6 +329,12 @@ export default {
         }
       }
       updateLogs(instanceId)
+    },
+    closeLogs() {
+      this.$store.dispatch('getInstanceLogs', null) // reset
+      this.logs.showDialog = false
+      this.selectedInstance = {}
+      this.logs.returned = false
     }
   }
 }

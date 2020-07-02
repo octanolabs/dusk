@@ -75,9 +75,9 @@ export const actions = {
       instance.id = await sha256(instance.name + instance.timestamp.toString())
         .toString()
         .substr(0, 8)
-      const res = await axios.post('/api/instance/add', instance)
-      if (res.data.success) {
-        commit('ADD_INSTANCE', instance)
+      const { data } = await axios.post('/api/instance/add', instance)
+      if (data.success && data.info) {
+        commit('SET_INSTANCES', data.info)
       }
     } catch (error) {
       consola.error(new Error(error))
@@ -117,9 +117,13 @@ export const actions = {
   },
   async getInstanceLogs({ commit }, instanceId) {
     try {
-      const { data } = await axios.post('/api/instance/logs', instanceId)
-      if (data.logs) {
-        commit('SET_INSTANCE_LOGS', data.logs)
+      if (instanceId && instanceId.id) {
+        const { data } = await axios.post('/api/instance/logs', instanceId)
+        if (data.logs) {
+          commit('SET_INSTANCE_LOGS', data.logs)
+        }
+      } else {
+        commit('SET_INSTANCE_LOGS', { stdout: [], stderr: [] }) // reset
       }
     } catch (error) {
       consola.error(new Error(error))
