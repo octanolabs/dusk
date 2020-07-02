@@ -502,15 +502,15 @@
 export default {
   props: {
     client: {
-      type: String,
+      type: Object,
       default() {
-        return 'go-ubiq'
+        return {}
       }
     },
-    version: {
-      type: String,
+    release: {
+      type: Object,
       default() {
-        return '3.0.1'
+        return {}
       }
     },
     network: {
@@ -591,16 +591,19 @@ export default {
   methods: {
     setDefaults(opts) {
       this.instance = {
-        name: this.network + '_' + this.client + '_' + this.version,
+        name:
+          this.network + '_' + this.client.name + '_' + this.release.version,
         client: this.client,
-        version: this.version,
+        version: this.release.version,
+        binpath: this.release.binpath,
         network: {
           id: this.network,
           type: this.networkType
         }
       }
       this.config = {
-        datadir: this.homedir + '/.dusk/' + this.client + '/' + this.network, // TODO - OSX
+        datadir:
+          this.homedir + '/.dusk/' + this.client.name + '/' + this.network, // TODO - OSX
         fullsync: opts?.fullsync || false,
         archive: opts?.archive || false,
         port: opts?.port || 30388,

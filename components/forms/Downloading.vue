@@ -14,7 +14,6 @@
         >
           <v-icon>mdi-check</v-icon>
         </v-btn>
-        <v-subtitle></v-subtitle>
       </v-flex>
       <v-list two-line>
         <v-list-item>

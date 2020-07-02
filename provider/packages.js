@@ -24,7 +24,7 @@ const chmod = promisify(fs.chmod)
 
 // paths
 const DUSKDIR = path.join(os.homedir(), '.dusk')
-const BIN = path.join(path.join(DUSKDIR, 'persist'), 'bin')
+const BIN = path.join(DUSKDIR, 'bin')
 
 // caches
 let PACKAGES = []
@@ -43,7 +43,7 @@ let NETWORKS = {
  *  0: available for downloaded
  *  1: downloaded & verified (available for use)
  */
-const downloadCompleted = async function(clientName, version, success, error) {
+const downloadCompleted = async function(clientName, version, binpath, success, error) {
   try {
     for (let n in CLIENTS) {
       if (CLIENTS[n].name === clientName) {
@@ -52,6 +52,7 @@ const downloadCompleted = async function(clientName, version, success, error) {
           if (cmpver(release.version, version) === 0) {
             if (CLIENTS[n].releases[x].status !== 1) {
               CLIENTS[n].releases[x].status = success ? 1 : -1
+              CLIENTS[n].releases[x].binpath = binpath
               CLIENTS[n].releases[x].error = success ? null : error
             }
           }
@@ -245,6 +246,7 @@ Downloader.emitter.on('download-error', function(downloader) {
   downloadCompleted(
     downloader.info.name,
     downloader.info.version,
+    null,
     false,
     downloader.error
   )
@@ -254,14 +256,16 @@ Downloader.emitter.on('download-error', function(downloader) {
 Hasher.emitter.on('sha256-complete', async function(hasher) {
   try {
     const pass = hasher.hash === hasher.info.sha256
+    let binpath = hasher.path
     if (pass && hasher.info.extract === true) {
       const bindir = path.dirname(hasher.path) + '/'
-      const files = Downloader.helpers.extract(hasher.path, bindir)
+      const files = await Downloader.helpers.extract(hasher.path, bindir)
+      binpath = path.join(path.dirname(hasher.path), files[0].path)
     }
-
     downloadCompleted(
       hasher.info.name,
       hasher.info.version,
+      binpath,
       pass
     )
   } catch (e) {
@@ -274,6 +278,7 @@ Hasher.emitter.on('sha256-error', function(hasher) {
   downloadCompleted(
     hasher.info.name,
     hasher.info.version,
+    hasher.path,
     false,
     hasher.error
   )

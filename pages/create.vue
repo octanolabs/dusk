@@ -39,7 +39,7 @@
               selectedNetwork = network.id
               selectedNetworkType = 'mainnet'
               selectedClient = null
-              selectedClientVersion = null
+              selectedRelease = null
               showTestnetsDisabled = false
               selectedEngine = network.engine
               filterClientsByNetwork()
@@ -95,7 +95,7 @@
                     selectedNetwork = network.id
                     selectedNetworkType = 'testnet'
                     selectedClient = null
-                    selectedClientVersion = null
+                    selectedRelease = null
                     showTestnetsDisabled = true
                     selectedEngine = network.engine
                     filterClientsByNetwork()
@@ -157,7 +157,7 @@
                 outlined
                 style="display:inline-block;"
                 hover
-                :raised="selectedClient === client.name"
+                :raised="selectedClient && selectedClient.name === client.name"
                 class="ma-1"
               >
                 <v-menu
@@ -182,9 +182,12 @@
                             {{ client.name }}
                           </v-list-item-title>
                           <v-list-item-subtitle
-                            v-if="selectedClient === client.name"
+                            v-if="
+                              selectedClient &&
+                                selectedClient.name === client.name
+                            "
                           >
-                            v{{ selectedClientVersion }}
+                            v{{ selectedRelease.version }}
                           </v-list-item-subtitle>
                         </v-list-item-content>
                         <v-list-item-action>
@@ -194,18 +197,18 @@
                     </v-list>
                   </template>
                   <v-list>
-                    <template v-for="(item, i) in client.releases">
+                    <template v-for="(release, i) in client.releases">
                       <v-list-item
-                        v-if="item.status > 0"
+                        v-if="release.status > 0"
                         :key="i"
                         @click="
-                          selectedClient = client.name
-                          selectedClientVersion = item.version
+                          selectedClient = client
+                          selectedRelease = release
                           defaultOptions = client.defaultOptions
                         "
                       >
                         <v-list-item-title>
-                          v{{ item.version }} - {{ item.tag }}
+                          v{{ release.version }} - {{ release.tag }}
                         </v-list-item-title>
                       </v-list-item>
                     </template>
@@ -227,7 +230,7 @@
     </v-flex>
     <v-flex shrink>
       <v-slide-y-transition>
-        <v-flex v-show="!!selectedClient && !!selectedClientVersion">
+        <v-flex v-show="!!selectedClient && !!selectedRelease.version">
           <v-card class="px-1 py-2 mt-2">
             <v-card-title class="py-1">
               <v-icon class="mx-1">mdi-cogs</v-icon>
@@ -253,7 +256,7 @@
           <geth-settings
             :client="selectedClient"
             :engine="selectedEngine"
-            :version="selectedClientVersion"
+            :release="selectedRelease"
             :network="selectedNetwork"
             :network-type="selectedNetworkType"
             :show-advanced="showAdvanced"
@@ -282,8 +285,12 @@ export default {
       showAdvancedDisabled: false,
       selectedNetwork: null,
       selectedNetworkType: 'mainnet',
-      selectedClient: null,
-      selectedClientVersion: null,
+      selectedClient: {
+        name: ''
+      },
+      selectedRelease: {
+        version: null
+      },
       availableClients: [],
       defaultOptions: null,
       breadcrumbs: [
