@@ -75,6 +75,10 @@ export const actions = {
       instance.id = await sha256(instance.name + instance.timestamp.toString())
         .toString()
         .substr(0, 8)
+      // temporarily stage instances
+      const staged = instance
+      staged.supervisor = { state: 9000 }
+      commit('ADD_INSTANCE', staged)
       const { data } = await axios.post('/api/instance/add', instance)
       if (data.success && data.info) {
         commit('SET_INSTANCES', data.info)

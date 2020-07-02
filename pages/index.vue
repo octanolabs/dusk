@@ -70,6 +70,13 @@
                   <v-icon color="secondary">mdi-cog mdi-spin</v-icon>
                   stopping
                 </v-flex>
+                <v-flex
+                  v-else-if="item.supervisor.state === 9000"
+                  color="primary"
+                >
+                  <v-icon color="primary">mdi-atom-variant mdi-spin</v-icon>
+                  creating
+                </v-flex>
                 <v-flex v-else color="secondary">
                   <v-icon color="secondary">mdi-fire</v-icon>
                   error
