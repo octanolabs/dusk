@@ -204,7 +204,7 @@ const createSupervisorConfig = function (instance, cb) {
   const user = os.userInfo()
   let config =
     '[program:' + instance.id + ']' + '\n' +
-    'command=' + binpath + instance.flags + '\n' +
+    'command=' + binpath + ' ' + instance.flags + '\n' +
     'user=' + user.username + '\n' +
     'autostart=true' + '\n' +
     'autorestart=true' + '\n' +
