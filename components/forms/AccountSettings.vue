@@ -25,6 +25,7 @@
                     class="input-group--focused"
                     :label="$t('account.username.label')"
                     name="username"
+                    autocomplete="off"
                     :rules="[rules.required, rules.minlen]"
                   ></v-text-field>
                 </v-row>

@@ -12,7 +12,7 @@
                       Instance Name
                     </v-list-item-title>
                     <v-list-item-subtitle>
-                      Unique identifier for this instance.
+                      Identifier for this instance.
                     </v-list-item-subtitle>
                     <v-text-field
                       v-model="instance.name"
@@ -22,6 +22,7 @@
                       dense
                       :rules="[rules.required, rules.minlen]"
                       hide-details="auto"
+                      autocomplete="off"
                     ></v-text-field>
                   </v-list-item-content>
                 </v-list-item>
@@ -47,6 +48,7 @@
                       dense
                       :rules="[rules.required]"
                       hide-details="auto"
+                      autocomplete="off"
                     ></v-text-field>
                   </v-list-item-content>
                 </v-list-item>

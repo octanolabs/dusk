@@ -16,6 +16,7 @@
               :label="$t('login.username')"
               name="username"
               :rules="[rules.required]"
+              autocomplete="off"
             ></v-text-field>
             <v-text-field
               v-model="formPassword"
@@ -25,6 +26,7 @@
               :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
               :type="showPassword ? 'text' : 'password'"
               :rules="[rules.required]"
+              autocomplete="off"
               @click:append="showPassword = !showPassword"
             ></v-text-field>
           </v-card-text>

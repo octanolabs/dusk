@@ -227,6 +227,7 @@
                 label="confirm"
                 name="confirm"
                 hide-details="auto"
+                autocomplete="off"
                 outlined
                 dense
               ></v-text-field>
