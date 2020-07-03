@@ -16,6 +16,7 @@ const LOGDIR = path.join(SVDIR, 'logs')
 const stat = promisify(fs.stat)
 const mkdir = promisify(fs.mkdir)
 const writeFile = promisify(fs.writeFile)
+const unlink = promisify(fs.unlink)
 
 const SV = xmlrpc.createClient({
   socketPath: '/var/run/supervisor.sock',
@@ -83,12 +84,56 @@ export default {
         return null
       }
     },
-    async remove(id) {
-      try {
-        return await removeInstance(id)
-      } catch (e) {
-        consola.error(new Error(e))
-        return null
+    remove(id, rmDatadir, cb) {
+      if (id) {
+        // get supervisor progress info
+        SV.methodCall('supervisor.getProcessInfo', [ id ], async function(err, info) {
+          try {
+            if (err) consola.error(new Error(err))
+            if (info) {
+              if (info.state === 20) {
+                // process is still running (????), kill it before continuing
+                SV.methodCall('supervisor.stopProcessGroup', [ id ], async function(err, success) {
+                  try {
+                    // remove logs
+                    await unlink(info.stderr_logfile)
+                    await unlink(info.stdout_logfile)
+                    // remove supervisor config
+                    await unlink(path.join(SVDIR, id + '.conf'))
+                  } catch (e) {
+                    consola.error(new Error(err))
+                  }
+                })
+              } else {
+                await unlink(info.stderr_logfile)
+                await unlink(info.stdout_logfile)
+                // remove supervisor config
+                await unlink(path.join(SVDIR, id + '.conf'))
+              }
+            }
+            SV.methodCall('supervisor.removeProcessGroup', [ id ], async function(err, success) {
+              if (rmDatadir) {
+                getInstanceDatadir(id, function(path) {
+                  fs.rmdir(path, { recursive: true }, function(err) {
+                    if (err) consola.error(new Error(err))
+                  })
+                })
+              }
+
+              const filtered = CACHE.filter(function(value, index, arr) {
+                return value.id !== id
+              })
+              await storage.setItem('instances', filtered)
+              CACHE = filtered
+              return cb({ success: true, info: filtered })
+            })
+          } catch (e) {
+            consola.error(new Error(err))
+            return cb({ success: false })
+          }
+        })
+      } else {
+        return cb({ success: false })
       }
     },
     start (instanceId, cb) {
@@ -177,29 +222,17 @@ function addInstance(instance, cb) {
   }
 }
 
-
-async function removeInstance(id) {
-  try {
-    if (id) {
-      const filtered = CACHE.filter(function(value, index, arr) {
-        return value.id !== id
-      })
-      await storage.setItem('instances', filtered)
-      CACHE = filtered
-      return { success: true, info: CACHE }
+const getInstanceDatadir = function (instanceId, cb) {
+  for (const i in CACHE) {
+    if (CACHE[i].id === instanceId) {
+      return cb(CACHE[i].config.datadir)
     }
-    return { success: false }
-  } catch (e) {
-    consola.error(new Error(e))
-    return null
   }
 }
 
 const createSupervisorConfig = function (instance, cb) {
   let err = '.err.log'
   let out = '.out.log'
-  consola.log('createSupervisorConfig')
-  consola.log(instance)
   const binpath = '/usr/bin/gubiq'
   const user = os.userInfo()
   let config =
@@ -218,28 +251,32 @@ const createSupervisorConfig = function (instance, cb) {
 // supervisor process states
 // http://supervisord.org/subprocess.html#process-states
 const supervisor = {
-  reloadConfig() {
-    SV.methodCall('supervisor.reloadConfig', [], function(err, changes) {
-      if (err) consola.error(new Estatrror(err))
-      return changes
-    })
-  },
-  getAllProcessInfo() {
-    SV.methodCall('supervisor.getAllProcessInfo', [], function(err, info) {
+  getProcessInfo(id) {
+    SV.methodCall('supervisor.getProcessInfo', [ id ], function(err, info) {
       if (err) consola.error(new Error(err))
       return info
     })
   },
-  addProcessGroup (instanceId) {
-    SV.methodCall('supervisor.addProcessGroup', [ instanceId ], function(err, success) {
-      if (err) consola.error(new Error(err))
-      return success
-    })
+  async stopProcessGroup(id) {
+    try {
+      SV.methodCall('supervisor.stopProcessGroup', [ id ], function(err, status) {
+        if (err) consola.error(new Error(err))
+        return status
+      })
+    } catch (e) {
+      consola.error(new Error(e))
+      return null
+    }
   },
-  removeProcessGroup (instanceId) {
-    SV.methodCall('supervisor.removeProcessGroup', [ instanceId ], function(err, success) {
-      if (err) consola.error(new Error(err))
-      return success
-    })
+  async removeProcessGroup(id) {
+    try {
+      SV.methodCall('supervisor.removeProcessGroup', [ id ], function(err, status) {
+        if (err) consola.error(new Error(err))
+        return status
+      })
+    } catch (e) {
+      consola.error(new Error(e))
+      return null
+    }
   }
 }

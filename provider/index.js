@@ -46,8 +46,10 @@ const providers = {
     add(instance) {
       return instances.helpers.add(instance)
     },
-    remove(instanceId) {
-      return instances.helpers.remove(instanceId)
+    remove(instanceId, rmDatadir, cb) {
+      instances.helpers.remove(instanceId, rmDatadir, function(success, instances) {
+        return cb(success, instances)
+      })
     },
     start(instanceId, cb) {
       instances.helpers.start(instanceId, function(success, instances){

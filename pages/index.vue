@@ -226,9 +226,23 @@
                 class="input-group--focused"
                 label="confirm"
                 name="confirm"
+                hide-details="auto"
                 outlined
                 dense
               ></v-text-field>
+              <v-list dense>
+                <v-list-item dense>
+                  <v-list-item-content v-if="selectedInstance">
+                    <v-list-item-title>Remove datadir</v-list-item-title>
+                    <v-list-item-subtitle v-if="selectedInstance.config">
+                      {{ selectedInstance.config.datadir }}
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
+                  <v-list-item-actions>
+                    <v-switch v-model="destroy.datadir.remove" />
+                  </v-list-item-actions>
+                </v-list-item>
+              </v-list>
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
@@ -269,6 +283,9 @@ export default {
       selectedInstance: {},
       destroy: {
         showDialog: false,
+        datadir: {
+          remove: false
+        },
         confirm: ''
       },
       logs: {
@@ -310,7 +327,10 @@ export default {
       return this.$store.state.packages.networks[type][id].name || ''
     },
     destroyInstance(instanceId) {
-      this.$store.dispatch('removeInstance', { id: instanceId })
+      this.$store.dispatch('removeInstance', {
+        id: instanceId,
+        rmDatadir: this.destroy.datadir.remove
+      })
     },
     startInstance(instanceId) {
       this.$store.dispatch('startInstance', { id: instanceId })

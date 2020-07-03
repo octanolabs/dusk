@@ -71,12 +71,13 @@ router.post('/instance/add', async (req, res) => {
   }
 })
 
-router.post('/instance/remove', async (req, res) => {
+router.post('/instance/remove', (req, res) => {
   if (!req.body.id) {
     res.status(401).json({ message: 'Bad params' })
   } else {
-    const rm = await providers.instances.remove(req.body.id)
-    res.json({ success: rm.success, info: rm.info })
+    providers.instances.remove(req.body.id, req.body.rmDatadir, function(removed) {
+      return res.json({ success: removed.success, info: removed.info })
+    })
   }
 })
 
