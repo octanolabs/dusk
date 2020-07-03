@@ -56,6 +56,7 @@ export default {
         await storage.init({
           dir: STORE
         })
+        CACHE = []
         // read from disk
         const instances = await storage.getItem('instances')
         for (let i in instances) {

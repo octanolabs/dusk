@@ -36,7 +36,7 @@ const providers = {
   },
   instances: {
     timer: new NanoTimer(),
-    interval: '30s',
+    interval: '1s',
     set() {
       instances.set()
     },

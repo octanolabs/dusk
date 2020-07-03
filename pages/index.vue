@@ -294,6 +294,7 @@ export default {
         tabs: null,
         returned: false
       },
+      syncTimer: null,
       headers: [
         { text: 'name', value: 'name' },
         { text: 'network', value: 'network' },
@@ -305,6 +306,10 @@ export default {
         { text: '', align: 'end', value: 'menu' }
       ]
     }
+  },
+  created() {
+    this.$store.dispatch('instances')
+    this.startSync()
   },
   computed: {
     instances() {
@@ -318,6 +323,17 @@ export default {
     }
   },
   methods: {
+    startSync() {
+      const self = this
+      clearInterval(this.syncTimer)
+      this.syncTimer = setInterval(function() {
+        self.$store.dispatch('instances')
+      }, 2000)
+    },
+    stopSync() {
+      clearInterval(this.syncTimer)
+      this.syncTimer = null
+    },
     getNetworkPackagePath(id, type) {
       return this.$store.state.packages.networks[type][id].duskpkg.path || ''
     },
