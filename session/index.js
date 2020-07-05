@@ -19,7 +19,7 @@ router.use((req, res, next) => {
 })
 
 const DUSKDIR = path.join(os.homedir(), '.dusk')
-const STORE = path.join(path.join(DUSKDIR, 'persist'), 'store')
+const STORE = path.join(DUSKDIR, 'store')
 const DEFAULT_SALT_ROUNDS = 12
 const ONE_HOUR = 3600
 

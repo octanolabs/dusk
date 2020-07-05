@@ -8,7 +8,7 @@ import xmlrpc from 'xmlrpc'
 import Loop from './lib/loop'
 
 const DUSKDIR = path.join(os.homedir(), '.dusk')
-const STORE = path.join(path.join(DUSKDIR, 'persist'), 'store')
+const STORE = path.join(DUSKDIR, 'store')
 const SVDIR = path.join(DUSKDIR, 'supervisor')
 const LOGDIR = path.join(SVDIR, 'logs')
 
@@ -56,7 +56,6 @@ export default {
         await storage.init({
           dir: STORE
         })
-        CACHE = []
         // read from disk
         const instances = await storage.getItem('instances')
         for (let i in instances) {
