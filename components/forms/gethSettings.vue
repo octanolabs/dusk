@@ -205,13 +205,14 @@
                 </v-list-item>
                 <v-list-item v-if="config.ethstats.enable" dense>
                   <v-text-field
-                    v-model="config.ethstats.nodename"
+                    v-model="config.ethstats.value"
                     class="input-group--focused"
-                    label="Node name"
+                    label="nodename:secret@host"
                     name="ethstats"
                     outlined
                     dense
                     :rules="[rules.required]"
+                    autocomplete="off"
                   ></v-text-field>
                 </v-list-item>
               </v-list>
@@ -617,7 +618,7 @@ export default {
         nodiscover: opts?.nodiscover || false,
         ethstats: {
           enable: false,
-          nodename: 'dusk_v' + this.$store.state.version
+          value: ''
         },
         http: {
           enable: false,
@@ -668,61 +669,94 @@ export default {
         }
         // ethstats
         if (config.ethstats?.enable) {
-          flags =
-            flags +
-            ' --ethstats="' +
-            config.ethstats?.nodename +
-            ':jbs4lyfe@ubiq.darcr.us"' // TODO - add to network config
+          flags = flags + ' --ethstats="' + config.ethstats?.value + '"'
         }
-        // http-rpc
-        if (config.http?.enable) {
-          flags =
-            flags +
-            ' --http --http.api="' +
-            config.http.api +
-            '" --http.addr="' +
-            config.http.addr +
-            '" --http.port ' +
-            config.http.port +
-            ' --http.vhosts="' +
-            config.http.vhosts +
-            '"'
-          if (config.http.corsdomain) {
-            flags =
-              flags + ' --http.corsdomain="' + config.http.corsdomain + '"'
-          }
-        }
-        // ws-rpc
-        if (config.ws?.enable) {
-          flags =
-            flags +
-            ' --ws --ws.api="' +
-            config.ws.api +
-            '" --ws.addr="' +
-            config.ws.addr +
-            '" --ws.port ' +
-            config.ws.port
-          if (config.ws.origins) {
-            flags = flags + ' --ws.origins="' + config.ws.origins + '"'
-          }
-        }
-        if (config.graphql?.enable) {
-          flags =
-            flags +
-            ' --graphql' +
-            ' --graphql.addr="' +
-            config.graphql.addr +
-            '" --graphql.port ' +
-            config.graphql.port +
-            ' --graphql.vhosts="' +
-            config.graphql.vhosts +
-            '"'
-          if (config.graphql.corsdomain) {
+        // suport legacy rpc flags for older client versions, otherwise use new
+        // http.* ws.* graphql.* formatting.
+        if (this.release.legacyRPC && this.release.legacyRPC === true) {
+          // legacy http-rpc
+          if (config.http?.enable) {
             flags =
               flags +
-              ' --graphql.corsdomain="' +
-              config.graphql.corsdomain +
+              ' --rpc --rpcapi="' +
+              config.http.api +
+              '" --rpcaddr="' +
+              config.http.addr +
+              '" --rpcport ' +
+              config.http.port +
+              ' --rpcvhosts="' +
+              config.http.vhosts +
               '"'
+            if (config.http.corsdomain) {
+              flags =
+                flags + ' --rpccorsdomain="' + config.http.corsdomain + '"'
+            }
+          }
+          // legacy ws-rpc
+          if (config.ws?.enable) {
+            flags =
+              flags +
+              ' --ws --wsapi="' +
+              config.ws.api +
+              '" --wsaddr="' +
+              config.ws.addr +
+              '" --wsport ' +
+              config.ws.port
+            if (config.ws.origins) {
+              flags = flags + ' --wsorigins="' + config.ws.origins + '"'
+            }
+          }
+        } else {
+          // http-rpc
+          if (config.http?.enable) {
+            flags =
+              flags +
+              ' --http --http.api="' +
+              config.http.api +
+              '" --http.addr="' +
+              config.http.addr +
+              '" --http.port ' +
+              config.http.port +
+              ' --http.vhosts="' +
+              config.http.vhosts +
+              '"'
+            if (config.http.corsdomain) {
+              flags =
+                flags + ' --http.corsdomain="' + config.http.corsdomain + '"'
+            }
+          }
+          // ws-rpc
+          if (config.ws?.enable) {
+            flags =
+              flags +
+              ' --ws --ws.api="' +
+              config.ws.api +
+              '" --ws.addr="' +
+              config.ws.addr +
+              '" --ws.port ' +
+              config.ws.port
+            if (config.ws.origins) {
+              flags = flags + ' --ws.origins="' + config.ws.origins + '"'
+            }
+          }
+          if (config.graphql?.enable) {
+            flags =
+              flags +
+              ' --graphql' +
+              ' --graphql.addr="' +
+              config.graphql.addr +
+              '" --graphql.port ' +
+              config.graphql.port +
+              ' --graphql.vhosts="' +
+              config.graphql.vhosts +
+              '"'
+            if (config.graphql.corsdomain) {
+              flags =
+                flags +
+                ' --graphql.corsdomain="' +
+                config.graphql.corsdomain +
+                '"'
+            }
           }
         }
         i.flags = flags
