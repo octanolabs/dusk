@@ -53,21 +53,28 @@ export default {
           CACHE = newCache
         })
       } else {
+        let newCache = []
         await storage.init({
           dir: STORE
         })
         // read from disk
         const instances = await storage.getItem('instances')
-        for (let i in instances) {
+        Loop.sync(instances.length, function(loop) {
+          const i = loop.iteration()
+          consola.log(i)
           SV.methodCall('supervisor.getProcessInfo', [ instances[i].id ], function(err, info) {
             if (!err) {
               instances[i].supervisor = info
-              CACHE.push(instances[i])
+              newCache.push(instances[i])
+              loop.next()
             } else {
               consola.error(new Error(err))
+              loop.break(true)
             }
           })
-        }
+        }, function() {
+          CACHE = newCache
+        })
       }
     } catch (e) {
       consola.error(new Error(e))
