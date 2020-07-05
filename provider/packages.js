@@ -182,6 +182,7 @@ const parseClient = async function(json) {
           tag: release.tag,
           note: release.note,
           info: release.info,
+          legacyRPC: release['legacy-rpc'],
           download: release[build]
         }
         releases.push(r)

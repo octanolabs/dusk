@@ -402,7 +402,7 @@
               </v-list>
             </v-row>
           </v-card>
-          <v-card class="mb-1">
+          <v-card v-if="legacyRPC !== true" class="mb-1">
             <v-row no-gutters>
               <v-list two-line class="w-100">
                 <v-list-item>
@@ -580,6 +580,9 @@ export default {
     },
     homedir() {
       return this.$store.state.system?.userInfo?.homedir || ''
+    },
+    legacyRPC() {
+      return this.release?.legacyRPC || false
     }
   },
   watch: {
