@@ -51,13 +51,6 @@
 import OctanoLogo from '~/components/Logo.vue'
 
 export default {
-  nuxtI18n: {
-    paths: {
-      en: '/login',
-      es: '/iniciar-sesion',
-      ru: '/авторизоваться'
-    }
-  },
   components: {
     OctanoLogo
   },

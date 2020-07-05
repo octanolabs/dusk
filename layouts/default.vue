@@ -20,9 +20,22 @@ export default {
     LeftDrawer,
     Downloading
   },
+  watch: {
+    $route(to, from) {
+      // react to route changes...
+      if (from.path === '/') {
+        this.stopSyncInstances()
+      }
+      if (to.path === '/') {
+        this.$store.dispatch('instances')
+        this.startSyncInstances()
+      }
+    }
+  },
   data() {
     return {
-      title: 'Octano Dusk'
+      title: 'Octano Dusk',
+      instancesTimer: null
     }
   },
   computed: {
@@ -46,6 +59,17 @@ export default {
       } catch (e) {
         this.formError = e.message
       }
+    },
+    startSyncInstances() {
+      const self = this
+      clearInterval(this.instancesTimer)
+      this.instancesTimer = setInterval(function() {
+        self.$store.dispatch('instances')
+      }, 2000)
+    },
+    stopSyncInstances() {
+      clearInterval(this.instancesTimer)
+      this.instancesTimer = null
     }
   }
 }
