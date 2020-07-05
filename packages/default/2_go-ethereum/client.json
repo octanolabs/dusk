@@ -2,6 +2,7 @@
   "name": "go-ethereum",
   "desc": "Official Go implementation of the Ethereum protocol.",
   "icon": "static/mascot.png",
+  "type": "geth",
   "releases": [
     {
       "version": "1.9.15",

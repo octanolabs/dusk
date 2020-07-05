@@ -1,7 +1,7 @@
 {
   "name": "go-ethereum",
   "version": 1,
-  "type": "geth",
+  "type": "client",
   "icon": "static/mascot.png",
   "client": {
     "local": "client.json",

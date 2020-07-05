@@ -1,7 +1,7 @@
 {
   "name": "core-geth",
   "version": 1,
-  "type": "geth",
+  "type": "client",
   "icon": "static/logo.png",
   "client": {
     "local": "client.json",

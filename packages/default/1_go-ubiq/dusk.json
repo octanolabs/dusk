@@ -1,7 +1,7 @@
 {
   "name": "go-ubiq",
   "version": 1,
-  "type": "geth",
+  "type": "client",
   "icon": "static/networks/ubiq.svg",
   "client": {
     "local": "client.json",
