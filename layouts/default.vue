@@ -63,10 +63,6 @@ export default {
   },
   created() {
     this.$store.dispatch('packages')
-    const t = this
-    setInterval(function() {
-      t.$store.dispatch('packages')
-    }, 10000)
   },
   methods: {
     async logout() {
