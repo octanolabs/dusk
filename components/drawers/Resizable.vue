@@ -109,6 +109,7 @@ export default {
       el.style.width = w + 'px'
       el.style.transition = 'initial'
       this.width = el.style.width
+      this.$emit('toggled', this.width)
     },
     setBorderWidth() {
       const i = this.$refs.drawer.$el.querySelector(
