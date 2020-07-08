@@ -5,7 +5,7 @@
     <v-main>
       <nuxt />
     </v-main>
-    <downloading />
+    <downloading v-if="authed" />
   </v-app>
 </template>
 
@@ -20,35 +20,51 @@ export default {
     LeftDrawer,
     Downloading
   },
-  watch: {
-    $route(to, from) {
-      // react to route changes...
-      if (from.path === '/') {
-        this.stopSyncInstances()
-      }
-      if (to.path === '/') {
-        this.$store.dispatch('instances')
-        this.startSyncInstances()
-      }
-    }
-  },
   data() {
     return {
       title: 'Octano Dusk',
-      instancesTimer: null
+      timer: {
+        instances: null,
+        system: null
+      },
+      interval: {
+        instances: 2000,
+        system: 10000
+      }
     }
   },
   computed: {
     authed() {
       return this.$auth.loggedIn
+    },
+    syncSystemInfo() {
+      return this.$store.state.sync.system
+    }
+  },
+  watch: {
+    $route(to, from) {
+      // react to route changes...
+      if (from.path === '/') {
+        this.stopSync('instances')
+      }
+      if (to.path === '/') {
+        this.$store.dispatch('instances')
+        this.startSync('instances')
+      }
+    },
+    syncSystemInfo(nval, oval) {
+      if (nval === true) {
+        this.$store.dispatch('system')
+        this.startSync('system')
+      } else {
+        this.stopSync('system')
+      }
     }
   },
   created() {
-    this.$store.dispatch('system')
     this.$store.dispatch('packages')
     const t = this
     setInterval(function() {
-      t.$store.dispatch('system')
       t.$store.dispatch('packages')
     }, 10000)
   },
@@ -60,16 +76,17 @@ export default {
         this.formError = e.message
       }
     },
-    startSyncInstances() {
+    startSync(store) {
       const self = this
-      clearInterval(this.instancesTimer)
-      this.instancesTimer = setInterval(function() {
-        self.$store.dispatch('instances')
-      }, 2000)
+      clearInterval(this.timer[store])
+      this.timer[store] = null
+      this.timer[store] = setInterval(function() {
+        self.$store.dispatch(store)
+      }, this.interval[store])
     },
-    stopSyncInstances() {
-      clearInterval(this.instancesTimer)
-      this.instancesTimer = null
+    stopSync(store) {
+      clearInterval(this.timer[store])
+      this.timer[store] = null
     }
   }
 }

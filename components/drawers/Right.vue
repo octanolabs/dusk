@@ -1,5 +1,5 @@
 <template>
-  <resizable-drawer :show="true" side="right" app>
+  <resizable-drawer :show="true" side="right" app v-on:toggled="toggled">
     <v-toolbar>
       <v-list dense class="pa-0">
         <v-list-item>
@@ -229,19 +229,19 @@ export default {
   },
   computed: {
     version() {
-      return this.$store.state.version
+      return this.$store.state.version || ''
     },
     system() {
-      return this.$store.state.system
+      return this.$store.state.system || ''
     },
     meminfo() {
-      return this.$store.state.system.meminfo
+      return this.$store.state.system?.meminfo || {}
     },
     diskusage() {
-      return this.$store.state.system.diskusage
+      return this.$store.state.system?.diskusage || {}
     },
     cpuinfo() {
-      return this.$store.state.system.cpus
+      return this.$store.state.system?.cpus || {}
     },
     networkInterfaces() {
       return this.system.networkInterfaces || {}
@@ -279,6 +279,10 @@ export default {
       }
     }
   },
+  created() {
+    this.$store.dispatch('system')
+    this.$store.dispatch('rightdrawer', true)
+  },
   methods: {
     convertUnits(bytes, showUnit, units) {
       const sizes =
@@ -297,6 +301,10 @@ export default {
         unit = ' ' + sizes[i]
       }
       return (bytes / 1024 ** i).toFixed(1) + unit
+    },
+    toggled(width) {
+      const expanded = width.slice(0, -2) > 20
+      this.$store.dispatch('rightdrawer', expanded)
     }
   }
 }

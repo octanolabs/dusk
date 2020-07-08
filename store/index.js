@@ -3,8 +3,13 @@ import consola from 'consola'
 import sha256 from 'crypto-js/sha256'
 
 export const state = () => ({
-  drawers: {
-    right: true
+  version: '0.0.1',
+  system: {},
+  packages: {},
+  instances: [],
+  logs: {
+    stdout: [],
+    stderr: []
   },
   downloading: {
     client: null,
@@ -16,14 +21,10 @@ export const state = () => ({
       total: 0
     }
   },
-  system: {},
-  packages: {},
-  instances: [],
-  logs: {
-    stdout: [],
-    stderr: []
-  },
-  version: '0.0.1'
+  sync: {
+    instances: false,
+    system: false
+  }
 })
 
 export const mutations = {
@@ -57,10 +58,16 @@ export const mutations = {
   },
   ADD_INSTANCE(state, data) {
     state.instances.push(data)
+  },
+  SET_RIGHT_DRAWER(state, data) {
+    state.sync.system = data
   }
 }
 
 export const actions = {
+  rightdrawer({ commit }, payload) {
+    commit('SET_RIGHT_DRAWER', payload)
+  },
   async instances({ commit }) {
     try {
       const { data } = await axios.get('/api/instances/get')

@@ -61,7 +61,6 @@ export default {
         const instances = await storage.getItem('instances')
         Loop.sync(instances.length, function(loop) {
           const i = loop.iteration()
-          consola.log(i)
           SV.methodCall('supervisor.getProcessInfo', [ instances[i].id ], function(err, info) {
             if (!err) {
               instances[i].supervisor = info
