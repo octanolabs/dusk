@@ -158,7 +158,7 @@
           persistent
           class="logs-dialog"
         >
-          <v-card>
+          <v-card v-if="selectedInstance && instanceLogs[selectedInstance.id]">
             <v-btn
               color="secondary"
               fab
