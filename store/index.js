@@ -41,8 +41,8 @@ export const mutations = {
       }
     }
   },
-  SET_INSTANCE_LOGS(state, logs) {
-    state.logs = logs
+  SET_INSTANCE_LOGS(state, data) {
+    state.logs[data.id] = data.logs
   },
   SET_SYSTEMINFO(state, data) {
     state.system = data
@@ -131,10 +131,10 @@ export const actions = {
       if (instanceId && instanceId.id) {
         const { data } = await axios.post('/api/instance/logs', instanceId)
         if (data.logs) {
-          commit('SET_INSTANCE_LOGS', data.logs)
+          commit('SET_INSTANCE_LOGS', { id: instanceId.id, logs: data.logs })
         }
       } else {
-        commit('SET_INSTANCE_LOGS', { stdout: [], stderr: [] }) // reset
+        commit('SET_INSTANCE_LOGS', { id: instanceId.id, logs: null }) // reset
       }
     } catch (error) {
       consola.error(new Error(error))

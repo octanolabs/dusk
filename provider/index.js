@@ -8,7 +8,7 @@ import instances from './instances.js'
 const providers = {
   system: {
     timer: new NanoTimer(),
-    interval: '25s',
+    interval: '10s',
     set() {
       system.set()
     },

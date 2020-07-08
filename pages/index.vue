@@ -194,7 +194,7 @@
                     v-else
                     style="width:100%;height:100%;display:flex;flex-direction:column-reverse;"
                   >
-                    {{ stderr }}
+                    {{ instanceLogs[selectedInstance.id].stderr[0] || '' }}
                   </pre>
                 </v-tab-item>
                 <v-tab-item key="1" style="height:100%;">
@@ -204,7 +204,9 @@
                     type="paragraph, sentences, paragraph, text, paragraph, sentences"
                     max-height="600"
                   ></v-skeleton-loader>
-                  <pre v-else style="width:100%;height:100%;">{{ stdout }}</pre>
+                  <pre v-else style="width:100%;height:100%;">
+                    {{ instanceLogs[selectedInstance.id].stdout[0] || '' }}
+                  </pre>
                 </v-tab-item>
               </v-tabs-items>
             </v-card-text>
@@ -311,11 +313,8 @@ export default {
     instances() {
       return this.$store.state.instances
     },
-    stdout() {
-      return this.$store.state.logs.stdout[0] || null
-    },
-    stderr() {
-      return this.$store.state.logs.stderr[0] || null
+    instanceLogs() {
+      return this.$store.state.logs || null
     }
   },
   methods: {
@@ -344,7 +343,7 @@ export default {
       const self = this
       const updateLogs = function(id) {
         self.$store.dispatch('getInstanceLogs', { id })
-        if (self.stdout || self.stderr) {
+        if (self.instanceLogs[id]) {
           self.logs.returned = true
         }
         if (
