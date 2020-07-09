@@ -7,10 +7,7 @@ export const state = () => ({
   system: {},
   packages: {},
   instances: [],
-  logs: {
-    stdout: [],
-    stderr: []
-  },
+  logs: {},
   downloading: {
     client: null,
     version: null,

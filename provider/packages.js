@@ -52,8 +52,16 @@ const downloadCompleted = async function(clientName, version, binpath, success, 
           if (cmpver(release.version, version) === 0) {
             if (CLIENTS[n].releases[x].status !== 1) {
               CLIENTS[n].releases[x].status = success ? 1 : -1
-              CLIENTS[n].releases[x].binpath = binpath
               CLIENTS[n].releases[x].error = success ? null : error
+              // this has come from hasher, we need to adjusst binpath for
+              // downloads that needed extracting.
+              if (CLIENTS[n].releases[x].download.extract) {
+                const n_binpath =
+                  path.join(path.dirname(binpath), CLIENTS[n].releases[x].download.bin)
+                  CLIENTS[n].releases[x].binpath = n_binpath
+              } else {
+                CLIENTS[n].releases[x].binpath = binpath
+              }
             }
           }
         }
@@ -261,7 +269,6 @@ Hasher.emitter.on('sha256-complete', async function(hasher) {
     if (pass && hasher.info.extract === true) {
       const bindir = path.dirname(hasher.path) + '/'
       const files = await Downloader.helpers.extract(hasher.path, bindir)
-      binpath = path.join(path.dirname(hasher.path), files[0].path)
     }
     downloadCompleted(
       hasher.info.name,
