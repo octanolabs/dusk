@@ -241,7 +241,7 @@ export default {
       return this.$store.state.system?.diskusage || {}
     },
     cpuinfo() {
-      return this.$store.state.system?.cpus || {}
+      return this.$store.state.system?.cpus || []
     },
     networkInterfaces() {
       return this.system.networkInterfaces || {}
