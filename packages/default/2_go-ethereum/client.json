@@ -5,55 +5,37 @@
   "type": "geth",
   "releases": [
     {
-      "version": "1.9.15",
-      "tag": "Dextro Heat Sink",
-      "note": "Geth v1.9.15 is a maintenance release containing bug fixes as well as implementations of all EIPs currently scheduled for the upcoming Berlin fork.",
-      "info": "https://github.com/ethereum/go-ethereum/releases/tag/v1.9.15",
+      "version": "1.9.16",
+      "tag": "Ryncol",
+      "note": "Geth v1.9.16 is a maintenance release containing a couple minor new features, bug fixes, and block processing optimizations.",
+      "info": "https://github.com/ethereum/go-ethereum/releases/tag/v1.9.16",
       "darwin-amd64": {
-        "url": "https://github.com/ubiq/go-ubiq/releases/download/v3.0.1/gubiq-darwin-amd64",
-        "sha256": "340173ac5758054a558ca31257309e9cb2860534e239b711a0c14c7236189c78",
-        "size": 28643632
+        "url": "https://gethstore.blob.core.windows.net/builds/geth-darwin-amd64-1.9.16-ea3b00ad.tar.gz",
+        "sha256": "aaf35abce64caeaa15a6ac561677794ce3575fe48364eb576b4df0896b1696a5",
+        "size": 12386788,
+        "extract": true,
+        "bin": "geth-darwin-amd64-1.9.16-ea3b00ad/geth"
       },
       "linux-amd64": {
-        "url": "https://github.com/ubiq/go-ubiq/releases/download/v3.0.1/gubiq-linux-amd64",
-        "sha256": "5bb82c6a8f1b1fb441ff6d72e7114104263c4461ad7dddf7ef18cb5763d10455",
-        "size": 25775528
+        "url": "https://gethstore.blob.core.windows.net/builds/geth-linux-amd64-1.9.16-ea3b00ad.tar.gz",
+        "sha256": "5d553051becfb03493945cbd168b1cc843a9fd10b690ecfb714b6cbad876eb3f",
+        "size": 18662424,
+        "extract": true,
+        "bin": "geth-linux-amd64-1.9.16-ea3b00ad/geth"
       },
       "linux-arm-7": {
-        "url": "https://github.com/ubiq/go-ubiq/releases/download/v3.0.1/gubiq-linux-arm-7",
-        "sha256": "06d105485aae819ba3f510d8d5916a63c34953770e277b80a78d71fe42848a67",
-        "size": 22774548
+        "url": "https://gethstore.blob.core.windows.net/builds/geth-linux-arm7-1.9.16-ea3b00ad.tar.gz",
+        "sha256": "39845a5f1b2748357d851d1f5f1c5f96644d9e376572286ee7f4a01eb38ffc11",
+        "size": 17707673,
+        "extract": true,
+        "bin": "geth-linux-arm7-1.9.16-ea3b00ad/geth"
       },
       "linux-arm64": {
-        "url": "https://github.com/ubiq/go-ubiq/releases/download/v3.0.1/gubiq-linux-arm64",
-        "sha256": "cc03df2fedd4e02f4c15705deed36308e119c877b0ee158d8cf05c57b7fea5aa",
-        "size": 24529952
-      }
-    },
-    {
-      "version": "1.9.14",
-      "tag": "Pink Marble",
-      "note": "Geth v1.9.14 is a regular maintenance release, but is also packs a punch with some interesting new features!",
-      "info": "https://github.com/ethereum/go-ethereum/releases/tag/v1.9.14",
-      "darwin-amd64": {
-        "url": "https://github.com/ubiq/go-ubiq/releases/download/v3.0.0/gubiq-darwin-amd64",
-        "sha256": "8f0be7ac16c8ecc26b6bf8caa5b3ac4cc2bad746e86c8008aad9a7dec5da5acd",
-        "size": 28703240
-      },
-      "linux-amd64": {
-        "url": "https://github.com/ubiq/go-ubiq/releases/download/v3.0.0/gubiq-linux-amd64",
-        "sha256": "5a50f79e893f87a6db5958bca7a626251eaa113e9aee077b59184521b40c6f72",
-        "size": 25849384
-      },
-      "linux-arm-7": {
-        "url": "https://github.com/ubiq/go-ubiq/releases/download/v3.0.0/gubiq-linux-arm-7",
-        "sha256": "b666eba8fdf8323255b585e71fa1a7c05184267cb4fa9bba06ddcfc675c6de7f",
-        "size": 22831948
-      },
-      "linux-arm64": {
-        "url": "https://github.com/ubiq/go-ubiq/releases/download/v3.0.0/gubiq-linux-arm64",
-        "sha256": "0c2a2124d6c18abb2bedfe72feeaf41764f386e219e069e410d0e7f5f677a7b3",
-        "size": 24591488
+        "url": "https://gethstore.blob.core.windows.net/builds/geth-linux-arm64-1.9.16-ea3b00ad.tar.gz",
+        "sha256": "4aa9205a667987e9616dfe2553af10b5f1add928e2f79ac98fc3d5373825add3",
+        "size": 17489678,
+        "extract": true,
+        "bin": "geth-linux-arm64-1.9.16-ea3b00ad/geth"
       }
     }
   ],
