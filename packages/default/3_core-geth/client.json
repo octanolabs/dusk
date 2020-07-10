@@ -5,29 +5,29 @@
   "type": "geth",
   "releases": [
     {
-      "version": "1.11.2",
+      "version": "1.11.8",
       "maxHeight": 0,
-      "tag": "Tropicana Halo",
-      "note": "Updates Mordor and Kotti bootnodes. Fixes minor issue with Clique snapshot loop condition. Fixes recurrent sync issue occurring on Kotti (in the wake of the intentional fork revision there).",
-      "info": "https://github.com/etclabscore/core-geth/releases/tag/v1.11.3",
+      "tag": "Fructose Sweet Drink",
+      "note": "Merges ethereum/go-ethereum through bcb3087.",
+      "info": "https://github.com/etclabscore/core-geth/releases/tag/v1.11.8",
       "darwin-amd64": {
-        "url": "https://github.com/etclabscore/core-geth/releases/download/v1.11.3/core-geth-osx-v1.11.3.zip",
-        "sha256": "99bc654f2980efdf4391fc4fe585821975c5881d469ab6145fbddc499d494435",
-        "size": 12143628,
+        "url": "https://github.com/etclabscore/core-geth/releases/download/v1.11.8/core-geth-osx-v1.11.8.zip",
+        "sha256": "826fd197e4e135e1c9ba265eb784a872cdd2ce94723b9ccf82e76e2616df3f6c",
+        "size": 12499356,
         "extract": true,
         "bin": "geth"
       },
       "linux-amd64": {
-        "url": "https://github.com/etclabscore/core-geth/releases/download/v1.11.3/core-geth-linux-v1.11.3.zip",
-        "sha256": "160f22cd7bbae212156eca3b7f11e79e23f01d7d3fd89165ed3f8f34aa849b3a",
-        "size": 18161393,
+        "url": "https://github.com/etclabscore/core-geth/releases/download/v1.11.8/core-geth-linux-v1.11.8.zip",
+        "sha256": "197f91e0ebf58806128a8a512dc7d2e602af0db686724c4b6339e66fd09e468d",
+        "size": 18873566,
         "extract": true,
         "bin": "geth"
       },
       "linux-arm64": {
-        "url": "https://github.com/etclabscore/core-geth/releases/download/v1.11.3/core-geth-arm-v1.11.3.zip",
-        "sha256": "c147431ebde618e857d5c5d21f6db6582df3a2cc371fb5a55cf97fe3b69f2707",
-        "size": 16984469,
+        "url": "https://github.com/etclabscore/core-geth/releases/download/v1.11.8/core-geth-arm-v1.11.8.zip",
+        "sha256": "6239ed0d7390de0c74160574929f98601c02fb1c49fd57989103f1d72ada1d02",
+        "size": 17738368,
         "extract": true,
         "bin": "geth"
       }
