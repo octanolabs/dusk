@@ -96,6 +96,11 @@ export default {
       }
     }
   },
+  data() {
+    return {
+      errors: []
+    }
+  },
   computed: {
     isDownloading() {
       return this.$store.state.downloading.status
@@ -131,7 +136,7 @@ export default {
           version: release.version
         })
       } catch (e) {
-        console.log(e)
+        this.errors.push(e)
       }
     }
   }

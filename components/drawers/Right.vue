@@ -1,5 +1,5 @@
 <template>
-  <resizable-drawer :show="true" side="right" app v-on:toggled="toggled">
+  <resizable-drawer :show="true" side="right" app @toggled="toggled">
     <v-toolbar>
       <v-list dense class="pa-0">
         <v-list-item>
