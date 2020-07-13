@@ -4,9 +4,9 @@ import Web3 from 'web3'
 import consola from 'consola'
 import NanoTimer from 'nanotimer'
 
-import BlockCache from './sub/blocks.js'
-import PeerCache from './sub/peers.js'
-import Loop from '../lib/loop.js'
+import BlockCache from './blocks.js'
+import PeerCache from './peers.js'
+import Loop from '/provider/lib/loop.js'
 
 const providers = {}
 

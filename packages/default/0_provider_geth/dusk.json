@@ -1,0 +1,8 @@
+{
+  "name": "geth",
+  "desc": "Main provider for geth based clients.",
+  "version": 1,
+  "type": "provider",
+  "icon": "static/networks/ubiq.svg",
+  "provider": "provider.js"
+}
