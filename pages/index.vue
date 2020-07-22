@@ -92,11 +92,7 @@
                     </v-flex>
                   </template>
                   <v-list>
-                    <v-list-item
-                      :disabled="item.supervisor.state !== 20"
-                      to="/dashboard"
-                      link
-                    >
+                    <v-list-item :to="'/instance/' + item.id" link>
                       <v-list-item-title>
                         <v-icon>mdi-information-outline</v-icon>
                         Details
