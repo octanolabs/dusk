@@ -133,6 +133,63 @@
               </v-list-item>
             </v-list>
           </v-card-title>
+          <v-row no-gutters>
+            <v-card outlined raised class="ma-1" style="display:inline-block;">
+              <v-menu
+                bottom
+                transition="slide-y-transition"
+                origin="top center"
+              >
+                <template v-slot:activator="{ on }">
+                  <v-list two-line class="pa-0" style="background-color:#111">
+                    <v-list-item v-on="on">
+                      <v-list-item-avatar tile>
+                        <img
+                          :src="
+                            require('~/packages' +
+                              instance.client.duskpkg.path +
+                              instance.client.icon)
+                          "
+                        />
+                      </v-list-item-avatar>
+                      <v-list-item-content>
+                        <v-list-item-title>
+                          {{ instance.client.name }}
+                        </v-list-item-title>
+                        <v-list-item-subtitle>
+                          v{{ release.version }}
+                        </v-list-item-subtitle>
+                      </v-list-item-content>
+                      <v-list-item-action>
+                        <v-icon color="grey lighten-1">mdi-menu-down</v-icon>
+                      </v-list-item-action>
+                    </v-list-item>
+                  </v-list>
+                </template>
+                <v-list>
+                  <template v-for="(r, i) in instance.client.releases">
+                    <v-list-item
+                      v-if="r.status > 0"
+                      :key="i"
+                      @click="release = r"
+                    >
+                      <v-list-item-title>
+                        v{{ r.version }} - {{ r.tag }}
+                      </v-list-item-title>
+                    </v-list-item>
+                  </template>
+                  <v-divider />
+                  <v-list-item @click="$router.push({ path: '/clients' })">
+                    <v-list-item-content>
+                      <v-list-item-subtitle>
+                        Go to client downloads..
+                      </v-list-item-subtitle>
+                    </v-list-item-content>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+            </v-card>
+          </v-row>
         </v-card>
         <geth-settings
           v-if="!!instance && !!network && !!release"
