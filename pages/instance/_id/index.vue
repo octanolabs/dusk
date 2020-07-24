@@ -143,6 +143,7 @@
           :network-type="instance.network.type"
           :show-advanced="showAdvanced"
           :default-options="instance.config"
+          :instance-name="instance.name"
         />
       </v-tab-item>
     </v-tabs>

@@ -540,6 +540,12 @@ export default {
         return null
       }
     },
+    instanceName: {
+      type: String,
+      default() {
+        return null
+      }
+    },
     showAdvanced: {
       type: Boolean,
       default() {
@@ -598,6 +604,7 @@ export default {
     setDefaults(opts) {
       this.instance = {
         name:
+          this.instanceName ||
           this.network + '_' + this.client.name + '_' + this.release.version,
         client: this.client,
         version: this.release.version,
