@@ -75,17 +75,28 @@ export const actions = {
   },
   async addInstance({ commit }, instance) {
     try {
-      instance.timestamp = Date.now()
-      instance.id = await sha256(instance.name + instance.timestamp.toString())
-        .toString()
-        .substr(0, 8)
-      // temporarily stage instances
-      const staged = instance
-      staged.supervisor = { state: 9000 }
-      commit('ADD_INSTANCE', staged)
-      const { data } = await axios.post('/api/instance/add', instance)
-      if (data.success && data.info) {
-        commit('SET_INSTANCES', data.info)
+      if (instance.id) {
+        // instance already has id, update existing.
+        const { data } = await axios.post('/api/instance/update', instance)
+        if (data.success && data.info) {
+          commit('SET_INSTANCES', data.info)
+        }
+      } else {
+        // new instance.
+        instance.timestamp = Date.now()
+        instance.id = await sha256(
+          instance.name + instance.timestamp.toString()
+        )
+          .toString()
+          .substr(0, 8)
+        // temporarily stage instances.
+        const staged = instance
+        staged.supervisor = { state: 9000 }
+        commit('ADD_INSTANCE', staged)
+        const { data } = await axios.post('/api/instance/add', instance)
+        if (data.success && data.info) {
+          commit('SET_INSTANCES', data.info)
+        }
       }
     } catch (error) {
       consola.error(new Error(error))
@@ -188,6 +199,17 @@ export const actions = {
     // reset download state
     try {
       await axios.post('/api/resetdownload')
+    } catch (error) {
+      consola.error(new Error(error))
+    }
+  },
+  async createProvider({ commit }, payload) {
+    try {
+      await axios.post('/api/provider/create', {
+        id: payload.id,
+        ipcPath: payload.ipcPath,
+        type: payload.type
+      })
     } catch (error) {
       consola.error(new Error(error))
     }

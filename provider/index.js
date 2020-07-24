@@ -1,9 +1,13 @@
 import consola from 'consola'
 import NanoTimer from 'nanotimer'
 
+// core providers
 import system from './system.js'
 import packages from './packages.js'
 import instances from './instances.js'
+
+// reusable providers
+import Geth from './geth/provider.js'
 
 const providers = {
   system: {
@@ -51,6 +55,11 @@ const providers = {
         return cb(success, instances)
       })
     },
+    update(instance, cb) {
+      instances.helpers.update(instance, function(success, instances) {
+        return cb(success, instances)
+      })
+    },
     start(instanceId, cb) {
       instances.helpers.start(instanceId, function(success, instances){
         return cb(success, instances)
@@ -72,7 +81,6 @@ const providers = {
 export default {
   async init() {
     try {
-      // TODO: load provider functions from packages
       return providers
     } catch (e) {
       consola.error(new Error(e))
@@ -88,5 +96,16 @@ export default {
         providers[name].interval
       ) // repeat
     }
+  },
+  createProvider(type, id, ipcPath, cb) {
+    if (type === 'geth') {
+      providers[id] = Geth.new(ipcPath, id, '5s')
+      return cb(providers)
+    } else {
+      return cb(null)
+    }
+  },
+  destroyProvider(id) {
+    providers[id] = null
   }
 }

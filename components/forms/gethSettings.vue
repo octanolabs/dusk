@@ -540,8 +540,8 @@ export default {
         return null
       }
     },
-    instanceName: {
-      type: String,
+    value: {
+      type: Object,
       default() {
         return null
       }
@@ -602,16 +602,19 @@ export default {
   },
   methods: {
     setDefaults(opts) {
-      this.instance = {
-        name:
-          this.instanceName ||
-          this.network + '_' + this.client.name + '_' + this.release.version,
-        client: this.client,
-        version: this.release.version,
-        binpath: this.release.binpath,
-        network: {
-          id: this.network,
-          type: this.networkType
+      if (this.value) {
+        this.instance = this.value
+      } else {
+        this.instance = {
+          name:
+            this.network + '_' + this.client.name + '_' + this.release.version,
+          client: this.client,
+          version: this.release.version,
+          binpath: this.release.binpath,
+          network: {
+            id: this.network,
+            type: this.networkType
+          }
         }
       }
       this.config = {
@@ -652,7 +655,7 @@ export default {
         }
       }
     },
-    async saveInstance(config) {
+    async saveInstance(config, update) {
       try {
         this.spin = true
         const i = this.instance

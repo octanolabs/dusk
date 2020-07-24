@@ -71,6 +71,16 @@ router.post('/instance/add', async (req, res) => {
   }
 })
 
+router.post('/instance/update', (req, res) => {
+  if (!req.body.id) {
+    res.status(401).json({ message: 'Bad params' })
+  } else {
+    providers.instances.update(req.body, function(updated) {
+      return res.json({ success: updated.success, info: updated.info })
+    })
+  }
+})
+
 router.post('/instance/remove', (req, res) => {
   if (!req.body.id) {
     res.status(401).json({ message: 'Bad params' })
@@ -107,6 +117,21 @@ router.post('/instance/logs', (req, res) => {
   } else {
     providers.instances.logs(req.body.id, function (logs) {
       return res.json({ logs: logs })
+    })
+  }
+})
+
+router.post('/provider/create', (req, res) => {
+  if (!req.body.id) {
+    return res.status(401).json({ message: 'Bad params' })
+  } else {
+    provider.createProvider(req.body.type, req.body.id, req.body.ipcPath, function(_providers) {
+      if (_providers) {
+        providers = _providers
+        return res.json({ success: true })
+      } else {
+        return res.json({ success: false })
+      }
     })
   }
 })

@@ -59,21 +59,23 @@ export default {
         })
         // read from disk
         const instances = await storage.getItem('instances')
-        Loop.sync(instances.length, function(loop) {
-          const i = loop.iteration()
-          SV.methodCall('supervisor.getProcessInfo', [ instances[i].id ], function(err, info) {
-            if (!err) {
-              instances[i].supervisor = info
-              newCache.push(instances[i])
-              loop.next()
-            } else {
-              consola.error(new Error(err))
-              loop.break(true)
-            }
+        if (instances) {
+          Loop.sync(instances.length, function(loop) {
+            const i = loop.iteration()
+            SV.methodCall('supervisor.getProcessInfo', [ instances[i].id ], function(err, info) {
+              if (!err) {
+                instances[i].supervisor = info
+                newCache.push(instances[i])
+                loop.next()
+              } else {
+                consola.error(new Error(err))
+                loop.break(true)
+              }
+            })
+          }, function() {
+            CACHE = newCache
           })
-        }, function() {
-          CACHE = newCache
-        })
+        }
       }
     } catch (e) {
       consola.error(new Error(e))
@@ -88,6 +90,56 @@ export default {
       } catch (e) {
         consola.error(new Error(e))
         return null
+      }
+    },
+    update(instance, cb) {
+      if (instance && instance.id) {
+        createSupervisorConfig(instance, async function (config) {
+          try {
+            const confPath = path.join(SVDIR, instance.id + '.conf')
+            // write to disk
+            const err = await writeFile(confPath, config)
+            if (err) {
+              consola.error(new Error(err))
+              return cb({ success: false })
+            } else {
+              // remove old instance from cache
+              const filtered = CACHE.filter(function(value, index, arr) {
+                return value.id !== instance.id
+              })
+              // push updated instance to cache
+              filtered.push(instance)
+              // save to persistent store
+              await storage.setItem('instances', filtered)
+              // update cache
+              CACHE = filtered
+              // reread supervisor config
+              SV.methodCall('supervisor.reloadConfig', [], function(rl_err, changes) {
+                if (rl_err) consola.error(new Error(rl_err))
+                SV.methodCall('supervisor.stopProcessGroup', [ instance.id ], function(err, success) {
+                  SV.methodCall('supervisor.removeProcessGroup', [ instance.id ], function(err, status) {
+                    SV.methodCall('supervisor.addProcessGroup', [ instance.id ], function(err, status) {
+                      if (!err) {
+                        updateCacheStates(CACHE, function(newCache) {
+                          CACHE = newCache
+                          return cb({ success: true, info: CACHE })
+                        })
+                      } else {
+                        consola.error(new Error(err))
+                        return cb({ success: false })
+                      }
+                    })
+                  })
+                })
+              })
+            }
+          } catch (e) {
+            consola.error(new Error(e))
+            return cb({ success: false })
+          }
+        })
+      } else {
+        return cb({ success: false })
       }
     },
     remove(id, rmDatadir, cb) {
