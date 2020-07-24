@@ -603,7 +603,7 @@ export default {
   methods: {
     setDefaults(opts) {
       if (this.value) {
-        this.instance = this.value
+        this.instance = { ...this.value }
       } else {
         this.instance = {
           name:
