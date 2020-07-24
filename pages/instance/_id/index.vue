@@ -23,25 +23,10 @@
               }}
             </v-list-item-subtitle>
           </v-list-item-content>
-          <v-list-item-action>
-            <v-btn icon><v-icon>mdi-console</v-icon></v-btn>
-          </v-list-item-action>
-          <v-list-item-action>
-            <v-btn icon><v-icon>mdi-power</v-icon></v-btn>
-          </v-list-item-action>
-          <v-list-item-action>
-            <v-btn icon><v-icon>mdi-restart</v-icon></v-btn>
-          </v-list-item-action>
-          <v-list-item-action>
-            <v-btn icon><v-icon>mdi-database-remove</v-icon></v-btn>
-          </v-list-item-action>
-          <v-list-item-action>
-            <v-btn icon><v-icon>mdi-trash-can-outline</v-icon></v-btn>
-          </v-list-item-action>
         </v-list-item>
       </v-list>
     </v-row>
-    <v-tabs v-model="tab">
+    <v-tabs v-model="tab" class="details-tabs">
       <v-tab :key="0">
         Overview
       </v-tab>
@@ -49,9 +34,9 @@
         Settings
       </v-tab>
       <v-tab-item :key="0">
-        <v-col v-if="!!instance" :cols="12" class="d-flex">
-          <v-col :cols="6">
-            <v-card outlined>
+        <v-col v-if="!!instance" :cols="12" class="d-flex pa-0">
+          <v-col :cols="6" class="pa-0 pr-1">
+            <v-card>
               <v-card-title>Details</v-card-title>
               <v-card-text>
                 <v-simple-table>
@@ -87,8 +72,8 @@
               </v-card-text>
             </v-card>
           </v-col>
-          <v-col :cols="6">
-            <v-card outlined class="pa-0">
+          <v-col :cols="6" class="pa-0 pl-1">
+            <v-card class="pa-0">
               <v-card-title>Supervisor</v-card-title>
               <v-card-text>
                 <v-simple-table>
@@ -126,19 +111,61 @@
           </v-col>
         </v-col>
       </v-tab-item>
+      <v-tab-item :key="1">
+        <v-card class="px-1 py-2">
+          <v-card-title class="py-1">
+            <v-icon class="mx-1">mdi-cogs</v-icon>
+            Configure your client
+            <v-spacer />
+            <v-list>
+              <v-list-item>
+                <v-list-item-content>
+                  <v-list-item-subtitle>
+                    show advanced
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+                <v-list-item-action>
+                  <v-switch
+                    v-model="showAdvanced"
+                    :disabled="showAdvancedDisabled"
+                  ></v-switch>
+                </v-list-item-action>
+              </v-list-item>
+            </v-list>
+          </v-card-title>
+        </v-card>
+        <geth-settings
+          v-if="!!instance && !!network && !!release"
+          :client="instance.client"
+          :engine="network.engine"
+          :release="release"
+          :network="network.id"
+          :network-type="instance.network.type"
+          :show-advanced="showAdvanced"
+          :default-options="instance.config"
+        />
+      </v-tab-item>
     </v-tabs>
   </v-container>
 </template>
 
 <script>
+import GethSettings from '~/components/forms/gethSettings'
+
 export default {
   middleware: 'auth',
   name: 'Instance',
+  components: {
+    GethSettings
+  },
   data() {
     return {
       instance: null,
       network: null,
+      release: null,
       tab: null,
+      showAdvanced: false,
+      showAdvancedDisabled: false,
       breadcrumbs: [
         {
           text: 'Instances',
@@ -150,6 +177,7 @@ export default {
   },
   created() {
     const instanceId = this.$route.params.id
+
     if (instanceId) {
       this.instance = this.$store.state.instances.find(function(
         value,
@@ -157,6 +185,14 @@ export default {
         arr
       ) {
         return value.id === instanceId
+      })
+      const version = this.instance.version
+      this.release = this.instance.client.releases.find(function(
+        value,
+        index,
+        arr
+      ) {
+        return value.version === version
       })
       this.network = this.$store.state.packages.networks[
         this.instance.network.type

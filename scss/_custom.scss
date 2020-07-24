@@ -95,3 +95,7 @@ pre {
 .v-dialog {
   overflow-y: visible !important;
 }
+
+.details-tabs > .v-tabs-items {
+  background-color: $transparent !important;
+}
