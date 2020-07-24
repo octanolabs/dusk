@@ -592,7 +592,7 @@ export default {
     }
   },
   created() {
-    this.setDefaults(null)
+    this.setDefaults(this.defaultOptions)
   },
   methods: {
     setDefaults(opts) {
@@ -609,7 +609,8 @@ export default {
       }
       this.config = {
         datadir:
-          this.homedir + '/.dusk/' + this.client.name + '/' + this.network, // TODO - OSX
+          opts?.datadir ||
+          this.homedir + '/.dusk/data/' + this.client.name + '/' + this.network, // TODO - OSX
         fullsync: opts?.fullsync || false,
         archive: opts?.archive || false,
         port: opts?.port || 30388,
