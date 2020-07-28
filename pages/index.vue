@@ -92,6 +92,13 @@
                     </v-flex>
                   </template>
                   <v-list>
+                    <dashboard
+                      list
+                      :instance-id="item.id"
+                      :provider="item.client.provider"
+                      ipc-path=""
+                      :state="item.supervisor.state"
+                    />
                     <v-list-item :to="'/instance/' + item.id" link>
                       <v-list-item-title>
                         <v-icon>mdi-information-outline</v-icon>
@@ -275,8 +282,13 @@
 </template>
 
 <script>
+import Dashboard from '@/components/dialogs/Dashboard'
+
 export default {
   middleware: 'auth',
+  components: {
+    Dashboard
+  },
   data() {
     return {
       selectedInstance: {},

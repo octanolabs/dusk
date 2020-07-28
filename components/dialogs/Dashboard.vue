@@ -5,10 +5,18 @@
     hide-overlay
     transition="dialog-bottom-transition"
   >
-    <template v-slot:activator="{ on, attrs }">
+    <template v-if="!list" v-slot:activator="{ on, attrs }">
       <v-btn icon v-bind="attrs" :disabled="state !== 20" v-on="on">
         <v-icon>mdi-desktop-mac-dashboard</v-icon>
       </v-btn>
+    </template>
+    <template v-else v-slot:activator="{ on, attrs }">
+      <v-list-item link :disabled="state !== 20" v-bind="attrs" v-on="on">
+        <v-list-item-title>
+          <v-icon>mdi-desktop-mac-dashboard</v-icon>
+          Dashboard
+        </v-list-item-title>
+      </v-list-item>
     </template>
     <v-card>
       <v-toolbar dark color="primary">
@@ -51,6 +59,12 @@ export default {
       type: String,
       default() {
         return ''
+      }
+    },
+    list: {
+      type: Boolean,
+      default() {
+        return false
       }
     }
   },
