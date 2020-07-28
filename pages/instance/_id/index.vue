@@ -259,10 +259,10 @@
 
 <script>
 import GethSettings from '~/components/forms/gethSettings'
-import Dashboard from '@/components/dialogs/Dashboard'
-import DestroyInstance from '@/components/dialogs/DestroyInstance'
+import Dashboard from '@/components/actions/dialogs/Dashboard'
+import DestroyInstance from '@/components/actions/dialogs/DestroyInstance'
 import ControlInstance from '@/components/actions/ControlInstance'
-import InstanceLogs from '@/components/dialogs/Logs'
+import InstanceLogs from '@/components/actions/dialogs/Logs'
 
 export default {
   middleware: 'auth',

@@ -128,9 +128,9 @@
 
 <script>
 import ControlInstance from '@/components/actions/ControlInstance'
-import Dashboard from '@/components/dialogs/Dashboard'
-import DestroyInstance from '@/components/dialogs/DestroyInstance'
-import InstanceLogs from '@/components/dialogs/Logs'
+import Dashboard from '@/components/actions/dialogs/Dashboard'
+import DestroyInstance from '@/components/actions/dialogs/DestroyInstance'
+import InstanceLogs from '@/components/actions/dialogs/Logs'
 
 export default {
   middleware: 'auth',
