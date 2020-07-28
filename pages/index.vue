@@ -119,22 +119,7 @@
                       </v-list-item-title>
                     </v-list-item>
                     <v-divider />
-                    <v-list-item
-                      v-if="item.supervisor.state === 20"
-                      link
-                      @click="stopInstance(item.id)"
-                    >
-                      <v-list-item-title>
-                        <v-icon>mdi-stop-circle</v-icon>
-                        Stop
-                      </v-list-item-title>
-                    </v-list-item>
-                    <v-list-item v-else link @click="startInstance(item.id)">
-                      <v-list-item-title>
-                        <v-icon>mdi-play-circle</v-icon>
-                        Start
-                      </v-list-item-title>
-                    </v-list-item>
+                    <control-instance :instance="item" list />
                     <v-divider />
                     <destroy-instance
                       :instance="item"
@@ -213,12 +198,14 @@
 </template>
 
 <script>
+import ControlInstance from '@/components/actions/ControlInstance'
 import Dashboard from '@/components/dialogs/Dashboard'
 import DestroyInstance from '@/components/dialogs/DestroyInstance'
 
 export default {
   middleware: 'auth',
   components: {
+    ControlInstance,
     Dashboard,
     DestroyInstance
   },
@@ -260,12 +247,6 @@ export default {
     },
     getNetworkName(id, type) {
       return this.$store.state.packages.networks[type][id].name || ''
-    },
-    startInstance(instanceId) {
-      this.$store.dispatch('startInstance', { id: instanceId })
-    },
-    stopInstance(instanceId) {
-      this.$store.dispatch('stopInstance', { id: instanceId })
     },
     getInstanceLogs(instanceId) {
       const self = this

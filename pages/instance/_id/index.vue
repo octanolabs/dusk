@@ -42,6 +42,18 @@
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
                 <span v-on="on">
+                  <control-instance :instance="instance" />
+                </span>
+              </template>
+              <span>
+                {{ instance.supervisor.state === 20 ? 'Stop' : 'Start' }}
+              </span>
+            </v-tooltip>
+          </v-list-action>
+          <v-list-action>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <span v-on="on">
                   <destroy-instance
                     :instance="instance"
                     :state="instance.supervisor.state"
@@ -239,14 +251,16 @@
 import GethSettings from '~/components/forms/gethSettings'
 import Dashboard from '@/components/dialogs/Dashboard'
 import DestroyInstance from '@/components/dialogs/DestroyInstance'
+import ControlInstance from '@/components/actions/ControlInstance'
 
 export default {
   middleware: 'auth',
   name: 'Instance',
   components: {
-    GethSettings,
+    ControlInstance,
     Dashboard,
-    DestroyInstance
+    DestroyInstance,
+    GethSettings
   },
   data() {
     return {
