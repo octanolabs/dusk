@@ -23,6 +23,21 @@
               }}
             </v-list-item-subtitle>
           </v-list-item-content>
+          <v-list-action>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <span v-on="on">
+                  <dashboard
+                    :instance-id="instance.id"
+                    :provider="instance.client.provider"
+                    ipc-path=""
+                    :state="instance.supervisor.state"
+                  />
+                </span>
+              </template>
+              <span>Dashboard</span>
+            </v-tooltip>
+          </v-list-action>
         </v-list-item>
       </v-list>
     </v-row>
@@ -209,12 +224,14 @@
 
 <script>
 import GethSettings from '~/components/forms/gethSettings'
+import Dashboard from '@/components/dialogs/Dashboard'
 
 export default {
   middleware: 'auth',
   name: 'Instance',
   components: {
-    GethSettings
+    GethSettings,
+    Dashboard
   },
   data() {
     return {
