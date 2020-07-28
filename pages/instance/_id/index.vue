@@ -38,6 +38,19 @@
               <span>Dashboard</span>
             </v-tooltip>
           </v-list-action>
+          <v-list-action>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <span v-on="on">
+                  <destroy-instance
+                    :instance="instance"
+                    :state="instance.supervisor.state"
+                  />
+                </span>
+              </template>
+              <span>Destroy</span>
+            </v-tooltip>
+          </v-list-action>
         </v-list-item>
       </v-list>
     </v-row>
@@ -225,13 +238,15 @@
 <script>
 import GethSettings from '~/components/forms/gethSettings'
 import Dashboard from '@/components/dialogs/Dashboard'
+import DestroyInstance from '@/components/dialogs/DestroyInstance'
 
 export default {
   middleware: 'auth',
   name: 'Instance',
   components: {
     GethSettings,
-    Dashboard
+    Dashboard,
+    DestroyInstance
   },
   data() {
     return {

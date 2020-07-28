@@ -136,19 +136,11 @@
                       </v-list-item-title>
                     </v-list-item>
                     <v-divider />
-                    <v-list-item
-                      link
-                      :disabled="item.supervisor.state === 20"
-                      @click.stop="
-                        selectedInstance = item
-                        destroy.showDialog = true
-                      "
-                    >
-                      <v-list-item-title color="secondary">
-                        <v-icon color="secondary">mdi-delete</v-icon>
-                        Destroy Instance
-                      </v-list-item-title>
-                    </v-list-item>
+                    <destroy-instance
+                      :instance="item"
+                      :state="item.supervisor.state"
+                      list
+                    />
                   </v-list>
                 </v-menu>
               </template>
@@ -215,67 +207,6 @@
             </v-card-text>
           </v-card>
         </v-dialog>
-        <v-dialog v-model="destroy.showDialog" width="500" persistent>
-          <v-card>
-            <v-card-title primary-title>Destroy Instance</v-card-title>
-            <v-card-text>
-              <p>
-                Are you sure you want to destroy
-                <strong>{{ selectedInstance.name }}?</strong>
-                <br />
-                Enter <code class="elevation-0">{{ selectedInstance.id }}</code>
-                to confirm.
-              </p>
-              <v-text-field
-                v-model="destroy.confirm"
-                class="input-group--focused"
-                label="confirm"
-                name="confirm"
-                hide-details="auto"
-                autocomplete="off"
-                outlined
-                dense
-              ></v-text-field>
-              <v-list dense>
-                <v-list-item dense>
-                  <v-list-item-content v-if="selectedInstance">
-                    <v-list-item-title>Remove datadir</v-list-item-title>
-                    <v-list-item-subtitle v-if="selectedInstance.config">
-                      {{ selectedInstance.config.datadir }}
-                    </v-list-item-subtitle>
-                  </v-list-item-content>
-                  <v-list-item-actions>
-                    <v-switch v-model="destroy.datadir.remove" />
-                  </v-list-item-actions>
-                </v-list-item>
-              </v-list>
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn
-                color="primary"
-                @click.stop="
-                  selectedInstance = {}
-                  destroy.showDialog = false
-                "
-              >
-                No
-              </v-btn>
-              <v-btn
-                color="secondary"
-                text
-                :disabled="destroy.confirm !== selectedInstance.id"
-                @click.stop="
-                  destroyInstance(selectedInstance.id)
-                  selectedInstance = {}
-                  destroy.showDialog = false
-                "
-              >
-                Yes
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
       </v-tab-item>
     </v-tabs>
   </v-container>
@@ -283,22 +214,17 @@
 
 <script>
 import Dashboard from '@/components/dialogs/Dashboard'
+import DestroyInstance from '@/components/dialogs/DestroyInstance'
 
 export default {
   middleware: 'auth',
   components: {
-    Dashboard
+    Dashboard,
+    DestroyInstance
   },
   data() {
     return {
       selectedInstance: {},
-      destroy: {
-        showDialog: false,
-        datadir: {
-          remove: false
-        },
-        confirm: ''
-      },
       logs: {
         showDialog: false,
         tabs: null,
@@ -334,12 +260,6 @@ export default {
     },
     getNetworkName(id, type) {
       return this.$store.state.packages.networks[type][id].name || ''
-    },
-    destroyInstance(instanceId) {
-      this.$store.dispatch('removeInstance', {
-        id: instanceId,
-        rmDatadir: this.destroy.datadir.remove
-      })
     },
     startInstance(instanceId) {
       this.$store.dispatch('startInstance', { id: instanceId })
