@@ -92,6 +92,13 @@
                     </v-flex>
                   </template>
                   <v-list>
+                    <v-list-item :to="'/instance/' + item.id" link>
+                      <v-list-item-title>
+                        <v-icon>mdi-information-outline</v-icon>
+                        Details
+                      </v-list-item-title>
+                    </v-list-item>
+                    <v-divider />
                     <dashboard
                       list
                       :instance-id="item.id"
@@ -99,25 +106,7 @@
                       ipc-path=""
                       :state="item.supervisor.state"
                     />
-                    <v-list-item :to="'/instance/' + item.id" link>
-                      <v-list-item-title>
-                        <v-icon>mdi-information-outline</v-icon>
-                        Details
-                      </v-list-item-title>
-                    </v-list-item>
-                    <v-list-item
-                      link
-                      @click="
-                        selectedInstance = item
-                        logs.showDialog = true
-                        getInstanceLogs(item.id)
-                      "
-                    >
-                      <v-list-item-title>
-                        <v-icon>mdi-cogs</v-icon>
-                        Logs
-                      </v-list-item-title>
-                    </v-list-item>
+                    <instance-logs :instance="item" list />
                     <v-divider />
                     <control-instance :instance="item" list />
                     <v-divider />
@@ -132,66 +121,6 @@
             </v-data-table>
           </v-card-text>
         </v-card>
-        <v-dialog
-          v-model="logs.showDialog"
-          width="800"
-          persistent
-          class="logs-dialog"
-        >
-          <v-card v-if="selectedInstance && instanceLogs[selectedInstance.id]">
-            <v-btn
-              color="secondary"
-              fab
-              absolute
-              top
-              right
-              @click.stop="closeLogs()"
-            >
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
-            <v-card-title primary-title>
-              {{ selectedInstance.name }} logs
-            </v-card-title>
-            <v-divider></v-divider>
-            <v-card-text style="height: 600px;" class="pa-0">
-              <v-tabs v-model="logs.tabs" background-color="transparent" grow>
-                <v-tab key="0">
-                  stdout
-                </v-tab>
-                <v-tab key="1">
-                  stderr
-                </v-tab>
-              </v-tabs>
-              <v-tabs-items v-model="logs.tabs" style="height:100%;">
-                <v-tab-item key="0" style="height:100%;">
-                  <v-skeleton-loader
-                    v-if="!logs.returned"
-                    class="mx-auto mt-6"
-                    type="paragraph, sentences, paragraph, text, paragraph, sentences"
-                    max-height="600"
-                  ></v-skeleton-loader>
-                  <pre
-                    v-else
-                    style="width:100%;height:100%;display:flex;flex-direction:column-reverse;"
-                  >
-                    {{ instanceLogs[selectedInstance.id].stderr[0] || '' }}
-                  </pre>
-                </v-tab-item>
-                <v-tab-item key="1" style="height:100%;">
-                  <v-skeleton-loader
-                    v-if="!logs.returned"
-                    class="mx-auto mt-6"
-                    type="paragraph, sentences, paragraph, text, paragraph, sentences"
-                    max-height="600"
-                  ></v-skeleton-loader>
-                  <pre v-else style="width:100%;height:100%;">
-                    {{ instanceLogs[selectedInstance.id].stdout[0] || '' }}
-                  </pre>
-                </v-tab-item>
-              </v-tabs-items>
-            </v-card-text>
-          </v-card>
-        </v-dialog>
       </v-tab-item>
     </v-tabs>
   </v-container>
@@ -201,23 +130,18 @@
 import ControlInstance from '@/components/actions/ControlInstance'
 import Dashboard from '@/components/dialogs/Dashboard'
 import DestroyInstance from '@/components/dialogs/DestroyInstance'
+import InstanceLogs from '@/components/dialogs/Logs'
 
 export default {
   middleware: 'auth',
   components: {
     ControlInstance,
     Dashboard,
-    DestroyInstance
+    DestroyInstance,
+    InstanceLogs
   },
   data() {
     return {
-      selectedInstance: {},
-      logs: {
-        showDialog: false,
-        tabs: null,
-        returned: false
-      },
-      syncTimer: null,
       headers: [
         { text: 'name', value: 'name' },
         { text: 'network', value: 'network' },
@@ -233,9 +157,6 @@ export default {
   computed: {
     instances() {
       return this.$store.state.instances
-    },
-    instanceLogs() {
-      return this.$store.state.logs || null
     }
   },
   methods: {
@@ -247,31 +168,6 @@ export default {
     },
     getNetworkName(id, type) {
       return this.$store.state.packages.networks[type][id].name || ''
-    },
-    getInstanceLogs(instanceId) {
-      const self = this
-      const updateLogs = function(id) {
-        self.$store.dispatch('getInstanceLogs', { id })
-        if (self.instanceLogs[id]) {
-          self.logs.returned = true
-        }
-        if (
-          self.logs.showDialog &&
-          (self.selectedInstance?.supervisor?.state === 20 ||
-            self.logs.returned === false)
-        ) {
-          setTimeout(function() {
-            updateLogs(id)
-          }, 1000)
-        }
-      }
-      updateLogs(instanceId)
-    },
-    closeLogs() {
-      this.$store.dispatch('getInstanceLogs', null) // reset
-      this.logs.showDialog = false
-      this.selectedInstance = {}
-      this.logs.returned = false
     }
   }
 }

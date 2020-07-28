@@ -23,7 +23,7 @@
               }}
             </v-list-item-subtitle>
           </v-list-item-content>
-          <v-list-action>
+          <v-list-item-action>
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
                 <span v-on="on">
@@ -37,8 +37,18 @@
               </template>
               <span>Dashboard</span>
             </v-tooltip>
-          </v-list-action>
-          <v-list-action>
+          </v-list-item-action>
+          <v-list-item-action>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <span v-on="on">
+                  <instance-logs :instance="instance" />
+                </span>
+              </template>
+              <span>Logs</span>
+            </v-tooltip>
+          </v-list-item-action>
+          <v-list-item-action>
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
                 <span v-on="on">
@@ -49,8 +59,8 @@
                 {{ instance.supervisor.state === 20 ? 'Stop' : 'Start' }}
               </span>
             </v-tooltip>
-          </v-list-action>
-          <v-list-action>
+          </v-list-item-action>
+          <v-list-item-action>
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
                 <span v-on="on">
@@ -62,7 +72,7 @@
               </template>
               <span>Destroy</span>
             </v-tooltip>
-          </v-list-action>
+          </v-list-item-action>
         </v-list-item>
       </v-list>
     </v-row>
@@ -252,6 +262,7 @@ import GethSettings from '~/components/forms/gethSettings'
 import Dashboard from '@/components/dialogs/Dashboard'
 import DestroyInstance from '@/components/dialogs/DestroyInstance'
 import ControlInstance from '@/components/actions/ControlInstance'
+import InstanceLogs from '@/components/dialogs/Logs'
 
 export default {
   middleware: 'auth',
@@ -260,7 +271,8 @@ export default {
     ControlInstance,
     Dashboard,
     DestroyInstance,
-    GethSettings
+    GethSettings,
+    InstanceLogs
   },
   data() {
     return {
