@@ -24,12 +24,27 @@
       </v-list-item>
     </template>
     <v-card v-if="instance">
-      <v-toolbar>
-        <v-toolbar-title>{{ instance.name }}</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <v-btn color="secondary" fab small @click="closeLogs()">
+      <v-toolbar flat>
+        <v-btn color="secondary" fab small class="mr-4" @click="closeLogs()">
           <v-icon>mdi-close</v-icon>
         </v-btn>
+        <v-toolbar-title>{{ instance.name }}</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-list dense class="pa-0" style="max-width:235px;background:none;">
+          <v-list-item class="pr-0">
+            <v-list-item-avatar>
+              <img src="~/static/octano.svg" />
+            </v-list-item-avatar>
+            <v-list-item-content class="text-right">
+              <h1 style="color:#6fceb7">
+                octano<span style="color:#e76754">dusk</span>
+              </h1>
+              <v-list-item-subtitle style="color:#e76754">
+                v{{ version }}
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
         <v-toolbar-items></v-toolbar-items>
       </v-toolbar>
       <v-card-text style="height: calc(100vh - 112px);" class="pa-0">
@@ -106,6 +121,9 @@ export default {
   computed: {
     instanceLogs() {
       return this.$store.state.logs || null
+    },
+    version() {
+      return this.$store.state.version
     }
   },
   methods: {
