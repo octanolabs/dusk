@@ -1,10 +1,5 @@
 <template>
-  <v-dialog
-    v-model="show"
-    fullscreen
-    hide-overlay
-    transition="dialog-bottom-transition"
-  >
+  <v-dialog v-model="show" fullscreen transition="dialog-bottom-transition">
     <template v-if="!list" v-slot:activator="{ on, attrs }">
       <v-btn icon v-bind="attrs" :disabled="state !== 20" v-on="on">
         <v-icon>mdi-desktop-mac-dashboard</v-icon>
@@ -18,16 +13,29 @@
         </v-list-item-title>
       </v-list-item>
     </template>
-    <v-card>
-      <v-toolbar dark color="primary">
-        <v-btn icon dark @click="show = false">
+    <v-card v-if="instance">
+      <v-toolbar flat>
+        <v-btn color="secondary" fab small class="mr-4" @click="show = false">
           <v-icon>mdi-close</v-icon>
         </v-btn>
-        <v-toolbar-title>Settings</v-toolbar-title>
+        <v-toolbar-title>{{ instance.name }}</v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-toolbar-items>
-          <v-btn dark text @click="dialog = false">Save</v-btn>
-        </v-toolbar-items>
+        <v-list dense class="pa-0" style="max-width:235px;background:none;">
+          <v-list-item class="pr-0">
+            <v-list-item-avatar>
+              <img src="~/static/octano.svg" />
+            </v-list-item-avatar>
+            <v-list-item-content class="text-right">
+              <h1 style="color:#6fceb7">
+                octano<span style="color:#e76754">dusk</span>
+              </h1>
+              <v-list-item-subtitle style="color:#e76754">
+                v{{ version }}
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+        <v-toolbar-items></v-toolbar-items>
       </v-toolbar>
     </v-card>
   </v-dialog>
@@ -37,28 +45,10 @@
 export default {
   middleware: 'auth',
   props: {
-    instanceId: {
-      type: String,
+    instance: {
+      type: Object,
       default() {
-        return ''
-      }
-    },
-    state: {
-      type: Number,
-      default() {
-        return 0
-      }
-    },
-    provider: {
-      type: String,
-      default() {
-        return 'geth'
-      }
-    },
-    ipcPath: {
-      type: String,
-      default() {
-        return ''
+        return null
       }
     },
     list: {
@@ -71,6 +61,14 @@ export default {
   data() {
     return {
       show: false
+    }
+  },
+  computed: {
+    state() {
+      return this.instance?.supervisor.state
+    },
+    version() {
+      return this.$store.state.version
     }
   },
   methods: {}
