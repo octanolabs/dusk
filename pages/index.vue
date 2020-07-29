@@ -99,13 +99,7 @@
                       </v-list-item-title>
                     </v-list-item>
                     <v-divider />
-                    <dashboard
-                      list
-                      :instance-id="item.id"
-                      :provider="item.client.provider"
-                      ipc-path=""
-                      :state="item.supervisor.state"
-                    />
+                    <dashboard list :instance="item" />
                     <instance-logs :instance="item" list />
                     <v-divider />
                     <control-instance :instance="item" list />

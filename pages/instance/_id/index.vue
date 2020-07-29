@@ -27,12 +27,7 @@
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
                 <span v-on="on">
-                  <dashboard
-                    :instance-id="instance.id"
-                    :provider="instance.client.provider"
-                    ipc-path=""
-                    :state="instance.supervisor.state"
-                  />
+                  <dashboard :instance="instance" />
                 </span>
               </template>
               <span>Dashboard</span>
@@ -101,16 +96,22 @@
                         <td>{{ instance.id }}</td>
                       </tr>
                       <tr>
-                        <th>client</th>
-                        <td>{{ instance.client.name }}</td>
-                      </tr>
-                      <tr>
-                        <th>version</th>
-                        <td>{{ instance.version }}</td>
-                      </tr>
-                      <tr>
                         <th>network</th>
                         <td>{{ network.name }}</td>
+                      </tr>
+                      <tr>
+                        <th>client</th>
+                        <td>
+                          {{ instance.client.name }} v{{ instance.version }}
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>binpath</th>
+                        <td>{{ instance.binpath }}</td>
+                      </tr>
+                      <tr>
+                        <th>datadir</th>
+                        <td>{{ instance.config.datadir }}</td>
                       </tr>
                       <tr>
                         <th>created</th>
@@ -130,8 +131,26 @@
                   <template v-slot:default>
                     <tbody class="text-left">
                       <tr>
+                        <th>state</th>
+                        <td>{{ instance.supervisor.statename }}</td>
+                      </tr>
+                      <tr v-if="instance.supervisor.state === 20">
+                        <th>uptime</th>
+                        <td>
+                          {{ instance.supervisor.description.split(' ')[3] }}
+                        </td>
+                      </tr>
+                      <tr v-else>
+                        <th>stopped at</th>
+                        <td>{{ instance.supervisor.description }}</td>
+                      </tr>
+                      <tr v-if="instance.supervisor.state === 20">
                         <th>pid</th>
                         <td>{{ instance.supervisor.pid }}</td>
+                      </tr>
+                      <tr v-else>
+                        <th>exit status</th>
+                        <td>{{ instance.supervisor.exitstatus }}</td>
                       </tr>
                       <tr>
                         <th>group</th>
@@ -140,10 +159,6 @@
                       <tr>
                         <th>name</th>
                         <td>{{ instance.supervisor.name }}</td>
-                      </tr>
-                      <tr>
-                        <th>state</th>
-                        <td>{{ instance.supervisor.statename }}</td>
                       </tr>
                       <tr>
                         <th>stderr</th>
