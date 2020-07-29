@@ -57,6 +57,8 @@ export default {
         if (from.path.substr(0, from.path.lastIndexOf('/')) === '/instance') {
           this.stopSync('instances')
         }
+      }
+      if (to.path.length > 1) {
         if (to.path.substr(0, to.path.lastIndexOf('/')) === '/instance') {
           this.$store.dispatch('instances')
           this.startSync('instances')
