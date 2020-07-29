@@ -1,11 +1,10 @@
 <template>
   <span v-if="!list">
-    <v-btn
-      v-if="instance.supervisor.state === 20"
-      icon
-      @click="stopInstance(instance.id)"
-    >
+    <v-btn v-if="state === 20" icon @click="stopInstance(instance.id)">
       <v-icon>mdi-stop-circle</v-icon>
+    </v-btn>
+    <v-btn v-else-if="state === 10 || state === 40" icon>
+      <v-icon>mdi-cog mdi-spin</v-icon>
     </v-btn>
     <v-btn v-else icon @click="startInstance(instance.id)">
       <v-icon>mdi-play-circle</v-icon>
@@ -46,6 +45,11 @@ export default {
       default() {
         return false
       }
+    }
+  },
+  computed: {
+    state() {
+      return this.instance?.supervisor.state || 0
     }
   },
   methods: {
