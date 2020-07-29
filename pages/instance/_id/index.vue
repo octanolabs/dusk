@@ -291,33 +291,46 @@ export default {
       ]
     }
   },
+  computed: {
+    instances() {
+      return this.$store.state.instances
+    }
+  },
+  watch: {
+    instances(nval, oval) {
+      if (nval) {
+        this.update()
+      }
+    }
+  },
   created() {
-    const instanceId = this.$route.params.id
+    this.update()
+    this.breadcrumbs.push({
+      text: this.instance.name || this.instance.id,
+      disabled: true,
+      to: '/'
+    })
+  },
+  methods: {
+    update() {
+      const instanceId = this.$route.params.id
 
-    if (instanceId) {
-      this.instance = this.$store.state.instances.find(function(
-        value,
-        index,
-        arr
-      ) {
-        return value.id === instanceId
-      })
-      const version = this.instance.version
-      this.release = this.instance.client.releases.find(function(
-        value,
-        index,
-        arr
-      ) {
-        return value.version === version
-      })
-      this.network = this.$store.state.packages.networks[
-        this.instance.network.type
-      ][this.instance.network.id]
-      this.breadcrumbs.push({
-        text: this.instance.name || instanceId,
-        disabled: true,
-        to: '/'
-      })
+      if (instanceId) {
+        this.instance = this.instances.find(function(value, index, arr) {
+          return value.id === instanceId
+        })
+        const version = this.instance.version
+        this.release = this.instance.client.releases.find(function(
+          value,
+          index,
+          arr
+        ) {
+          return value.version === version
+        })
+        this.network = this.$store.state.packages.networks[
+          this.instance.network.type
+        ][this.instance.network.id]
+      }
     }
   }
 }
