@@ -51,9 +51,9 @@
                 {{ instance.config.datadir }}
               </v-list-item-subtitle>
             </v-list-item-content>
-            <v-list-item-actions>
+            <v-list-item-action>
               <v-switch v-model="datadir.remove" />
-            </v-list-item-actions>
+            </v-list-item-action>
           </v-list-item>
         </v-list>
       </v-card-text>
