@@ -44,12 +44,23 @@ export default {
   watch: {
     $route(to, from) {
       // react to route changes...
+      // start/stop instances sync (index: /)
       if (from.path === '/') {
         this.stopSync('instances')
       }
       if (to.path === '/') {
         this.$store.dispatch('instances')
         this.startSync('instances')
+      }
+      // start/stop instances sync (instance details: /instance/:id)
+      if (from.path.length > 1) {
+        if (from.path.substr(0, from.path.lastIndexOf('/')) === '/instance') {
+          this.stopSync('instances')
+        }
+        if (to.path.substr(0, to.path.lastIndexOf('/')) === '/instance') {
+          this.$store.dispatch('instances')
+          this.startSync('instances')
+        }
       }
     },
     syncSystemInfo(nval, oval) {
