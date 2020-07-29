@@ -4,7 +4,7 @@
       <v-btn
         icon
         v-bind="attrs"
-        @click.stop="getInstanceLogs(instance.id)"
+        @click="getInstanceLogs(instance.id)"
         v-on="on"
       >
         <v-icon>mdi-console</v-icon>
@@ -14,7 +14,7 @@
       <v-list-item
         link
         v-bind="attrs"
-        @click.stop="getInstanceLogs(instance.id)"
+        @click="getInstanceLogs(instance.id)"
         v-on="on"
       >
         <v-list-item-title>

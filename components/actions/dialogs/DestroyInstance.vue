@@ -1,12 +1,22 @@
 <template>
   <v-dialog v-model="show" width="500" persistent>
     <template v-if="!list" v-slot:activator="{ on, attrs }">
-      <v-btn icon v-bind="attrs" :disabled="state === 20" v-on="on">
+      <v-btn
+        icon
+        v-bind="attrs"
+        :disabled="instance.supervisor.state === 20"
+        v-on="on"
+      >
         <v-icon color="secondary">mdi-delete</v-icon>
       </v-btn>
     </template>
     <template v-else v-slot:activator="{ on, attrs }">
-      <v-list-item link :disabled="state === 20" v-bind="attrs" v-on="on">
+      <v-list-item
+        link
+        :disabled="instance.supervisor.state === 20"
+        v-bind="attrs"
+        v-on="on"
+      >
         <v-list-item-title>
           <v-icon color="secondary">mdi-delete</v-icon>
           Destroy Instance
@@ -74,12 +84,6 @@ export default {
       type: Object,
       default() {
         return null
-      }
-    },
-    state: {
-      type: Number,
-      default() {
-        return 0
       }
     },
     list: {
