@@ -258,7 +258,7 @@
         </v-card>
         <geth-settings
           v-if="!!instance && !!network && !!release"
-          :client="instance.client"
+          :client="client"
           :engine="network.engine"
           :release="release"
           :network="network.id"
@@ -317,7 +317,8 @@ export default {
   },
   watch: {
     instances(nval, oval) {
-      if (nval) {
+      // dont update if on settings tab
+      if (nval && this.tab !== 1) {
         this.update()
       }
     }
@@ -342,14 +343,16 @@ export default {
         this.client = this.clients.find(function(value, index, arr) {
           return value.name === clientName
         })
-        const version = this.instance.version
-        this.release = this.instance.client.releases.find(function(
-          value,
-          index,
-          arr
-        ) {
-          return value.version === version
-        })
+        if (!this.release) {
+          const version = this.instance.version
+          this.release = this.instance.client.releases.find(function(
+            value,
+            index,
+            arr
+          ) {
+            return value.version === version
+          })
+        }
         this.network = this.$store.state.packages.networks[
           this.instance.network.type
         ][this.instance.network.id]

@@ -604,6 +604,9 @@ export default {
     setDefaults(opts) {
       if (this.value) {
         this.instance = { ...this.value }
+        this.instance.version = this.release.version
+        this.instance.binpath = this.release.binpath
+        this.instance.client = this.client
       } else {
         this.instance = {
           name:
@@ -771,6 +774,9 @@ export default {
           }
         }
         i.flags = flags
+        i.version = this.release.version
+        i.binpath = this.release.binpath
+        i.client = this.client
         await this.$store.dispatch('addInstance', i)
         this.spin = false
         this.$router.push({ path: '/' })
