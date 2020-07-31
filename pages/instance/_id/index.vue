@@ -232,7 +232,7 @@
                   </v-list>
                 </template>
                 <v-list>
-                  <template v-for="(r, i) in instance.client.releases">
+                  <template v-for="(r, i) in client.releases">
                     <v-list-item
                       v-if="r.status > 0"
                       :key="i"
@@ -294,6 +294,7 @@ export default {
       instance: null,
       network: null,
       release: null,
+      client: null,
       tab: null,
       showAdvanced: false,
       showAdvancedDisabled: false,
@@ -309,6 +310,9 @@ export default {
   computed: {
     instances() {
       return this.$store.state.instances
+    },
+    clients() {
+      return this.$store.state.packages.clients
     }
   },
   watch: {
@@ -333,6 +337,10 @@ export default {
       if (instanceId) {
         this.instance = this.instances.find(function(value, index, arr) {
           return value.id === instanceId
+        })
+        const clientName = this.instance.client.name
+        this.client = this.clients.find(function(value, index, arr) {
+          return value.name === clientName
         })
         const version = this.instance.version
         this.release = this.instance.client.releases.find(function(
