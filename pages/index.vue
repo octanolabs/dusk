@@ -33,7 +33,7 @@
               <template v-slot:item.uptime="{ item }">
                 {{
                   item.supervisor.state === 20
-                    ? item.supervisor.description.split(' ')[3]
+                    ? formatUptime(item.supervisor.description)
                     : '-'
                 }}
               </template>
@@ -162,6 +162,20 @@ export default {
     },
     getNetworkName(id, type) {
       return this.$store.state.packages.networks[type][id].name || ''
+    },
+    formatUptime(str) {
+      const split = str.split(' ')
+      if (split.length > 4) {
+        const slice = split.slice(-3)
+        if (slice[0] > 1) {
+          slice[1] = 'days'
+        } else {
+          slice[1] = 'day'
+        }
+        return slice[0] + ' ' + slice[1] + ' - ' + slice[2]
+      } else {
+        return split[3]
+      }
     }
   }
 }

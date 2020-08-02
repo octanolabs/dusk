@@ -137,7 +137,7 @@
                       <tr v-if="instance.supervisor.state === 20">
                         <th>uptime</th>
                         <td>
-                          {{ instance.supervisor.description.split(' ')[3] }}
+                          {{ formatUptime(instance.supervisor.description) }}
                         </td>
                       </tr>
                       <tr v-else>
@@ -356,6 +356,20 @@ export default {
         this.network = this.$store.state.packages.networks[
           this.instance.network.type
         ][this.instance.network.id]
+      }
+    },
+    formatUptime(str) {
+      const split = str.split(' ')
+      if (split.length > 4) {
+        const slice = split.slice(-3)
+        if (slice[0] > 1) {
+          slice[1] = 'days'
+        } else {
+          slice[1] = 'day'
+        }
+        return slice[0] + ' ' + slice[1] + ' - ' + slice[2]
+      } else {
+        return split[3]
       }
     }
   }
