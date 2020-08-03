@@ -83,7 +83,7 @@
         </v-card>
       </v-col>
     </v-row>
-    <v-row no-gutters class="pb-2">
+    <v-row v-if="pendingTxns" no-gutters class="pb-2">
       <v-col :cols="12">
         <v-data-table
           :headers="headers"
@@ -124,6 +124,14 @@ export default {
     Difficulty,
     Usage
   },
+  props: {
+    provider: {
+      type: Object,
+      default() {
+        return null
+      }
+    }
+  },
   data() {
     return {
       seconds: 0,
@@ -137,7 +145,7 @@ export default {
   },
   computed: {
     blocks() {
-      return this.$store.state.blocks
+      return this.provider.blocks
     },
     latestBlock() {
       return this.blocks && this.blocks.length > 0
@@ -154,13 +162,13 @@ export default {
           }
     },
     pending() {
-      return this.$store.state.pending
+      return this.provider.pending || {}
     },
     pendingTxns() {
-      return this.$store.state.pending.transactions || []
+      return this.pending?.transactions || []
     },
     blockNumber() {
-      return this.latestBlock.number
+      return this.latestBlock.number || 0
     },
     chartData() {
       const data = {
@@ -196,7 +204,7 @@ export default {
       return data
     },
     chartBlocktime() {
-      return this.$store.state.blocks.length > 0
+      return this.provider.blocks.length > 0
         ? {
             labels: this.chartData.labels,
             datasets: [
@@ -244,7 +252,7 @@ export default {
         : {}
     },
     chartDifficulty() {
-      return this.$store.state.blocks.length > 0
+      return this.provider.blocks.length > 0
         ? {
             labels: this.chartData.labels,
             datasets: [
@@ -282,7 +290,7 @@ export default {
         : {}
     },
     chartUsage() {
-      return this.$store.state.blocks.length > 0
+      return this.provider.blocks.length > 0
         ? {
             labels: this.chartData.labels,
             datasets: [
@@ -378,7 +386,11 @@ export default {
       return (bytes / 1000 ** i).toFixed(2) + unit
     },
     format(hash) {
-      return hash.substring(0, 12) + '..'
+      if (hash) {
+        return hash.substring(0, 12) + '..'
+      } else {
+        return '-'
+      }
     },
     fromWei(wei) {
       return new BN(wei).div(1000000000000000000).toString()

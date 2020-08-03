@@ -3,6 +3,6 @@
   "desc": "Main provider for geth based clients.",
   "version": 1,
   "type": "provider",
-  "icon": "static/networks/ubiq.svg",
+  "icon": "static/mascot.png",
   "provider": "provider.js"
 }

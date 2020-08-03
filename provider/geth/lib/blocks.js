@@ -4,12 +4,20 @@ import Loop from '../../lib/loop.js'
 class BlockCache {
   constructor(maxlen) {
     this.cache = new LRU(maxlen)
-    this.pending = {}
+    this._pending = {}
     this.maxlen = maxlen
   }
+
   getBlocks() {
     return this.cache.values().reverse()
   }
+  set pending(value) {
+    this._pending = value
+  }
+  get pending() {
+    return this._pending
+  }
+
   setBlocks(blocks, cb) {
     this.cache.reset()
     const self = this
@@ -26,7 +34,7 @@ class BlockCache {
               blocktime: calc.blocktime,
               avgblocktime10: calc.avgblocktime10,
               avgblocktime25: calc.avgblocktime25,
-              avgblocktime88: calc.avgblocktime88,
+              avgblocktime8ca8: calc.avgblocktime88,
               hashrate: calc.hashrate,
               timestamp: block.timestamp,
               txns: block.transactions.length,
@@ -49,6 +57,7 @@ class BlockCache {
       }
     )
   }
+
   push(block) {
     calcBlockValues(this.cache, block, this.pending, function(calc) {
       this.cache.set(block.number, {

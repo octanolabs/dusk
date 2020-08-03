@@ -2,7 +2,8 @@
   "name": "go-ethereum",
   "desc": "Official Go implementation of the Ethereum protocol.",
   "icon": "static/mascot.png",
-  "type": "geth",
+  "provider": "geth",
+  "ipc": "geth.ipc",
   "releases": [
     {
       "version": "1.9.16",

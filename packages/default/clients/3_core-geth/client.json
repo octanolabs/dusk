@@ -2,7 +2,8 @@
   "name": "core-geth",
   "desc": "A highly configurable Go implementation of the Ethereum protocol.",
   "icon": "static/logo.png",
-  "type": "geth",
+  "provider": "geth",
+  "ipc": "geth.ipc",
   "releases": [
     {
       "version": "1.11.8",

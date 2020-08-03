@@ -88,10 +88,10 @@ export default {
     }
   },
   startProvider(name) {
-    providers[name].timer.setTimeout(providers[name].set, '', '2s')
+    providers[name].timer.setTimeout(providers[name].set.bind(providers[name]), '', '2s')
     if (providers[name].interval) {
       providers[name].timer.setInterval(
-        providers[name].set,
+        providers[name].set.bind(providers[name]),
         '',
         providers[name].interval
       ) // repeat
@@ -99,6 +99,8 @@ export default {
   },
   createProvider(type, id, ipcPath, cb) {
     if (type === 'geth') {
+      consola.log('createProvider')
+      consola.log(ipcPath)
       providers[id] = Geth.new(ipcPath, id, '5s')
       return cb(providers)
     } else {
