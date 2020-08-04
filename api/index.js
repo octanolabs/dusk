@@ -125,14 +125,35 @@ router.post('/provider/create', (req, res) => {
   if (!req.body.id) {
     return res.status(401).json({ message: 'Bad params' })
   } else {
-    provider.createProvider(req.body.type, req.body.id, req.body.ipcPath, function(_providers) {
+    consola.log('/provider/create')
+    consola.log(req.body.ipc)
+    provider.createProvider(req.body.type, req.body.id, req.body.ipc, function(_providers) {
       if (_providers) {
         providers = _providers
-        return res.json({ success: true })
+        provider.startProvider(req.body.id)
+        return res.json({ success: true, provider: providers[req.body.id].get() })
       } else {
         return res.json({ success: false })
       }
     })
+  }
+})
+
+router.post('/provider/get', (req, res) => {
+  if (!req.body.id) {
+    return res.status(401).json({ message: 'Bad params' })
+  } else {
+    const provider = providers[req.body.id].get()
+    return res.json({ success: true, provider })
+  }
+})
+
+router.post('/provider/start', (req, res) => {
+  if (!req.body.id) {
+    return res.status(401).json({ message: 'Bad params' })
+  } else {
+    provider.startProvider(req.body.id)
+    return res.json({ success: true })
   }
 })
 

@@ -92,7 +92,7 @@ const loadPackages = async function(pkgs) {
         let pkg = await readJson(path.join(packagePath, 'dusk.json'))
         pkg.path = packagePath.substr(8) + '/' // default/packageid
         PACKAGES.push(pkg)
-        if (pkg.client) {
+        if (pkg.type === 'client' && pkg.client) {
           // fetch client data
           const clientData = await getPackageData (
             path.join(packagePath, pkg.client.local),
@@ -316,16 +316,17 @@ export default {
       const pkgs = await stat(rootPath)
       if (pkgs.isDirectory()) {
         // set paths
-        const defaultPath = path.join(rootPath, 'default')
-        const customPath = path.join(rootPath, 'custom')
+        const defaultClientPath = path.join(rootPath, 'default', 'clients')
         // check packages/default directory exists
-        const defaultStat = await stat(defaultPath)
-        if (defaultStat.isDirectory()) {
+        const defaultClientStat = await stat(defaultClientPath)
+        if (defaultClientStat.isDirectory()) {
           // load packages
-          await loadPackages(defaultPath)
+          await loadPackages(defaultClientPath)
         } else {
-          consola.error('default packages path not found: ' + defaultPath)
+          consola.error('default clients path not found: ' + defaultPath)
         }
+
+        const customPath = path.join(rootPath, 'custom')
         // check packages/custom directory exists
         const custom = await stat(customPath)
         if (custom.isDirectory()) {

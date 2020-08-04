@@ -12,7 +12,7 @@
                 </v-list-item-title>
                 <v-list-item-subtitle>
                   <v-avatar tile size="16">
-                    <img src="~/static/networks/ubiq.svg" />
+                    <img src="~/static/octano.svg" />
                   </v-avatar>
                   mainnet
                 </v-list-item-subtitle>
@@ -50,7 +50,7 @@
             <client-only placeholder="Loading...">
               <world-map
                 v-if="map"
-                :countryData="map"
+                :country-data="map"
                 low-color="#6fceb7"
                 high-color="#6fceb7"
                 default-country-fill-color="#333"
@@ -101,49 +101,47 @@
     <v-card flat>
       <v-row no-gutters>
         <v-col :cols="12">
-          <client-only>
-            <v-data-table
-              :headers="headers"
-              :items="peers"
-              :items-per-page="5"
-              :expanded.sync="expandedPeers"
-              item-key="id"
-              flat
-              dense
-            >
-              <template v-slot:body="{ items }">
-                <tbody>
-                  <tr
-                    :class="item.id === 0 ? 'custom-highlight-row' : ''"
-                    v-for="item in items"
-                    :key="item.id"
-                  >
-                    <td class="text-left">{{ item.countryName }}</td>
-                    <td class="text-left">{{ item.client }}</td>
-                    <td class="text-left">{{ item.version }}</td>
-                    <td class="text-left">{{ item.tag }}</td>
-                    <td class="text-left">{{ item.build }}</td>
-                    <td class="text-left">{{ item.os }}</td>
-                    <td class="text-left">{{ item.arch }}</td>
-                  </tr>
-                </tbody>
-              </template>
-              <template v-slot:item.id="{ item }">
-                <v-icon v-if="item.id === 0" small>
-                  mdi-star
-                </v-icon>
-              </template>
-              <template v-slot:item.os="{ item }">
-                <v-icon v-if="item.os === 'linux'" small>
-                  mdi-linux
-                </v-icon>
-                <v-icon v-else-if="item.os === 'darwin'" small>
-                  mdi-apple
-                </v-icon>
-                <v-icon v-else small>mdi-windows</v-icon>
-              </template>
-            </v-data-table>
-          </client-only>
+          <v-data-table
+            :headers="headers"
+            :items="peers"
+            :items-per-page="10"
+            :expanded.sync="expandedPeers"
+            item-key="id"
+            flat
+            dense
+          >
+            <template v-slot:body="{ items }">
+              <tbody>
+                <tr
+                  v-for="item in items"
+                  :key="item.id"
+                  :class="item.id === 0 ? 'custom-highlight-row' : ''"
+                >
+                  <td class="text-left">{{ item.countryName }}</td>
+                  <td class="text-left">{{ item.client }}</td>
+                  <td class="text-left">{{ item.version }}</td>
+                  <td class="text-left">{{ item.tag }}</td>
+                  <td class="text-left">{{ item.build }}</td>
+                  <td class="text-left">{{ item.os }}</td>
+                  <td class="text-left">{{ item.arch }}</td>
+                </tr>
+              </tbody>
+            </template>
+            <template v-slot:item.id="{ item }">
+              <v-icon v-if="item.id === 0" small>
+                mdi-star
+              </v-icon>
+            </template>
+            <template v-slot:item.os="{ item }">
+              <v-icon v-if="item.os === 'linux'" small>
+                mdi-linux
+              </v-icon>
+              <v-icon v-else-if="item.os === 'darwin'" small>
+                mdi-apple
+              </v-icon>
+              <v-icon v-else small>mdi-windows</v-icon>
+            </template>
+          </v-data-table>
         </v-col>
       </v-row>
     </v-card>
@@ -162,6 +160,14 @@ export default {
     Doughnut,
     WorldMap
   },
+  props: {
+    provider: {
+      type: Object,
+      default() {
+        return null
+      }
+    }
+  },
   data() {
     return {
       expandedPeers: [],
@@ -178,10 +184,10 @@ export default {
   },
   computed: {
     peers() {
-      return this.$store.state.peers
+      return this.provider.peers
     },
     chartArch() {
-      return this.$store.state.peers.length > 0
+      return this.provider.peers.length > 0
         ? this.toChartData(this.peers, 'arch', 0)
         : false
     },
@@ -189,29 +195,27 @@ export default {
       return this.chartCountry ? this.chartCountry.datasets[0].data.length : 0
     },
     chartCountry() {
-      return this.$store.state.peers.length > 0
+      return this.provider.peers.length > 0
         ? this.toChartData(this.peers, 'countryCode', 1)
         : false
     },
     chartClient() {
-      return this.$store.state.peers.length > 0
+      return this.provider.peers.length > 0
         ? this.toChartData(this.peers, 'client', 0)
         : false
     },
     chartOperatingSystem() {
-      return this.$store.state.peers.length > 0
+      return this.provider.peers.length > 0
         ? this.toChartData(this.peers, 'os', 0)
         : false
     },
     chartVersion() {
-      return this.$store.state.peers.length > 0
+      return this.provider.peers.length > 0
         ? this.toChartData(this.peers, 'version', 0)
         : false
     },
     map() {
-      return this.$store.state.peers.length > 0
-        ? this.toMapData(this.peers)
-        : false
+      return this.provider.peers.length > 0 ? this.toMapData(this.peers) : false
     }
   },
   methods: {
@@ -227,10 +231,8 @@ export default {
         counts: []
       }
       for (const key in counts) {
-        if (counts.hasOwnProperty(key)) {
-          cdata.labels.push(key)
-          cdata.counts.push(counts[key])
-        }
+        cdata.labels.push(key)
+        cdata.counts.push(counts[key])
       }
       return {
         labels: cdata.labels,

@@ -21,7 +21,8 @@ export const state = () => ({
   sync: {
     instances: false,
     system: false
-  }
+  },
+  providers: {}
 })
 
 export const mutations = {
@@ -40,6 +41,9 @@ export const mutations = {
   },
   SET_INSTANCE_LOGS(state, data) {
     state.logs[data.id] = data.logs
+  },
+  SET_PROVIDER(state, provider) {
+    state.providers[provider.id] = provider.data
   },
   SET_SYSTEMINFO(state, data) {
     state.system = data
@@ -203,13 +207,31 @@ export const actions = {
       consola.error(new Error(error))
     }
   },
-  async createProvider({ commit }, payload) {
+  async getProvider({ commit, state }, payload) {
     try {
-      await axios.post('/api/provider/create', {
-        id: payload.id,
-        ipcPath: payload.ipcPath,
-        type: payload.type
-      })
+      if (payload && state.providers[payload.id]) {
+        // update provider
+        const { data } = await axios.post('/api/provider/get', {
+          id: payload.id
+        })
+        if (data.success && data.provider) {
+          commit('SET_PROVIDER', { id: payload.id, data: data.provider })
+        }
+        // set provider
+      } else if (payload) {
+        consola.log('action')
+        consola.log(payload.client)
+        // create provider
+        const { data } = await axios.post('/api/provider/create', {
+          id: payload.id,
+          ipc: payload.config.datadir + '/' + payload.client.ipc,
+          type: payload.client.provider
+        })
+        if (data.success && data.provider) {
+          commit('SET_PROVIDER', { id: payload.id, data: data.provider })
+        }
+        // set provider
+      }
     } catch (error) {
       consola.error(new Error(error))
     }

@@ -27,37 +27,52 @@ class GethProvider extends Provider {
     this.peerCache = PeerCache.new(86400) // 1day
     this.set = function() {
       const self = this
-      this.web3.eth.getBlock('pending', true, function(err, head) {
-        if (err || !head) {
-          consola.fatal(new Error(err))
-          return
+      this.web3Admin.getPeers(function(err, peers) {
+        if (err) {
+          consola.error(new Error(err))
         } else {
-          const cache = []
-          self.blockCache.pending = head
-          const blockNumber = head.number - self.blockCache.maxlen * 2
-          Loop.sync(
-            self.blockCache.maxlen * 2 + 1,
-            function(loop) {
-              const i = loop.iteration()
-              self.web3.eth.getBlock(blockNumber + i, false, function(
-                err,
-                block
-              ) {
-                if (!err && block) {
-                  cache.push(block)
-                  loop.next()
-                } else {
-                  loop.break(true)
-                  loop.next()
-                }
-              })
-            },
-            function() {
-              self.blockCache.setBlocks(cache, function() {
-                return
+          self.web3Admin.getNodeInfo(function(err, localhost) {
+            if (err) {
+              consola.error(new Error(err))
+            } else {
+              self.peerCache.setPeers(peers, function() {
+                // self.peerCache.localhost.bind(self.peerCache) = localhost
+                self.web3.eth.getBlock('pending', true, function(err, head) {
+                  if (err || !head) {
+                    consola.fatal(new Error(err))
+                    return
+                  } else {
+                    const cache = []
+                    self.blockCache.pending = head
+                    const blockNumber = head.number - self.blockCache.maxlen * 2
+                    Loop.sync(
+                      self.blockCache.maxlen * 2 + 1,
+                      function(loop) {
+                        const i = loop.iteration()
+                        self.web3.eth.getBlock(blockNumber + i, false, function(
+                          err,
+                          block
+                        ) {
+                          if (!err && block) {
+                            cache.push(block)
+                            loop.next()
+                          } else {
+                            loop.break(true)
+                            loop.next()
+                          }
+                        })
+                      },
+                      function() {
+                        self.blockCache.setBlocks(cache, function() {
+                          return
+                        })
+                      }
+                    )
+                  }
+                })
               })
             }
-          )
+          })
         }
       })
     }

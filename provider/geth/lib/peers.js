@@ -9,6 +9,23 @@ class PeerCache {
     this.geodata = new LRU({ maxAge: maxage })
     this.maxage = maxage
     this._localhost = {}
+    this.getGeo = function(ip, cb) {
+      const self = this
+      if (!this.geodata.get(ip)) {
+        axios
+          .get('https://ip2c.org/' + ip)
+          .then(function(response) {
+            const parsed = parseCountryCode(response.data)
+            self.geodata.set(ip, parsed)
+            return cb(parsed)
+          })
+          .catch(function(err) {
+            consola.error(new Error(err))
+          })
+      } else {
+        return cb(this.geodata.get(ip))
+      }
+    }
   }
   clear() {
     this.cache.reset()
@@ -29,40 +46,25 @@ class PeerCache {
       self.getGeo(ip, function(geodata) {
         parsed.countryName = geodata.name
         parsed.countryCode = geodata.code
-        self.cache.set(ip, peer)
+        self.cache.set(ip, parsed)
         loop.next()
       })
     }, function() {
       return cb()
     })
   }
-  getGeo(ip, cb) {
-    const self = this
-    if (!this.geodata.get(ip)) {
-      axios
-        .get('https://ip2c.org/' + ip)
-        .then(function(response) {
-          const parsed = parseCountryCode(response.data)
-          self.geodata.set(ip, parsed)
-          return cb(parsed)
-        })
-        .catch(function(err) {
-          consola.error(new Error(err))
-        })
-    } else {
-      return cb(this.geodata.get(ip))
-    }
-  }
+
   get localhost() {
     return this._localhost
   }
   set localhost(lo) {
     let parsed = parseNode(lo, 0)
+    let self = this
     this.getGeo(lo.ip, function(geodata) {
       parsed.countryName = geodata.name
       parsed.countryCode = geodata.code
-      this.cache.set(lo.ip, parsed)
-      this._localhost = parsed
+      self.cache.set(lo.ip, parsed)
+      self._localhost = parsed
     })
   }
 }

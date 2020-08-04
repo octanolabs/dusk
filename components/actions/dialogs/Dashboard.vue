@@ -50,7 +50,9 @@
       </v-toolbar>
       <v-col :cols="12" class="pa-2">
         <v-row v-if="!!provider" no-gutters>
-          <v-col :cols="6"></v-col>
+          <v-col :cols="6">
+            <dashboard-peers :provider="provider" />
+          </v-col>
           <v-col :cols="6" class="pl-2">
             <dashboard-blocks :provider="provider" />
           </v-col>
@@ -62,11 +64,13 @@
 
 <script>
 import DashboardBlocks from '~/components/dashboard/Blocks.vue'
+import DashboardPeers from '~/components/dashboard/Peers.vue'
 
 export default {
   middleware: 'auth',
   components: {
-    DashboardBlocks
+    DashboardBlocks,
+    DashboardPeers
   },
   props: {
     instance: {
