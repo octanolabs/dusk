@@ -145,6 +145,15 @@
           <template v-slot:item.value="{ item }">
             {{ fromWei(item.value) }}
           </template>
+          <template v-slot:item.gas="{ item }">
+            {{ item.gas }}
+          </template>
+          <template v-slot:item.gasPrice="{ item }">
+            {{ item.gasPrice }}
+          </template>
+          <template v-slot:item.r="{ item }">
+            {{ maxfee(item.gas, item.gasPrice) }}
+          </template>
         </v-data-table>
       </v-col>
     </v-row>
@@ -186,7 +195,10 @@ export default {
         { text: 'Hash', value: 'hash' },
         { text: 'From', value: 'from' },
         { text: 'To', value: 'to' },
-        { text: 'Value', value: 'value' }
+        { text: 'Value', value: 'value' },
+        { text: 'Gas', value: 'gas' },
+        { text: 'Gas Price', value: 'gasPrice' },
+        { text: 'Max. Fee', value: 'r' }
       ]
     }
   },
@@ -441,6 +453,10 @@ export default {
     },
     fromWei(wei) {
       return new BN(wei).div(1000000000000000000).toString()
+    },
+    maxfee(gas, price) {
+      const mf = new BN(gas).times(price)
+      return mf.div(1000000000000000000).toString()
     }
   }
 }
