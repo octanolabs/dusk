@@ -1,6 +1,6 @@
 <template>
-  <div v-if="blocks">
-    <v-col :cols="12" class="pa-0">
+  <div>
+    <v-col v-if="blocks && blocks.length > 0" :cols="12" class="pa-0">
       <v-row no-gutters class="pb-2">
         <v-col :cols="4" class="pr-1">
           <v-card>
@@ -58,32 +58,72 @@
         </v-col>
       </v-row>
     </v-col>
-    <v-row no-gutters class="pb-2">
-      <v-col :cols="12">
-        <v-card class="bg-transparent" outlined>
-          <blocktime v-if="blocks" :data="chartBlocktime" title="Blocktime" />
-        </v-card>
-      </v-col>
-    </v-row>
-    <v-row no-gutters class="pb-2">
-      <v-col :cols="12">
-        <v-card class="bg-transparent" outlined>
-          <difficulty
-            v-if="blocks"
-            :data="chartDifficulty"
-            title="Difficulty"
+    <v-col v-else :cols="12" class="pa-0">
+      <v-row no-gutters class="pb-2">
+        <v-col :cols="4" class="pr-1">
+          <v-skeleton-loader
+            class="mx-auto"
+            type="image"
+            style="height:120px"
           />
-        </v-card>
-      </v-col>
-    </v-row>
-    <v-row no-gutters class="pb-2">
+        </v-col>
+        <v-col :cols="4" class="px-1">
+          <v-skeleton-loader
+            class="mx-auto"
+            type="image"
+            style="height:120px"
+          />
+        </v-col>
+        <v-col :cols="4" class="pl-1">
+          <v-skeleton-loader
+            class="mx-auto"
+            type="image"
+            style="height:120px"
+          />
+        </v-col>
+      </v-row>
+    </v-col>
+    <v-row v-if="blocks && blocks.length > 0" no-gutters class="pb-2">
       <v-col :cols="12">
         <v-card class="bg-transparent" outlined>
-          <usage v-if="blocks" :data="chartUsage" title="Activity" />
+          <blocktime :data="chartBlocktime" title="Blocktime" />
         </v-card>
       </v-col>
     </v-row>
-    <v-row v-if="pendingTxns" no-gutters class="pb-2">
+    <v-row v-else no-gutters class="pb-2">
+      <v-col :cols="12">
+        <v-skeleton-loader type="image" style="height:150px;" />
+      </v-col>
+    </v-row>
+    <v-row v-if="blocks && blocks.length > 0" no-gutters class="pb-2">
+      <v-col :cols="12">
+        <v-card class="bg-transparent" outlined>
+          <difficulty :data="chartDifficulty" title="Difficulty" />
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-row v-else no-gutters class="pb-2">
+      <v-col :cols="12">
+        <v-skeleton-loader type="image" style="height:150px;" />
+      </v-col>
+    </v-row>
+    <v-row v-if="blocks && blocks.length > 0" no-gutters class="pb-2">
+      <v-col :cols="12">
+        <v-card class="bg-transparent" outlined>
+          <usage :data="chartUsage" title="Activity" />
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-row v-else no-gutters class="pb-2">
+      <v-col :cols="12">
+        <v-skeleton-loader type="image" style="height:150px;" />
+      </v-col>
+    </v-row>
+    <v-row
+      v-if="pendingTxns && blocks && blocks.length > 0"
+      no-gutters
+      class="pb-2"
+    >
       <v-col :cols="12">
         <v-data-table
           :headers="headers"
@@ -106,6 +146,11 @@
             {{ fromWei(item.value) }}
           </template>
         </v-data-table>
+      </v-col>
+    </v-row>
+    <v-row v-else no-gutters class="pb-2">
+      <v-col :cols="12">
+        <v-skeleton-loader type="table-thead, table-tbody" />
       </v-col>
     </v-row>
   </div>
