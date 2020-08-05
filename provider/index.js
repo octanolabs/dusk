@@ -107,7 +107,11 @@ export default {
       return cb(null)
     }
   },
-  destroyProvider(id) {
-    providers[id] = null
+  destroyProvider(id, cb) {
+    if (providers[id].interval) {
+      providers[id].timer.clearInterval()
+    }
+    delete providers[id]
+    return cb(providers)
   }
 }

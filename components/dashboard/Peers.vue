@@ -1,20 +1,26 @@
 <template>
-  <div no-gutters>
+  <div v-if="peers" no-gutters>
     <v-col :cols="12" class="pa-0">
       <v-row no-gutters class="pb-2">
         <v-col :cols="6" class="pr-1">
-          <v-card>
+          <v-card v-if="network">
             <v-list-item three-line>
               <v-list-item-content>
                 <div class="overline mb-4">Network</div>
                 <v-list-item-title class="headline mb-1">
-                  Ubiq
+                  {{ network.name }}
                 </v-list-item-title>
                 <v-list-item-subtitle>
                   <v-avatar tile size="16">
-                    <img src="~/static/octano.svg" />
+                    <img
+                      :src="
+                        require('~/packages' +
+                          network.duskpkg.path +
+                          network.icon)
+                      "
+                    />
                   </v-avatar>
-                  mainnet
+                  {{ network.testnet ? 'testnet' : 'mainnet' }}
                 </v-list-item-subtitle>
               </v-list-item-content>
               <v-list-item-avatar tile size="80">
@@ -166,6 +172,12 @@ export default {
       default() {
         return null
       }
+    },
+    network: {
+      type: Object,
+      default() {
+        return null
+      }
     }
   },
   data() {
@@ -187,7 +199,7 @@ export default {
       return this.provider.peers
     },
     chartArch() {
-      return this.provider.peers.length > 0
+      return this.peers.length > 0
         ? this.toChartData(this.peers, 'arch', 0)
         : false
     },
@@ -195,27 +207,27 @@ export default {
       return this.chartCountry ? this.chartCountry.datasets[0].data.length : 0
     },
     chartCountry() {
-      return this.provider.peers.length > 0
+      return this.peers.length > 0
         ? this.toChartData(this.peers, 'countryCode', 1)
         : false
     },
     chartClient() {
-      return this.provider.peers.length > 0
+      return this.peers.length > 0
         ? this.toChartData(this.peers, 'client', 0)
         : false
     },
     chartOperatingSystem() {
-      return this.provider.peers.length > 0
+      return this.peers.length > 0
         ? this.toChartData(this.peers, 'os', 0)
         : false
     },
     chartVersion() {
-      return this.provider.peers.length > 0
+      return this.peers.length > 0
         ? this.toChartData(this.peers, 'version', 0)
         : false
     },
     map() {
-      return this.provider.peers.length > 0 ? this.toMapData(this.peers) : false
+      return this.peers.length > 0 ? this.toMapData(this.peers) : false
     }
   },
   methods: {

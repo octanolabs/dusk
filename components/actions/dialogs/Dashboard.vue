@@ -26,8 +26,8 @@
     </template>
     <v-card v-if="!!instance" style="background-color:#111">
       <v-toolbar flat>
-        <v-btn color="secondary" fab small class="mr-4" @click="show = false">
-          <v-icon>mdi-close</v-icon>
+        <v-btn color="secondary" fab x-small class="mr-4" @click="close()">
+          <v-icon>mdi-chevron-down</v-icon>
         </v-btn>
         <v-toolbar-title>{{ instance.name }}</v-toolbar-title>
         <v-spacer></v-spacer>
@@ -51,10 +51,14 @@
       <v-col :cols="12" class="pa-2">
         <v-row v-if="!!provider" no-gutters>
           <v-col :cols="6">
-            <dashboard-peers :provider="provider" />
+            <dashboard-peers
+              v-if="provider.peers && instance"
+              :provider="provider"
+              :network="network"
+            />
           </v-col>
           <v-col :cols="6" class="pl-2">
-            <dashboard-blocks :provider="provider" />
+            <dashboard-blocks v-if="provider.blocks" :provider="provider" />
           </v-col>
         </v-row>
       </v-col>
@@ -101,6 +105,13 @@ export default {
     },
     provider() {
       return this.$store.state.providers[this.instance.id] || null
+    },
+    network() {
+      return (
+        this.$store.state.packages.networks[this.instance.network.type][
+          this.instance.network.id
+        ] || null
+      )
     }
   },
   methods: {
@@ -118,11 +129,17 @@ export default {
           setTimeout(function() {
             if (self.show) {
               updateProvider()
+            } else {
+              self.close()
             }
           }, 2000)
         }
       }
       updateProvider()
+    },
+    close() {
+      this.$store.dispatch('stopProvider', self.instance)
+      this.show = false
     }
   }
 }

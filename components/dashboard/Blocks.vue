@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="blocks">
     <v-col :cols="12" class="pa-0">
       <v-row no-gutters class="pb-2">
         <v-col :cols="4" class="pr-1">

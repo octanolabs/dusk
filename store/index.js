@@ -45,6 +45,9 @@ export const mutations = {
   SET_PROVIDER(state, provider) {
     state.providers[provider.id] = provider.data
   },
+  DEL_PROVIDER(state, provider) {
+    delete state.providers[provider.id]
+  },
   SET_SYSTEMINFO(state, data) {
     state.system = data
   },
@@ -231,6 +234,20 @@ export const actions = {
           commit('SET_PROVIDER', { id: payload.id, data: data.provider })
         }
         // set provider
+      }
+    } catch (error) {
+      consola.error(new Error(error))
+    }
+  },
+  async stopProvider({ commit, state }, payload) {
+    try {
+      if (payload && state.providers[payload.id]) {
+        const { data } = await axios.post('/api/provider/stop', {
+          id: payload.id
+        })
+        if (data.success) {
+          commit('DEL_PROVIDER', { id: payload.id })
+        }
       }
     } catch (error) {
       consola.error(new Error(error))
