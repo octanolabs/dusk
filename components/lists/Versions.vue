@@ -53,7 +53,11 @@
             mdi-cloud-sync-outline
           </v-icon>
         </v-list-item-avatar>
-        <v-list-item-avatar v-else @click.stop="downloadRelease(item)">
+        <v-list-item-avatar
+          v-else
+          style="cursor: pointer"
+          @click.stop="downloadRelease(item)"
+        >
           <v-icon
             v-if="!item.status || (item.status === 0 && !isDownloading)"
             class="secondary"
