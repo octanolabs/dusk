@@ -92,7 +92,7 @@
     </v-row>
     <v-row v-else no-gutters class="pb-2">
       <v-col :cols="12">
-        <v-skeleton-loader type="image" style="height:150px;" />
+        <v-skeleton-loader type="image" style="height:151px;" />
       </v-col>
     </v-row>
     <v-row v-if="blocks && blocks.length > 0" no-gutters class="pb-2">
@@ -104,7 +104,7 @@
     </v-row>
     <v-row v-else no-gutters class="pb-2">
       <v-col :cols="12">
-        <v-skeleton-loader type="image" style="height:150px;" />
+        <v-skeleton-loader type="image" style="height:151px;" />
       </v-col>
     </v-row>
     <v-row v-if="blocks && blocks.length > 0" no-gutters class="pb-2">
@@ -150,7 +150,9 @@
     </v-row>
     <v-row v-else no-gutters class="pb-2">
       <v-col :cols="12">
-        <v-skeleton-loader type="table-thead, table-tbody" />
+        <v-skeleton-loader
+          type="table-thead, table-row-divider, table-row-divider, table-row-divider, table-tfoot"
+        />
       </v-col>
     </v-row>
   </div>
