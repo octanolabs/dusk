@@ -8,7 +8,7 @@ class PeerCache {
     this.cache = new LRU({ maxAge: maxage })
     this.geodata = new LRU({ maxAge: maxage })
     this.maxage = maxage
-    this._localhost = {}
+    this.localhost = {}
     this.getGeo = function(ip, cb) {
       const self = this
       if (!this.geodata.get(ip)) {
@@ -30,7 +30,7 @@ class PeerCache {
   clear() {
     this.cache.reset()
     this.geodata.reset()
-    this._localhost = {}
+    this.localhost = {}
   }
   getPeers() {
     return this.cache.values()
@@ -55,17 +55,17 @@ class PeerCache {
     })
   }
 
-  get localhost() {
-    return this._localhost
+  getLocalhost() {
+    return this.localhost
   }
-  set localhost(lo) {
+  setLocalhost(lo) {
     let parsed = parseNode(lo, 0)
     let self = this
     this.getGeo(lo.ip, function(geodata) {
       parsed.countryName = geodata.name
       parsed.countryCode = geodata.code
       self.cache.set(lo.ip, parsed)
-      self._localhost = parsed
+      self.localhost = parsed
     })
   }
 }

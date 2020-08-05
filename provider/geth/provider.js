@@ -36,7 +36,7 @@ class GethProvider extends Provider {
               consola.error(new Error(err))
             } else {
               self.peerCache.setPeers(peers, function() {
-                // self.peerCache.localhost.bind(self.peerCache) = localhost
+                self.peerCache.setLocalhost(localhost)
                 self.web3.eth.getBlock('pending', true, function(err, head) {
                   if (err || !head) {
                     consola.fatal(new Error(err))
@@ -81,7 +81,7 @@ class GethProvider extends Provider {
         blocks: this.blockCache.cache.values().reverse(),
         pending: this.blockCache.pending,
         peers: this.peerCache.cache.values(),
-        localhost: this.peerCache.localhost
+        localhost: this.peerCache.getLocalhost()
       }
     }
   }
