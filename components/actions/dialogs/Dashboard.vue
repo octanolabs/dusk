@@ -49,7 +49,7 @@
         <v-toolbar-items></v-toolbar-items>
       </v-toolbar>
       <v-col :cols="12" class="pa-2">
-        <v-row v-if="!!provider" no-gutters>
+        <v-row v-if="returned" no-gutters>
           <v-col :cols="6">
             <dashboard-peers
               v-if="provider.peers && instance"
@@ -60,6 +60,15 @@
           <v-col :cols="6" class="pl-2">
             <dashboard-blocks v-if="provider.blocks" :provider="provider" />
           </v-col>
+        </v-row>
+        <v-row
+          v-else
+          no-gutters
+          style="height:100%;padding-top:calc(100vh / 2 - 50px - 64px)"
+        >
+          <v-icon class="ma-auto" style="font-size:100px;" color="primary">
+            mdi-loading mdi-spin
+          </v-icon>
         </v-row>
       </v-col>
     </v-card>
@@ -119,7 +128,7 @@ export default {
       const self = this
       const updateProvider = function() {
         self.$store.dispatch('getProvider', self.instance)
-        if (self.provider) {
+        if (self.provider && !self.returned) {
           self.returned = true
         }
         if (
