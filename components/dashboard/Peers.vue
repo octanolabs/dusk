@@ -1,5 +1,5 @@
 <template>
-  <div v-if="peers" no-gutters>
+  <div>
     <v-col :cols="12" class="pa-0">
       <v-row no-gutters class="pb-2">
         <v-col :cols="6" class="pr-1">
@@ -29,7 +29,7 @@
             </v-list-item>
           </v-card>
         </v-col>
-        <v-col :cols="6" class="pl-1">
+        <v-col v-if="peers && peers.length > 0" :cols="6" class="pl-1">
           <v-card>
             <v-list-item three-line>
               <v-list-item-content>
@@ -47,9 +47,16 @@
             </v-list-item>
           </v-card>
         </v-col>
+        <v-col v-else :cols="6" class="pl-1">
+          <v-skeleton-loader type="image" style="height:120px" />
+        </v-col>
       </v-row>
     </v-col>
-    <v-card class="mb-2 bg-transparent" outlined>
+    <v-card
+      v-if="peers && peers.length > 0"
+      class="mb-2 bg-transparent"
+      outlined
+    >
       <v-row no-gutters>
         <v-col :cols="6" class="pa-3">
           <v-card class="bg-transparent" flat style="height:280px;">
@@ -70,7 +77,19 @@
         </v-col>
       </v-row>
     </v-card>
-    <v-card class="mb-2 bg-transparent" outlined>
+    <v-row v-else no-gutters class="mb-2">
+      <v-col :cols="6" class="pa-0 pr-1">
+        <v-skeleton-loader type="image, image" style="height:310px;" />
+      </v-col>
+      <v-col :cols="6" class="pa-0 pl-1">
+        <v-skeleton-loader type="image, image" style="height:310px;" />
+      </v-col>
+    </v-row>
+    <v-card
+      v-if="peers && peers.length > 0"
+      class="mb-2 bg-transparent"
+      outlined
+    >
       <v-row no-gutters style="height:150px;">
         <v-col :cols="3">
           <doughnut
@@ -104,7 +123,12 @@
         </v-col>
       </v-row>
     </v-card>
-    <v-card flat>
+    <v-row v-else no-gutters class="pb-2">
+      <v-col :cols="12">
+        <v-skeleton-loader type="image" style="height:150px;" />
+      </v-col>
+    </v-row>
+    <v-card v-if="peers && peers.length > 0" flat>
       <v-row no-gutters>
         <v-col :cols="12">
           <v-data-table
@@ -151,6 +175,13 @@
         </v-col>
       </v-row>
     </v-card>
+    <v-row v-else no-gutters class="pb-2">
+      <v-col :cols="12">
+        <v-skeleton-loader
+          type="table-thead, table-row-divider, table-row-divider, table-row-divider, table-tfoot"
+        />
+      </v-col>
+    </v-row>
   </div>
 </template>
 
