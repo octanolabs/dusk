@@ -36,7 +36,6 @@ class PeerCache {
     return this.cache.values()
   }
   setPeers(peers, cb) {
-    this.cache.reset()
     const newCache = new LRU({ maxAge: this.maxage })
     const self = this
     Loop.sync(peers.length, function(loop) {
