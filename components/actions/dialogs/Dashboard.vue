@@ -17,7 +17,13 @@
       </v-btn>
     </template>
     <template v-else v-slot:activator="{ on, attrs }">
-      <v-list-item link :disabled="state !== 20" v-bind="attrs" v-on="on">
+      <v-list-item
+        link
+        :disabled="state !== 20"
+        v-bind="attrs"
+        v-on="on"
+        @click="fetch()"
+      >
         <v-list-item-title>
           <v-icon>mdi-desktop-mac-dashboard</v-icon>
           Dashboard
@@ -48,7 +54,11 @@
         </v-list>
         <v-toolbar-items></v-toolbar-items>
       </v-toolbar>
-      <v-col :cols="12" class="pa-2">
+      <v-col
+        :cols="12"
+        class="pa-2"
+        style="height: calc(100vh - 64px);overflow-x:auto;"
+      >
         <v-row v-if="returned" no-gutters>
           <v-col :cols="6">
             <dashboard-peers
