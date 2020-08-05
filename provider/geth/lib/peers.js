@@ -37,6 +37,7 @@ class PeerCache {
   }
   setPeers(peers, cb) {
     this.cache.reset()
+    const newCache = new LRU({ maxAge: this.maxage })
     const self = this
     Loop.sync(peers.length, function(loop) {
       const i = loop.iteration()
@@ -46,10 +47,11 @@ class PeerCache {
       self.getGeo(ip, function(geodata) {
         parsed.countryName = geodata.name
         parsed.countryCode = geodata.code
-        self.cache.set(ip, parsed)
+        newCache.set(ip, parsed)
         loop.next()
       })
     }, function() {
+      self.cache = newCache
       return cb()
     })
   }
