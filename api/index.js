@@ -125,8 +125,6 @@ router.post('/provider/create', (req, res) => {
   if (!req.body.id) {
     return res.status(401).json({ message: 'Bad params' })
   } else {
-    consola.log('/provider/create')
-    consola.log(req.body.ipc)
     provider.createProvider(req.body.type, req.body.id, req.body.ipc, function(_providers) {
       if (_providers) {
         providers = _providers
@@ -145,6 +143,21 @@ router.post('/provider/get', (req, res) => {
   } else {
     const provider = providers[req.body.id].get()
     return res.json({ success: true, provider })
+  }
+})
+
+router.post('/provider/stop', (req, res) => {
+  if (!req.body.id) {
+    return res.status(401).json({ message: 'Bad params' })
+  } else {
+    provider.destroyProvider(req.body.id, function(_providers) {
+      if (_providers) {
+        providers = _providers
+        return res.json({ success: true })
+      } else {
+        return res.json({ success: false })
+      }
+    })
   }
 })
 

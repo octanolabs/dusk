@@ -170,5 +170,10 @@ module.exports = {
     extend(config, ctx) {}
   },
   // disable telemetry
-  telemetry: false
+  telemetry: false,
+
+  pageTransition: {
+    name: 'page',
+    mode: 'out-in'
+  }
 }
