@@ -34,6 +34,7 @@
         </template>
         <span>{{ $t('menu.networks') }}</span>
       </v-tooltip>
+      <!--
       <v-tooltip right>
         <template v-slot:activator="{ on }">
           <v-list-item to="/packages" link v-on="on">
@@ -45,6 +46,7 @@
         </template>
         <span>{{ $t('menu.packages') }}</span>
       </v-tooltip>
+      -->
     </v-list>
     <template v-slot:append>
       <v-list nav dense>
