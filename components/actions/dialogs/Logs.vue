@@ -25,8 +25,8 @@
     </template>
     <v-card v-if="instance">
       <v-toolbar flat>
-        <v-btn color="secondary" fab small class="mr-4" @click="closeLogs()">
-          <v-icon>mdi-close</v-icon>
+        <v-btn color="secondary" fab x-small class="mr-4" @click="closeLogs()">
+          <v-icon>mdi-chevron-down</v-icon>
         </v-btn>
         <v-toolbar-title>{{ instance.name }}</v-toolbar-title>
         <v-spacer></v-spacer>
