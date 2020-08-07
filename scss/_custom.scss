@@ -39,6 +39,10 @@ pre {
   width: 100% !important;
 }
 
+.h-100 {
+  height: calc(100vh - 80px)
+}
+
 .v-main__wrap {
   overflow:auto;
   max-height: calc(100vh);

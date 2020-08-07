@@ -56,7 +56,7 @@
       </v-toolbar>
       <v-col
         :cols="12"
-        class="pa-2"
+        class="pa-2 h-100"
         style="height: calc(100vh - 64px);overflow-x:auto;"
       >
         <v-row v-if="returned" no-gutters>
@@ -67,7 +67,10 @@
               :network="network"
             />
           </v-col>
-          <v-col :cols="6" class="pl-2">
+          <v-col v-if="showSyncing" :cols="6" class="pl-2">
+            <dashboard-syncing :provider="provider" />
+          </v-col>
+          <v-col v-else :cols="6" class="pl-2">
             <dashboard-blocks v-if="provider.blocks" :provider="provider" />
           </v-col>
         </v-row>
@@ -88,12 +91,14 @@
 <script>
 import DashboardBlocks from '~/components/dashboard/Blocks.vue'
 import DashboardPeers from '~/components/dashboard/Peers.vue'
+import DashboardSyncing from '~/components/dashboard/Syncing.vue'
 
 export default {
   middleware: 'auth',
   components: {
     DashboardBlocks,
-    DashboardPeers
+    DashboardPeers,
+    DashboardSyncing
   },
   props: {
     instance: {
@@ -127,6 +132,18 @@ export default {
     },
     network() {
       return this.instance.network
+    },
+    showSyncing() {
+      if (this.provider.syncing) {
+        if (
+          this.provider.syncing.highestBlock -
+            this.provider.syncing.currentBlock >
+          100
+        ) {
+          return true
+        }
+      }
+      return false
     }
   },
   methods: {

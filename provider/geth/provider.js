@@ -25,6 +25,7 @@ class GethProvider extends Provider {
     this.web3Admin = new Admin(ipcPath, net)
     this.blockCache = BlockCache.new(100) // 100 blocks
     this.peerCache = PeerCache.new(86400) // 1day
+    this.syncing = false
     this.set = function() {
       const self = this
       this.web3Admin.getPeers(function(err, peers) {
@@ -37,38 +38,41 @@ class GethProvider extends Provider {
             } else {
               self.peerCache.setPeers(peers, function() {
                 self.peerCache.setLocalhost(localhost)
-                self.web3.eth.getBlock('pending', true, function(err, head) {
-                  if (err || !head) {
-                    consola.fatal(new Error(err))
-                    return
-                  } else {
-                    const cache = []
-                    self.blockCache.pending = head
-                    const blockNumber = head.number - self.blockCache.maxlen * 2
-                    Loop.sync(
-                      self.blockCache.maxlen * 2 + 1,
-                      function(loop) {
-                        const i = loop.iteration()
-                        self.web3.eth.getBlock(blockNumber + i, false, function(
-                          err,
-                          block
-                        ) {
-                          if (!err && block) {
-                            cache.push(block)
-                            loop.next()
-                          } else {
-                            loop.break(true)
-                            loop.next()
-                          }
-                        })
-                      },
-                      function() {
-                        self.blockCache.setBlocks(cache, function() {
-                          return
-                        })
-                      }
-                    )
-                  }
+                self.web3.eth.isSyncing(function(err, isSyncing) {
+                  self.syncing = isSyncing
+                  self.web3.eth.getBlock('pending', true, function(err, head) {
+                    if (err || !head) {
+                      consola.fatal(new Error(err))
+                      return
+                    } else {
+                      const cache = []
+                      self.blockCache.pending = head
+                      const blockNumber = head.number - self.blockCache.maxlen * 2
+                      Loop.sync(
+                        self.blockCache.maxlen * 2 + 1,
+                        function(loop) {
+                          const i = loop.iteration()
+                          self.web3.eth.getBlock(blockNumber + i, false, function(
+                            err,
+                            block
+                          ) {
+                            if (!err && block) {
+                              cache.push(block)
+                              loop.next()
+                            } else {
+                              loop.break(false)
+                              loop.next()
+                            }
+                          })
+                        },
+                        function() {
+                          self.blockCache.setBlocks(cache, function() {
+                            return
+                          })
+                        }
+                      )
+                    }
+                  })
                 })
               })
             }
@@ -81,7 +85,8 @@ class GethProvider extends Provider {
         blocks: this.blockCache.cache.values().reverse(),
         pending: this.blockCache.pending,
         peers: this.peerCache.cache.values(),
-        localhost: this.peerCache.getLocalhost()
+        localhost: this.peerCache.getLocalhost(),
+        syncing: this.syncing
       }
     }
   }
