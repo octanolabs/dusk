@@ -18,7 +18,6 @@ class Provider {
 
 class GethProvider extends Provider {
   constructor(ipcPath, id, interval) {
-    consola.log(ipcPath)
     super(id, interval)
     this.ipcPath = ipcPath
     this.web3 = new Web3(ipcPath, net)
@@ -60,7 +59,7 @@ class GethProvider extends Provider {
                               cache.push(block)
                               loop.next()
                             } else {
-                              loop.break(false)
+                              loop.break(true)
                               loop.next()
                             }
                           })

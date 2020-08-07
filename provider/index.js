@@ -99,8 +99,6 @@ export default {
   },
   createProvider(type, id, ipcPath, cb) {
     if (type === 'geth') {
-      consola.log('createProvider')
-      consola.log(ipcPath)
       providers[id] = Geth.new(ipcPath, id, '5s')
       return cb(providers)
     } else {
