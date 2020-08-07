@@ -517,15 +517,9 @@ export default {
       }
     },
     network: {
-      type: String,
+      type: Object,
       default() {
-        return 'ubq'
-      }
-    },
-    networkType: {
-      type: String,
-      default() {
-        return 'mainnet'
+        return null
       }
     },
     engine: {
@@ -610,20 +604,25 @@ export default {
       } else {
         this.instance = {
           name:
-            this.network + '_' + this.client.name + '_' + this.release.version,
+            this.network.id +
+            '_' +
+            this.client.name +
+            '_' +
+            this.release.version,
           client: this.client,
           version: this.release.version,
           binpath: this.release.binpath,
-          network: {
-            id: this.network,
-            type: this.networkType
-          }
+          network: this.network
         }
       }
       this.config = {
         datadir:
           opts?.datadir ||
-          this.homedir + '/.dusk/data/' + this.client.name + '/' + this.network, // TODO - OSX
+          this.homedir +
+            '/.dusk/data/' +
+            this.client.name +
+            '/' +
+            this.network.id, // TODO - OSX
         fullsync: opts?.fullsync || false,
         archive: opts?.archive || false,
         port: opts?.port || 30388,
@@ -677,6 +676,12 @@ export default {
           ' --nat="' +
           config.nat +
           '"'
+
+        // add network flag
+        if (this.network.flag) {
+          flags = this.network.flag + ' ' + flags // prefix with network flag
+        }
+
         // check optional args
         if (config.nodiscover) {
           flags = flags + ' --nodiscover'

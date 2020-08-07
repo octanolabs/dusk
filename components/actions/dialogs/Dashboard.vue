@@ -126,11 +126,7 @@ export default {
       return this.$store.state.providers[this.instance.id] || null
     },
     network() {
-      return (
-        this.$store.state.packages.networks[this.instance.network.type][
-          this.instance.network.id
-        ] || null
-      )
+      return this.instance.network
     }
   },
   methods: {

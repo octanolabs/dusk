@@ -17,18 +17,15 @@
               <template v-slot:item.network="{ item }">
                 <v-avatar size="28px">
                   <img
-                    v-if="getNetworkIcon(item.network.id, item.network.type)"
+                    v-if="item.network.icon"
                     :src="
                       require('~/packages' +
-                        getNetworkPackagePath(
-                          item.network.id,
-                          item.network.type
-                        ) +
-                        getNetworkIcon(item.network.id, item.network.type))
+                        item.network.duskpkg.path +
+                        item.network.icon)
                     "
                   />
                 </v-avatar>
-                {{ getNetworkName(item.network.id, item.network.type) }}
+                {{ item.network.name }}
               </template>
               <template v-slot:item.uptime="{ item }">
                 {{
@@ -154,15 +151,6 @@ export default {
     }
   },
   methods: {
-    getNetworkPackagePath(id, type) {
-      return this.$store.state.packages.networks[type][id].duskpkg.path || ''
-    },
-    getNetworkIcon(id, type) {
-      return this.$store.state.packages.networks[type][id].icon || ''
-    },
-    getNetworkName(id, type) {
-      return this.$store.state.packages.networks[type][id].name || ''
-    },
     formatUptime(str) {
       const split = str.split(' ')
       if (split.length > 4) {

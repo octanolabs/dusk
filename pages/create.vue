@@ -33,10 +33,10 @@
             style="display:inline-block;"
             hover
             ripple
-            :raised="selectedNetwork === network.id"
+            :raised="selectedNetwork.id === network.id"
             class="ma-1"
             @click.stop="
-              selectedNetwork = network.id
+              selectedNetwork = network
               selectedNetworkType = 'mainnet'
               selectedClient = null
               selectedRelease = null
@@ -53,7 +53,8 @@
                 height="140"
                 style="max-height:140px;max-width:140px;"
                 :class="{
-                  grayscale: selectedNetwork && selectedNetwork !== network.id
+                  grayscale:
+                    selectedNetwork && selectedNetwork.id !== network.id
                 }"
               />
             </v-avatar>
@@ -89,10 +90,10 @@
                   style="min-width:182px;display:inline-block;"
                   hover
                   ripple
-                  :raised="selectedNetwork === network.id"
+                  :raised="selectedNetwork.id === network.id"
                   class="ma-1"
                   @click.stop="
-                    selectedNetwork = network.id
+                    selectedNetwork = network
                     selectedNetworkType = 'testnet'
                     selectedClient = null
                     selectedRelease = null
@@ -112,7 +113,7 @@
                       style="max-height:140px;max-width:140px;"
                       :class="{
                         grayscale:
-                          selectedNetwork && selectedNetwork !== network.id
+                          selectedNetwork && selectedNetwork.id !== network.id
                       }"
                     />
                   </v-avatar>
@@ -258,7 +259,6 @@
             :engine="selectedEngine"
             :release="selectedRelease"
             :network="selectedNetwork"
-            :network-type="selectedNetworkType"
             :show-advanced="showAdvanced"
             :default-options="defaultOptions"
           />
@@ -283,7 +283,9 @@ export default {
       showTestnetsDisabled: false,
       showAdvanced: false,
       showAdvancedDisabled: false,
-      selectedNetwork: null,
+      selectedNetwork: {
+        id: -1
+      },
       selectedNetworkType: 'mainnet',
       selectedClient: {
         name: ''
@@ -322,7 +324,7 @@ export default {
     filterClientsByNetwork() {
       const network = this.$store.state.packages.networks[
         this.selectedNetworkType
-      ][this.selectedNetwork]
+      ][this.selectedNetwork.id]
       const supportedClients = network.clients
       this.availableClients = []
       for (const n in supportedClients) {

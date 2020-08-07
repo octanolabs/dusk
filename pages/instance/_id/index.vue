@@ -261,8 +261,7 @@
           :client="client"
           :engine="network.engine"
           :release="release"
-          :network="network.id"
-          :network-type="instance.network.type"
+          :network="network"
           :show-advanced="showAdvanced"
           :default-options="instance.config"
           :value="instance"
@@ -353,9 +352,12 @@ export default {
             return value.version === version
           })
         }
-        this.network = this.$store.state.packages.networks[
-          this.instance.network.type
-        ][this.instance.network.id]
+        const networkType = this.instance.network.testnet
+          ? 'testnet'
+          : 'mainnet'
+        this.network = this.$store.state.packages.networks[networkType][
+          this.instance.network.id
+        ]
       }
     },
     formatUptime(str) {
