@@ -6,6 +6,60 @@
   "ipc": "geth.ipc",
   "releases": [
     {
+      "version": "1.9.18",
+      "tag": "Illium Elite",
+      "note": "Geth v1.9.18 is a bugfix release, fixing an occasional fast sync hang in the throttling mechanism (among other improvements).",
+      "info": "https://github.com/ethereum/go-ethereum/releases/tag/v1.9.18",
+      "darwin-amd64": {
+        "url": "https://gethstore.blob.core.windows.net/builds/geth-darwin-amd64-1.9.18-f5382591.tar.gz",
+        "sha256": "feb8d55de4c16b7fd494cb0ab58159ff62240c476a7945ce2d7ae49f720ef561",
+        "size": 12405926,
+        "extract": true,
+        "bin": "geth-darwin-amd64-1.9.18-f5382591/geth"
+      },
+      "linux-amd64": {
+        "url": "https://gethstore.blob.core.windows.net/builds/geth-linux-amd64-1.9.18-f5382591.tar.gz",
+        "sha256": "62bb6d821fefa4c62abf08a7269e8c4711fab004f8b61e4d71bf7ab9cff97adf",
+        "size": 18694632,
+        "extract": true,
+        "bin": "geth-linux-amd64-1.9.18-f5382591/geth"
+      },
+      "linux-arm64": {
+        "url": "https://gethstore.blob.core.windows.net/builds/geth-linux-arm64-1.9.18-f5382591.tar.gz",
+        "sha256": "34972004b7b0f0a8a313b14024d7f390f4318ecab043e06717fc0be986bd756f",
+        "size": 17516789,
+        "extract": true,
+        "bin": "geth-linux-arm64-1.9.18-f5382591/geth"
+      }
+    },
+    {
+      "version": "1.9.17",
+      "tag": "Mount Milgrom",
+      "note": "Geth v1.9.17 is a small maintenance release (trying to get back onto the biweekly schedule), though it does pack a few punches as well!",
+      "info": "https://github.com/ethereum/go-ethereum/releases/tag/v1.9.17",
+      "darwin-amd64": {
+        "url": "https://gethstore.blob.core.windows.net/builds/geth-darwin-amd64-1.9.17-748f22c1.tar.gz",
+        "sha256": "f37fef121868526a3e3db8a91230bd688d7af34b6171f234fd66d6bc5b1ecdc3",
+        "size": 12401361,
+        "extract": true,
+        "bin": "geth-darwin-amd64-1.9.17-748f22c1/geth"
+      },
+      "linux-amd64": {
+        "url": "https://gethstore.blob.core.windows.net/builds/geth-linux-amd64-1.9.17-748f22c1.tar.gz",
+        "sha256": "8944148020717b960992f0f7fce682d56e74e27a4319f3c1407c61bfba8e4b97",
+        "size": 18682414,
+        "extract": true,
+        "bin": "geth-linux-amd64-1.9.17-748f22c1/geth"
+      },
+      "linux-arm64": {
+        "url": "https://gethstore.blob.core.windows.net/builds/geth-linux-arm64-1.9.17-748f22c1.tar.gz",
+        "sha256": "45c1cff23cdf87f4b765dc894120ac18a5514875efb9aeb794939b5db225831c",
+        "size": 17512012,
+        "extract": true,
+        "bin": "geth-linux-arm64-1.9.17-748f22c1/geth"
+      }
+    },
+    {
       "version": "1.9.16",
       "tag": "Ryncol",
       "note": "Geth v1.9.16 is a maintenance release containing a couple minor new features, bug fixes, and block processing optimizations.",
@@ -23,13 +77,6 @@
         "size": 18662424,
         "extract": true,
         "bin": "geth-linux-amd64-1.9.16-ea3b00ad/geth"
-      },
-      "linux-arm-7": {
-        "url": "https://gethstore.blob.core.windows.net/builds/geth-linux-arm7-1.9.16-ea3b00ad.tar.gz",
-        "sha256": "39845a5f1b2748357d851d1f5f1c5f96644d9e376572286ee7f4a01eb38ffc11",
-        "size": 17707673,
-        "extract": true,
-        "bin": "geth-linux-arm7-1.9.16-ea3b00ad/geth"
       },
       "linux-arm64": {
         "url": "https://gethstore.blob.core.windows.net/builds/geth-linux-arm64-1.9.16-ea3b00ad.tar.gz",
