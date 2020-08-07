@@ -44,8 +44,8 @@
       "name": "Ethereum Classic",
       "icon": "static/networks/etc.svg",
       "engine": "ethash",
-      "explorer": "",
-      "ethstats": ""
+      "explorer": "https://blockscout.com/etc/mainnet",
+      "ethstats": "https://2miners.com/etc-stats"
     },
     {
       "id": "kotti",
@@ -56,7 +56,7 @@
       "name": "Kotti",
       "icon": "static/networks/etc.svg",
       "engine": "clique",
-      "explorer": "",
+      "explorer": "https://blockscout.com/etc/kotti",
       "ethstats": ""
     },
     {
@@ -68,7 +68,7 @@
       "name": "Mordor",
       "icon": "static/networks/etc.svg",
       "engine": "ethash",
-      "explorer": "",
+      "explorer": "https://blockscout.com/etc/mordor",
       "ethstats": ""
     }
   ],
