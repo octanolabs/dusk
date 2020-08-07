@@ -229,13 +229,16 @@ export default {
     blockNumber() {
       return this.latestBlock.number || 0
     },
+    syncing() {
+      return this.provider.syncing
+    },
     chartData() {
       const data = {
         labels: [],
         blocktime: [],
         avgblocktime10: [],
         avgblocktime25: [],
-        avgblocktime88: [],
+        avgblocktime50: [],
         hashrate: [],
         difficulty: [],
         limit: [],
@@ -250,7 +253,7 @@ export default {
           data.blocktime.push(this.blocks[i].blocktime)
           data.avgblocktime10.push(this.blocks[i].avgblocktime10)
           data.avgblocktime25.push(this.blocks[i].avgblocktime25)
-          data.avgblocktime88.push(this.blocks[i].avgblocktime88)
+          data.avgblocktime50.push(this.blocks[i].avgblocktime50)
           data.hashrate.push(this.blocks[i].hashrate)
           data.difficulty.push(this.blocks[i].difficulty)
           data.limit.push(this.blocks[i].gasLimit)
@@ -299,7 +302,7 @@ export default {
                 backgroundColor: '#6fceb7',
                 borderColor: '#6fceb7',
                 pointRadius: 0,
-                data: this.chartData.avgblocktime88,
+                data: this.chartData.avgblocktime50,
                 borderWidth: 2,
                 type: 'line',
                 fill: false,

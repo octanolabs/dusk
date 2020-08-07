@@ -1,7 +1,7 @@
 export default {
   async parse(arch, platform) {
     try {
-      if (arch === 'x64' || 'x86_64') {
+      if (arch === 'x64' || arch === 'x86_64') {
         arch = 'amd64'
       }
       return platform + '-' + arch

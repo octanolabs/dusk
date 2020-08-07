@@ -34,7 +34,7 @@ class BlockCache {
               blocktime: calc.blocktime,
               avgblocktime10: calc.avgblocktime10,
               avgblocktime25: calc.avgblocktime25,
-              avgblocktime8ca8: calc.avgblocktime88,
+              avgblocktime50: calc.avgblocktime50,
               hashrate: calc.hashrate,
               timestamp: block.timestamp,
               txns: block.transactions.length,
@@ -65,7 +65,7 @@ class BlockCache {
         blocktime: calc.blocktime,
         avgblocktime10: calc.avgblocktime10,
         avgblocktime25: calc.avgblocktime25,
-        avgblocktime88: calc.avgblocktime88,
+        avgblocktime50: calc.avgblocktime50,
         hashrate: calc.hashrate,
         timestamp: block.timestamp,
         txns: block.transactions.length,
@@ -98,16 +98,16 @@ const calcBlockValues = function(cache, block, next, cb) {
     len >= 25
       ? (next.timestamp - cache.peek(block.number - 25).timestamp) / 25
       : 0
-  const avgblocktime88 =
-    len >= 88
-      ? (next.timestamp - cache.peek(block.number - 88).timestamp) / 88
+  const avgblocktime50 =
+    len >= 50
+      ? (next.timestamp - cache.peek(block.number - 50).timestamp) / 50
       : 0
   const hashrate = block.difficulty / avgblocktime10
   return cb({
     blocktime,
     avgblocktime10,
     avgblocktime25,
-    avgblocktime88,
+    avgblocktime50,
     hashrate
   })
 }
