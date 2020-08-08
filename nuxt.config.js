@@ -136,7 +136,7 @@ module.exports = {
       }
     ],
     defaultLocale: 'en',
-    strategy: 'prefix_except_default',
+    strategy: 'no_prefix',
     vueI18n: {
       fallbackLocale: 'en',
       messages: {
