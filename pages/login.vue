@@ -42,7 +42,9 @@
     </v-flex>
     <v-snackbar v-model="snackbar" top right color="secondary">
       {{ formError }}
-      <v-btn dark text @click="snackbar = false">Close</v-btn>
+      <v-btn dark text @click="snackbar = false">
+        {{ $t('common.close') }}
+      </v-btn>
     </v-snackbar>
   </v-layout>
 </template>
@@ -63,7 +65,7 @@ export default {
       snackbar: false,
       spin: false,
       rules: {
-        required: (value) => !!value || this.$t('login.required')
+        required: (value) => !!value || this.$t('common.required')
       }
     }
   },

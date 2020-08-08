@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-tabs v-model="tab" grow>
+    <v-tabs v-model="tab" vertical>
       <v-tab v-for="client in clients" :key="client.tag">
         {{ client.name }}
       </v-tab>

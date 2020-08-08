@@ -1,17 +1,19 @@
 <template>
   <v-container>
     <v-tabs>
-      <v-tab :key="0">Instances</v-tab>
+      <v-tab :key="0">{{ $t('server.instances') }}</v-tab>
       <v-tab-item :key="0">
         <v-btn absolute dark fab top right color="primary" to="/create">
           <v-icon>mdi-plus</v-icon>
         </v-btn>
         <v-card>
-          <v-card-text>
+          <v-card-text class="pa-0">
             <v-data-table
               :headers="headers"
               :items="instances"
-              :items-per-page="20"
+              :items-per-page="-1"
+              :no-results-text="$t('server.noResults')"
+              hide-default-footer
               flat
             >
               <template v-slot:item.network="{ item }">
@@ -44,39 +46,39 @@
               <template v-slot:item.supervisor="{ item }">
                 <v-flex v-if="item.supervisor.state === 0" color="primary">
                   <v-icon color="secondary">mdi-rocket</v-icon>
-                  stopped
+                  {{ $t('server.stopped') }}
                 </v-flex>
                 <v-flex
                   v-else-if="item.supervisor.state === 10"
                   color="primary"
                 >
                   <v-icon color="primary">mdi-cog mdi-spin</v-icon>
-                  starting
+                  {{ $t('server.starting') }}
                 </v-flex>
                 <v-flex
                   v-else-if="item.supervisor.state === 20"
                   color="primary"
                 >
                   <v-icon color="primary">mdi-rocket-launch</v-icon>
-                  running
+                  {{ $t('server.running') }}
                 </v-flex>
                 <v-flex
                   v-else-if="item.supervisor.state === 40"
                   color="secondary"
                 >
                   <v-icon color="secondary">mdi-cog mdi-spin</v-icon>
-                  stopping
+                  {{ $t('server.stopping') }}
                 </v-flex>
                 <v-flex
                   v-else-if="item.supervisor.state === 9000"
                   color="primary"
                 >
                   <v-icon color="primary">mdi-atom-variant mdi-spin</v-icon>
-                  creating
+                  {{ $t('server.creating') }}
                 </v-flex>
                 <v-flex v-else color="secondary">
                   <v-icon color="secondary">mdi-fire</v-icon>
-                  error
+                  {{ $t('server.error') }}
                 </v-flex>
               </template>
               <template v-slot:item.menu="{ item }">
@@ -92,7 +94,7 @@
                     <v-list-item :to="'/instance/' + item.id" link>
                       <v-list-item-title>
                         <v-icon>mdi-information-outline</v-icon>
-                        Details
+                        {{ $t('server.details') }}
                       </v-list-item-title>
                     </v-list-item>
                     <v-divider />
@@ -134,13 +136,13 @@ export default {
   data() {
     return {
       headers: [
-        { text: 'name', value: 'name' },
-        { text: 'network', value: 'network' },
-        { text: 'client', value: 'client.name' },
-        { text: 'version', value: 'version' },
-        { text: 'status', value: 'supervisor' },
-        { text: 'uptime', value: 'uptime' },
-        { text: 'stopped at', value: 'stopped' },
+        { text: this.$t('server.name'), value: 'name' },
+        { text: this.$t('server.network'), value: 'network' },
+        { text: this.$t('server.client'), value: 'client.name' },
+        { text: this.$t('server.version'), value: 'version' },
+        { text: this.$t('server.status'), value: 'supervisor' },
+        { text: this.$t('server.uptime'), value: 'uptime' },
+        { text: this.$t('server.stoppedAt'), value: 'stopped' },
         { text: '', align: 'end', value: 'menu' }
       ]
     }
@@ -155,11 +157,7 @@ export default {
       const split = str.split(' ')
       if (split.length > 4) {
         const slice = split.slice(-3)
-        if (slice[0] > 1) {
-          slice[1] = 'days'
-        } else {
-          slice[1] = 'day'
-        }
+        slice[1] = this.$tc('server.day', slice[0])
         return slice[0] + ' ' + slice[1] + ' - ' + slice[2]
       } else {
         return split[3]
