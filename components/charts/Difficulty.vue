@@ -42,6 +42,7 @@ export default {
   },
   computed: {
     options() {
+      const self = this
       return {
         responsive: true,
         maintainAspectRatio: false,
@@ -95,9 +96,9 @@ export default {
 
               let label = (hashes / 1000 ** i).toFixed(2) + unit
               if (tooltipItem.datasetIndex === 1) {
-                label = 'Hashrate: ' + label + '/s'
+                label = self.$tc('geth.dashboard.hashrate', label)
               } else {
-                label = 'Difficulty: ' + label
+                label = self.$t('get.dashboard.difficulty') + ': ' + label
               }
               return label
             }
