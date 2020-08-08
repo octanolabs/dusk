@@ -42,6 +42,7 @@ export default {
   },
   computed: {
     options() {
+      const self = this
       return {
         responsive: true,
         maintainAspectRatio: false,
@@ -78,19 +79,29 @@ export default {
               let label = tooltipItem.value || 0
               if (label) {
                 if (tooltipItem.datasetIndex === 0) {
-                  label = 'Blocktime: ' + parseFloat(label).toFixed(2) + 's'
+                  label =
+                    self.$t('geth.dashboard.blocktime') +
+                    ': ' +
+                    parseFloat(label).toFixed(2) +
+                    's'
                 }
                 if (tooltipItem.datasetIndex === 1) {
                   label =
-                    'Average (10blocks): ' + parseFloat(label).toFixed(2) + 's'
+                    self.$tc('geth.dashboard.averageBlocks', 10) +
+                    parseFloat(label).toFixed(2) +
+                    's'
                 }
                 if (tooltipItem.datasetIndex === 2) {
                   label =
-                    'Average (25blocks): ' + parseFloat(label).toFixed(2) + 's'
+                    self.$tc('geth.dashboard.averageBlocks', 25) +
+                    parseFloat(label).toFixed(2) +
+                    's'
                 }
                 if (tooltipItem.datasetIndex === 3) {
                   label =
-                    'Average (88blocks): ' + parseFloat(label).toFixed(2) + 's'
+                    self.$tc('geth.dashboard.averageBlocks', 50) +
+                    parseFloat(label).toFixed(2) +
+                    's'
                 }
               }
               return label
