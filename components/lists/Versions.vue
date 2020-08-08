@@ -35,7 +35,8 @@
             outlined
             :color="releases.length > 0 ? 'primary' : 'secondary'"
           >
-            {{ releases.length }} release(s) available
+            {{ releases.length }}
+            {{ $tc('clients.available', releases.length) }}
           </v-chip>
         </v-card-actions>
       </div>

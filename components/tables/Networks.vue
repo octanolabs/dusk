@@ -1,5 +1,11 @@
 <template>
-  <v-data-table :headers="headers" :items="networks" :items-per-page="5" flat>
+  <v-data-table
+    :headers="headers"
+    :items="networks"
+    :items-per-page="-1"
+    hide-default-footer
+    flat
+  >
     <template v-slot:item.name="{ item }">
       <v-avatar size="28px">
         <img
