@@ -6,7 +6,9 @@
           <v-card v-if="network">
             <v-list-item three-line>
               <v-list-item-content>
-                <div class="overline mb-4">Network</div>
+                <div class="overline mb-4">
+                  {{ $t('geth.dashboard.network') }}
+                </div>
                 <v-list-item-title class="headline mb-1">
                   {{ network.name }}
                 </v-list-item-title>
@@ -20,7 +22,11 @@
                       "
                     />
                   </v-avatar>
-                  {{ network.testnet ? 'testnet' : 'mainnet' }}
+                  {{
+                    network.testnet
+                      ? $t('geth.dashboard.testnet')
+                      : $t('geth.dashboard.mainnet')
+                  }}
                 </v-list-item-subtitle>
               </v-list-item-content>
               <v-list-item-avatar tile size="80">
@@ -35,10 +41,10 @@
               <v-list-item-content>
                 <div class="overline mb-4">Connections</div>
                 <v-list-item-title class="headline mb-1">
-                  {{ peers.length - 1 }} peers
+                  {{ $tc('geth.dashboard.peers', peers.length - 1) }}
                 </v-list-item-title>
                 <v-list-item-subtitle>
-                  in {{ countryCount }} countries
+                  {{ $tc('geth.dashboard.countries', countryCount) }}
                 </v-list-item-subtitle>
               </v-list-item-content>
               <v-list-item-avatar tile size="80">
@@ -95,7 +101,6 @@
           <doughnut
             v-if="chartOperatingSystem"
             :data="chartOperatingSystem"
-            title="OS"
             legend="top"
             right
           />
@@ -104,19 +109,12 @@
           <doughnut v-if="chartArch" :data="chartArch" title="Arch" right />
         </v-col>
         <v-col :cols="3">
-          <doughnut
-            v-if="chartClient"
-            :data="chartClient"
-            title="Clients"
-            legend="top"
-            right
-          />
+          <doughnut v-if="chartClient" :data="chartClient" legend="top" right />
         </v-col>
         <v-col :cols="3">
           <doughnut
             v-if="chartVersion"
             :data="chartVersion"
-            title="Versions (Gubiq)"
             legend="top"
             right
           />
@@ -135,7 +133,7 @@
             :headers="headers"
             :items="peers"
             :items-per-page="10"
-            :expanded.sync="expandedPeers"
+            :footer-props="footerProps"
             item-key="id"
             flat
             dense
@@ -213,16 +211,20 @@ export default {
   },
   data() {
     return {
-      expandedPeers: [],
       headers: [
-        { text: 'Country', value: 'countryName' },
-        { text: 'Client', value: 'client' },
-        { text: 'Version', value: 'version' },
-        { text: 'Tag', value: 'tag' },
-        { text: 'Build', value: 'build' },
-        { text: 'OS', value: 'os' },
-        { text: 'Arch', value: 'arch' }
-      ]
+        { text: this.$t('geth.dashboard.country'), value: 'countryName' },
+        { text: this.$t('geth.dashboard.client'), value: 'client' },
+        { text: this.$t('geth.dashboard.version'), value: 'version' },
+        { text: this.$t('geth.dashboard.tag'), value: 'tag' },
+        { text: this.$t('geth.dashboard.build'), value: 'build' },
+        { text: this.$t('geth.dashboard.os'), value: 'os' },
+        { text: this.$t('geth.dashboard.arch'), value: 'arch' }
+      ],
+      footerProps: {
+        itemsPerPageAllText: this.$t('common.table.all'),
+        itemsPerPageText: this.$t('geth.dashboard.peersPerPage'),
+        itemsPerPageOptions: [5, 10, 25, -1]
+      }
     }
   },
   computed: {

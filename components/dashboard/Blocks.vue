@@ -6,12 +6,15 @@
           <v-card>
             <v-list-item three-line>
               <v-list-item-content>
-                <div class="overline mb-4">Difficulty</div>
+                <div class="overline mb-4">
+                  {{ $t('geth.dashboard.difficulty') }}
+                </div>
                 <v-list-item-title class="headline mb-1">
                   {{ convertHashes(latestBlock.difficulty, true) }}
                 </v-list-item-title>
                 <v-list-item-subtitle>
-                  Est. {{ convertHashes(latestBlock.hashrate, true) }}/s
+                  {{ $t('geth.dashboard.esthashrate') }}
+                  {{ convertHashes(latestBlock.hashrate, true) }}/s
                 </v-list-item-subtitle>
               </v-list-item-content>
               <v-list-item-avatar tile size="80">
@@ -24,12 +27,14 @@
           <v-card>
             <v-list-item three-line>
               <v-list-item-content>
-                <div class="overline mb-4">Last Block</div>
+                <div class="overline mb-4">
+                  {{ $t('geth.dashboard.lastBlock') }}
+                </div>
                 <v-list-item-title class="headline mb-1">
-                  {{ seconds }}s ago
+                  {{ $tc('geth.dashboard.ago', seconds) }}
                 </v-list-item-title>
                 <v-list-item-subtitle>
-                  Prev. {{ latestBlock.blocktime }}s
+                  {{ $tc('geth.dashboard.previous', latestBlock.blocktime) }}
                 </v-list-item-subtitle>
               </v-list-item-content>
               <v-list-item-avatar tile size="80">
@@ -42,7 +47,9 @@
           <v-card>
             <v-list-item three-line>
               <v-list-item-content>
-                <div class="overline mb-4">Best Block</div>
+                <div class="overline mb-4">
+                  {{ $t('geth.dashboard.bestBlock') }}
+                </div>
                 <v-list-item-title class="headline mb-1">
                   {{ latestBlock.number }}
                 </v-list-item-title>
@@ -128,8 +135,10 @@
         <v-data-table
           :headers="headers"
           :items="pendingTxns"
-          :items-per-page="5"
+          :items-per-page="10"
           item-key="id"
+          :footer-props="footerProps"
+          :no-data-text="$t('geth.dashboard.noPending')"
           flat
           dense
         >
@@ -192,14 +201,19 @@ export default {
     return {
       seconds: 0,
       headers: [
-        { text: 'Hash', value: 'hash' },
-        { text: 'From', value: 'from' },
-        { text: 'To', value: 'to' },
-        { text: 'Value', value: 'value' },
-        { text: 'Gas', value: 'gas' },
-        { text: 'Gas Price', value: 'gasPrice' },
-        { text: 'Max. Fee', value: 'r' }
-      ]
+        { text: this.$t('geth.dashboard.hash'), value: 'hash' },
+        { text: this.$t('geth.dashboard.from'), value: 'from' },
+        { text: this.$t('geth.dashboard.to'), value: 'to' },
+        { text: this.$t('geth.dashboard.value'), value: 'value' },
+        { text: this.$t('geth.dashboard.gas'), value: 'gas' },
+        { text: this.$t('geth.dashboard.gasPrice'), value: 'gasPrice' },
+        { text: this.$t('geth.dashboard.maxFee'), value: 'r' }
+      ],
+      footerProps: {
+        itemsPerPageAllText: this.$t('common.table.all'),
+        itemsPerPageText: this.$t('geth.dashboard.txnsPerPage'),
+        itemsPerPageOptions: [5, 10, 25, -1]
+      }
     }
   },
   computed: {

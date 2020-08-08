@@ -26,7 +26,7 @@
       >
         <v-list-item-title>
           <v-icon>mdi-desktop-mac-dashboard</v-icon>
-          Dashboard
+          {{ $t('geth.dashboard.title') }}
         </v-list-item-title>
       </v-list-item>
     </template>
