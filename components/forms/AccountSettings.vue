@@ -125,7 +125,7 @@
                     <v-icon v-if="spin === true">mdi-cog mdi-spin</v-icon>
                     <span v-else>
                       <v-icon>mdi-content-save-settings</v-icon>
-                      {{ $t('account.save') }}
+                      {{ $t('common.save') }}
                     </span>
                   </v-btn>
                 </v-row>
@@ -207,7 +207,7 @@
                     <v-icon v-if="spin === true">mdi-cog mdi-spin</v-icon>
                     <span v-else>
                       <v-icon>mdi-content-save-settings</v-icon>
-                      {{ $t('account.save') }}
+                      {{ $t('common.save') }}
                     </span>
                   </v-btn>
                 </v-row>

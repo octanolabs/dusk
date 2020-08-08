@@ -93,7 +93,10 @@
     <v-row v-if="blocks && blocks.length > 0" no-gutters class="pb-2">
       <v-col :cols="12">
         <v-card class="bg-transparent" outlined>
-          <blocktime :data="chartBlocktime" title="Blocktime" />
+          <blocktime
+            :data="chartBlocktime"
+            :title="$t('geth.dashboard.blocktime')"
+          />
         </v-card>
       </v-col>
     </v-row>
@@ -105,7 +108,10 @@
     <v-row v-if="blocks && blocks.length > 0" no-gutters class="pb-2">
       <v-col :cols="12">
         <v-card class="bg-transparent" outlined>
-          <difficulty :data="chartDifficulty" title="Difficulty" />
+          <difficulty
+            :data="chartDifficulty"
+            :title="$t('geth.dashboard.difficulty')"
+          />
         </v-card>
       </v-col>
     </v-row>
@@ -117,7 +123,7 @@
     <v-row v-if="blocks && blocks.length > 0" no-gutters class="pb-2">
       <v-col :cols="12">
         <v-card class="bg-transparent" outlined>
-          <usage :data="chartUsage" title="Activity" />
+          <usage :data="chartUsage" :title="$t('geth.dashboard.activity')" />
         </v-card>
       </v-col>
     </v-row>
