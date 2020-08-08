@@ -18,7 +18,7 @@
       </v-list>
     </v-toolbar>
     <v-list dense class="pa-0">
-      <v-subheader class="ml-2">System</v-subheader>
+      <v-subheader class="ml-2">{{ $t('system.system') }}</v-subheader>
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title>
@@ -39,7 +39,7 @@
       </v-list-item>
     </v-list>
     <v-list two-line dense class="pa-0">
-      <v-subheader class="ml-2">Network Interfaces</v-subheader>
+      <v-subheader class="ml-2">{{ $t('system.interfaces') }}</v-subheader>
       <template v-for="key of Object.keys(networkInterfaces)">
         <v-list-item
           v-if="
