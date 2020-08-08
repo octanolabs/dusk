@@ -18,13 +18,13 @@
     >
       <v-list-item-title>
         <v-icon>mdi-stop-circle</v-icon>
-        Stop
+        {{ $t('controls.stop') }}
       </v-list-item-title>
     </v-list-item>
     <v-list-item v-else link @click="startInstance(instance.id)">
       <v-list-item-title>
         <v-icon>mdi-play-circle</v-icon>
-        Start
+        {{ $t('controls.start') }}
       </v-list-item-title>
     </v-list-item>
   </span>
