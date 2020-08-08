@@ -19,7 +19,7 @@
       >
         <v-list-item-title>
           <v-icon>mdi-console</v-icon>
-          Logs
+          {{ $t('logs.title') }}
         </v-list-item-title>
       </v-list-item>
     </template>
@@ -50,10 +50,10 @@
       <v-card-text style="height: calc(100vh - 112px);" class="pa-0">
         <v-tabs v-model="tabs" background-color="transparent" grow>
           <v-tab key="0">
-            stdout
+            {{ $t('logs.stdout') }}
           </v-tab>
           <v-tab key="1">
-            stderr
+            {{ $t('logs.stderr') }}
           </v-tab>
         </v-tabs>
         <v-tabs-items v-model="tabs" style="height:100%;">
