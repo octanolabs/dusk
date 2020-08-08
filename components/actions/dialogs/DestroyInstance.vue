@@ -19,24 +19,19 @@
       >
         <v-list-item-title>
           <v-icon color="secondary">mdi-delete</v-icon>
-          Destroy Instance
+          {{ $t('destroy.title') }}
         </v-list-item-title>
       </v-list-item>
     </template>
     <v-card>
-      <v-card-title primary-title>Destroy Instance</v-card-title>
+      <v-card-title primary-title>{{ $t('destroy.title') }}</v-card-title>
       <v-card-text>
-        <p>
-          Are you sure you want to destroy
-          <strong>{{ instance.name }}?</strong>
-          <br />
-          Enter <code class="elevation-0">{{ instance.id }}</code>
-          to confirm.
-        </p>
+        <p>{{ $tc('destroy.question', instance.name) }}</p>
+        <p>{{ $tc('destroy.confirmation', instance.id) }}</p>
         <v-text-field
           v-model="confirm"
           class="input-group--focused"
-          label="confirm"
+          :label="$t('destroy.confirm')"
           name="confirm"
           hide-details="auto"
           autocomplete="off"
@@ -46,7 +41,9 @@
         <v-list dense>
           <v-list-item dense>
             <v-list-item-content v-if="instance">
-              <v-list-item-title>Remove datadir</v-list-item-title>
+              <v-list-item-title>
+                {{ $t('destroy.rmDatadir') }}
+              </v-list-item-title>
               <v-list-item-subtitle v-if="instance.config">
                 {{ instance.config.datadir }}
               </v-list-item-subtitle>
@@ -59,7 +56,9 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="primary" @click.stop="show = false">No</v-btn>
+        <v-btn color="primary" @click.stop="show = false">
+          {{ $t('common.no') }}
+        </v-btn>
         <v-btn
           color="secondary"
           text
@@ -69,7 +68,7 @@
             show = false
           "
         >
-          Yes
+          {{ $t('common.yes') }}
         </v-btn>
       </v-card-actions>
     </v-card>
