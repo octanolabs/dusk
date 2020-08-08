@@ -42,6 +42,7 @@ export default {
   },
   computed: {
     options() {
+      const self = this
       return {
         responsive: true,
         maintainAspectRatio: false,
@@ -91,13 +92,13 @@ export default {
               let label = tooltipItem.value || 0
               if (label) {
                 if (tooltipItem.datasetIndex === 0) {
-                  label = 'Txns: ' + label
+                  label = self.$tc('geth.dashboard.txnCount', label)
                 }
                 if (tooltipItem.datasetIndex === 1) {
-                  label = 'Gas Used: ' + label
+                  label = self.$tc('geth.dashboard.gasUsed', label)
                 }
                 if (tooltipItem.datasetIndex === 2) {
-                  label = 'Gas Limit: ' + label
+                  label = self.$tc('geth.dashboard.gasLimit', label)
                 }
                 if (tooltipItem.datasetIndex === 3) {
                   const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB']
@@ -106,7 +107,10 @@ export default {
                     Math.floor(Math.log(bytes) / Math.log(1024))
                   )
                   const unit = ' ' + sizes[i]
-                  label = 'Size: ' + (bytes / 1024 ** i).toFixed(1) + unit
+                  label = self.$tc(
+                    'geth.dashboard.size',
+                    (bytes / 1024 ** i).toFixed(1) + unit
+                  )
                 }
               }
               return label
