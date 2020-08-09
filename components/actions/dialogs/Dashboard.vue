@@ -59,7 +59,7 @@
         class="pa-2 h-100"
         style="height: calc(100vh - 64px);overflow-x:auto;"
       >
-        <v-row v-if="returned" no-gutters>
+        <v-row v-if="returned && provider" no-gutters>
           <v-col :cols="6">
             <dashboard-peers
               v-if="provider.peers && instance"
@@ -170,7 +170,7 @@ export default {
       updateProvider()
     },
     close() {
-      this.$store.dispatch('stopProvider', self.instance)
+      this.$store.dispatch('stopProvider', this.instance)
       this.show = false
     }
   }
