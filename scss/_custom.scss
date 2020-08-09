@@ -103,3 +103,7 @@ pre {
 .details-tabs > .v-tabs-items {
   background-color: $transparent !important;
 }
+
+.v-tabs--vertical > .v-window {
+  max-width: calc(100% - 124px) !important;
+}

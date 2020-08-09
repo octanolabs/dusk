@@ -1,94 +1,53 @@
 <template>
-  <v-card>
-    <div class="d-flex flex-no-wrap justify-space-between">
-      <div>
-        <v-list>
-          <v-list-item>
-            <v-list-item-avatar tile>
-              <img
-                v-if="client.icon"
-                :src="require('~/packages' + client.duskpkg.path + client.icon)"
-              />
-              <v-icon v-else color="#222" v-text="O.o"></v-icon>
-            </v-list-item-avatar>
-            <v-list-item-content>
-              <v-list-item-title>
-                {{ client.name }}
-              </v-list-item-title>
-              <v-list-item-subtitle>{{ client.desc }}</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
-        <v-card-actions>
-          <v-chip
-            small
-            outlined
-            label
-            class="mr-1"
-            :color="releases.length > 0 ? 'primary' : 'secondary'"
-          >
-            {{ client.platform }}
-          </v-chip>
-          <v-chip
-            small
-            label
-            outlined
-            :color="releases.length > 0 ? 'primary' : 'secondary'"
-          >
-            {{ releases.length }}
-            {{ $tc('clients.available', releases.length) }}
-          </v-chip>
-        </v-card-actions>
-      </div>
-    </div>
-    <v-divider />
-    <v-list>
-      <v-list-item v-for="item in releases" :key="item.version">
-        <v-list-item-avatar
-          v-if="(item.status === 1 && !isDownloading) || isDownloading"
+  <v-list>
+    <v-list-item
+      v-for="item in releases"
+      :key="item.version"
+      style="border-top:1px solid #363636;"
+    >
+      <v-list-item-avatar
+        v-if="(item.status === 1 && !isDownloading) || isDownloading"
+      >
+        <v-icon v-if="item.status === 1" class="primary">
+          mdi-cloud-check-outline
+        </v-icon>
+        <v-icon v-else class="secondary">
+          mdi-cloud-sync-outline
+        </v-icon>
+      </v-list-item-avatar>
+      <v-list-item-avatar
+        v-else
+        style="cursor: pointer"
+        @click.stop="downloadRelease(item)"
+      >
+        <v-icon
+          v-if="!item.status || (item.status === 0 && !isDownloading)"
+          class="secondary"
         >
-          <v-icon v-if="item.status === 1" class="primary">
-            mdi-cloud-check-outline
+          mdi-cloud-download-outline
+        </v-icon>
+        <v-icon v-else-if="item.status === -1" class="secondary">
+          mdi-cloud-alert
+        </v-icon>
+      </v-list-item-avatar>
+      <v-list-item-content>
+        <v-list-item-title>
+          v{{ item.version }} - {{ item.tag }}
+        </v-list-item-title>
+        <v-list-item-subtitle>{{ item.note }}</v-list-item-subtitle>
+      </v-list-item-content>
+      <v-list-item-action>
+        <v-list-item-action-text>
+          {{ humanFileSize(item.download.size, true) }}
+        </v-list-item-action-text>
+        <a :href="item.info" target="_blank" style="text-decoration:none;">
+          <v-icon color="grey lighten-1">
+            mdi-information-outline
           </v-icon>
-          <v-icon v-else class="secondary">
-            mdi-cloud-sync-outline
-          </v-icon>
-        </v-list-item-avatar>
-        <v-list-item-avatar
-          v-else
-          style="cursor: pointer"
-          @click.stop="downloadRelease(item)"
-        >
-          <v-icon
-            v-if="!item.status || (item.status === 0 && !isDownloading)"
-            class="secondary"
-          >
-            mdi-cloud-download-outline
-          </v-icon>
-          <v-icon v-else-if="item.status === -1" class="secondary">
-            mdi-cloud-alert
-          </v-icon>
-        </v-list-item-avatar>
-        <v-list-item-content>
-          <v-list-item-title>
-            v{{ item.version }} - {{ item.tag }}
-          </v-list-item-title>
-          <v-list-item-subtitle>{{ item.note }}</v-list-item-subtitle>
-        </v-list-item-content>
-        <v-list-item-action>
-          <v-list-item-action-text>
-            {{ humanFileSize(item.download.size, true) }}
-          </v-list-item-action-text>
-          <a :href="item.info" target="_blank" style="text-decoration:none;">
-            <v-icon color="grey lighten-1">
-              mdi-information-outline
-            </v-icon>
-          </a>
-        </v-list-item-action>
-      </v-list-item>
-    </v-list>
-    <v-divider />
-  </v-card>
+        </a>
+      </v-list-item-action>
+    </v-list-item>
+  </v-list>
 </template>
 
 <script>
