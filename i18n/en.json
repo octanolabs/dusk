@@ -95,6 +95,8 @@
     "clients": "supported clients"
   },
   "clients": {
+    "title": "Clients",
+    "releases": "Releases",
     "available": "release available | releases available"
   },
   "server": {
@@ -117,10 +119,12 @@
     "noResults": "Create an instance with the + button above.."
   },
   "create": {
+    "title": "Create",
     "selectNetwork": "Select a network",
     "selectClient": "Select a client",
     "mainnet": "MAINNET",
-    "testnet": "TESTNET"
+    "testnet": "TESTNET",
+    "showTestnets": "show testnets"
   },
   "logs": {
     "title": "Logs",

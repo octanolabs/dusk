@@ -12,7 +12,7 @@
           <v-list-item>
             <v-list-item-content>
               <v-list-item-subtitle>
-                {{ $t('geth.settings.showTestnets') }}
+                {{ $t('create.showTestnets') }}
               </v-list-item-subtitle>
             </v-list-item-content>
             <v-list-item-action>
@@ -297,12 +297,12 @@ export default {
       defaultOptions: null,
       breadcrumbs: [
         {
-          text: 'Instances',
+          text: this.$t('server.title'),
           disabled: false,
           to: '/'
         },
         {
-          text: 'Create',
+          text: this.$t('create.title'),
           disabled: true,
           to: '/create'
         }

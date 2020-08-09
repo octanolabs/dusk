@@ -1,5 +1,8 @@
 <template>
   <v-container>
+    <v-row>
+      <v-breadcrumbs :items="breadcrumbs"></v-breadcrumbs>
+    </v-row>
     <v-card style="background-color:#363636">
       <v-tabs v-model="tab" vertical>
         <v-tab v-for="client in clients" :key="client.tag">
@@ -66,7 +69,18 @@ export default {
   },
   data() {
     return {
-      tab: null
+      tab: null,
+      breadcrumbs: [
+        {
+          text: this.$t('clients.title'),
+          disabled: true,
+          to: '/'
+        },
+        {
+          text: this.$t('clients.releases'),
+          disabled: true
+        }
+      ]
     }
   },
   computed: {

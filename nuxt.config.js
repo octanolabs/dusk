@@ -175,5 +175,9 @@ module.exports = {
   pageTransition: {
     name: 'page',
     mode: 'out-in'
+  },
+
+  router: {
+    middleware: ['auth']
   }
 }
