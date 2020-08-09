@@ -30,7 +30,7 @@
                   <dashboard :instance="instance" />
                 </span>
               </template>
-              <span>Dashboard</span>
+              <span>{{ $t('geth.dashboard.title') }}</span>
             </v-tooltip>
           </v-list-item-action>
           <v-list-item-action>
@@ -40,7 +40,7 @@
                   <instance-logs :instance="instance" />
                 </span>
               </template>
-              <span>Logs</span>
+              <span>{{ $t('logs.title') }}</span>
             </v-tooltip>
           </v-list-item-action>
           <v-list-item-action>
@@ -51,7 +51,11 @@
                 </span>
               </template>
               <span>
-                {{ instance.supervisor.state === 20 ? 'Stop' : 'Start' }}
+                {{
+                  instance.supervisor.state === 20
+                    ? $t('controls.stop')
+                    : $t('controls.start')
+                }}
               </span>
             </v-tooltip>
           </v-list-item-action>
@@ -65,7 +69,7 @@
                   />
                 </span>
               </template>
-              <span>Destroy</span>
+              <span>{{ $t('destroy.title') }}</span>
             </v-tooltip>
           </v-list-item-action>
         </v-list-item>
@@ -73,48 +77,48 @@
     </v-row>
     <v-tabs v-model="tab" class="details-tabs">
       <v-tab :key="0">
-        Overview
+        {{ $t('geth.overview.title') }}
       </v-tab>
       <v-tab :key="1">
-        Settings
+        {{ $t('geth.settings.title') }}
       </v-tab>
       <v-tab-item :key="0">
         <v-col v-if="!!instance" :cols="12" class="d-flex pa-0">
           <v-col :cols="6" class="pa-0 pr-1">
             <v-card>
-              <v-card-title>Details</v-card-title>
+              <v-card-title>{{ $t('geth.overview.details') }}</v-card-title>
               <v-card-text>
                 <v-simple-table>
                   <template v-slot:default>
                     <tbody class="text-left">
                       <tr>
-                        <th>name</th>
+                        <th>{{ $t('geth.overview.name') }}</th>
                         <td>{{ instance.name }}</td>
                       </tr>
                       <tr>
-                        <th>id</th>
+                        <th>{{ $t('geth.overview.id') }}</th>
                         <td>{{ instance.id }}</td>
                       </tr>
                       <tr>
-                        <th>network</th>
+                        <th>{{ $t('geth.overview.network') }}</th>
                         <td>{{ network.name }}</td>
                       </tr>
                       <tr>
-                        <th>client</th>
+                        <th>{{ $t('geth.overview.client') }}</th>
                         <td>
                           {{ instance.client.name }} v{{ instance.version }}
                         </td>
                       </tr>
                       <tr>
-                        <th>binpath</th>
+                        <th>{{ $t('geth.overview.binpath') }}</th>
                         <td>{{ instance.binpath }}</td>
                       </tr>
                       <tr>
-                        <th>datadir</th>
+                        <th>{{ $t('geth.overview.datadir') }}</th>
                         <td>{{ instance.config.datadir }}</td>
                       </tr>
                       <tr>
-                        <th>created</th>
+                        <th>{{ $t('geth.overview.created') }}</th>
                         <td>{{ new Date(instance.timestamp) }}</td>
                       </tr>
                     </tbody>
@@ -125,47 +129,47 @@
           </v-col>
           <v-col :cols="6" class="pa-0 pl-1">
             <v-card class="pa-0">
-              <v-card-title>Supervisor</v-card-title>
+              <v-card-title>{{ $t('geth.overview.supervisor') }}</v-card-title>
               <v-card-text>
                 <v-simple-table>
                   <template v-slot:default>
                     <tbody class="text-left">
                       <tr>
-                        <th>state</th>
+                        <th>{{ $t('geth.overview.state') }}</th>
                         <td>{{ instance.supervisor.statename }}</td>
                       </tr>
                       <tr v-if="instance.supervisor.state === 20">
-                        <th>uptime</th>
+                        <th>{{ $t('geth.overview.uptime') }}</th>
                         <td>
                           {{ formatUptime(instance.supervisor.description) }}
                         </td>
                       </tr>
                       <tr v-else>
-                        <th>stopped at</th>
+                        <th>{{ $t('geth.overview.stoppedAt') }}</th>
                         <td>{{ instance.supervisor.description }}</td>
                       </tr>
                       <tr v-if="instance.supervisor.state === 20">
-                        <th>pid</th>
+                        <th>{{ $t('geth.overview.pid') }}</th>
                         <td>{{ instance.supervisor.pid }}</td>
                       </tr>
                       <tr v-else>
-                        <th>exit status</th>
+                        <th>{{ $t('geth.overview.exitStatus') }}</th>
                         <td>{{ instance.supervisor.exitstatus }}</td>
                       </tr>
                       <tr>
-                        <th>group</th>
+                        <th>{{ $t('geth.overview.group') }}</th>
                         <td>{{ instance.supervisor.group }}</td>
                       </tr>
                       <tr>
-                        <th>name</th>
+                        <th>{{ $t('geth.overview.name') }}</th>
                         <td>{{ instance.supervisor.name }}</td>
                       </tr>
                       <tr>
-                        <th>stderr</th>
+                        <th>{{ $t('geth.overview.stderr') }}</th>
                         <td>{{ instance.supervisor.stderr_logfile }}</td>
                       </tr>
                       <tr>
-                        <th>stdout</th>
+                        <th>{{ $t('geth.overview.stdout') }}</th>
                         <td>{{ instance.supervisor.stdout_logfile }}</td>
                       </tr>
                     </tbody>
@@ -180,13 +184,13 @@
         <v-card class="px-1 py-2">
           <v-card-title class="py-1">
             <v-icon class="mx-1">mdi-cogs</v-icon>
-            Configure your client
+            {{ $t('geth.settings.configure') }}
             <v-spacer />
             <v-list>
               <v-list-item>
                 <v-list-item-content>
                   <v-list-item-subtitle>
-                    show advanced
+                    {{ $t('geth.settings.showAdvanced') }}
                   </v-list-item-subtitle>
                 </v-list-item-content>
                 <v-list-item-action>
@@ -247,7 +251,7 @@
                   <v-list-item @click="$router.push({ path: '/clients' })">
                     <v-list-item-content>
                       <v-list-item-subtitle>
-                        Go to client downloads..
+                        {{ $t('geth.settings.downloads') }}
                       </v-list-item-subtitle>
                     </v-list-item-content>
                   </v-list-item>
@@ -299,7 +303,7 @@ export default {
       showAdvancedDisabled: false,
       breadcrumbs: [
         {
-          text: 'Instances',
+          text: this.$t('server.instances'),
           disabled: false,
           to: '/'
         }
@@ -364,11 +368,7 @@ export default {
       const split = str.split(' ')
       if (split.length > 4) {
         const slice = split.slice(-3)
-        if (slice[0] > 1) {
-          slice[1] = 'days'
-        } else {
-          slice[1] = 'day'
-        }
+        slice[1] = this.$tc('server.day', slice[0])
         return slice[0] + ' ' + slice[1] + ' - ' + slice[2]
       } else {
         return split[3]

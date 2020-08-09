@@ -98,7 +98,7 @@ export default {
               if (tooltipItem.datasetIndex === 1) {
                 label = self.$tc('geth.dashboard.hashrate', label)
               } else {
-                label = self.$t('get.dashboard.difficulty') + ': ' + label
+                label = self.$t('geth.dashboard.difficulty') + ': ' + label
               }
               return label
             }

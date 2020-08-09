@@ -19,10 +19,10 @@
         <v-list-item>
           <v-list-item-content v-if="show">
             <v-list-item-title v-if="show && !sync">
-              Download complete
+              {{ $t('download.complete') }}
             </v-list-item-title>
             <v-list-item-title v-else>
-              Downloading...
+              {{ $t('download.downloading') }}
             </v-list-item-title>
             <v-list-item-subtitle>
               {{ downloading.client }} v{{ downloading.version }}

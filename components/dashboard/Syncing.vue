@@ -6,7 +6,9 @@
         style="padding-top:128px;"
       >
         <v-row no-gutters>
-          <v-subheader>syncing from #{{ startingBlock }}</v-subheader>
+          <v-subheader>
+            {{ $tc('geth.dashboard.syncingFrom', startingBlock) }}
+          </v-subheader>
         </v-row>
         <v-row no-gutters class="pb-2">
           <v-progress-circular
@@ -20,10 +22,17 @@
           </v-progress-circular>
         </v-row>
         <v-row no-gutters>
-          <v-subheader>{{ currentBlock }} of {{ highestBlock }}</v-subheader>
+          <v-subheader>
+            {{
+              $tc('geth.dashboard.syncingCurrent', 0, {
+                current: currentBlock,
+                highest: highestBlock
+              })
+            }}
+          </v-subheader>
         </v-row>
         <v-row no-gutters>
-          blocks dashboard will load once complete
+          {{ $t('geth.dashboard.syncingMessage') }}
         </v-row>
       </v-flex>
     </v-col>
