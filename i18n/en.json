@@ -1,20 +1,31 @@
 {
+  "common": {
+    "required": "required",
+    "close": "Close",
+    "save": "Save",
+    "yes": "Yes",
+    "no": "No",
+    "table": {
+      "all": "All",
+      "itemsPerPage": "Items per page:"
+    }
+  },
   "login": {
     "login": "Login",
     "username": "username",
     "passphrase": "passphrase",
-    "error": "invalid credentials",
-    "required": "required"
+    "error": "invalid credentials"
   },
   "menu": {
     "server": "Server",
     "networks": "Networks",
     "clients": "Clients",
-    "packages": "Packages",
     "settings": "Settings",
     "logout": "Logout"
   },
   "system": {
+    "system": "System",
+    "interfaces": "Network Interfaces",
     "cpu": "CPU",
     "memory": "Memory",
     "swap": "Swap",
@@ -30,13 +41,12 @@
   "account": {
     "account": "Account",
     "changePassphrase": "Change Passphrase",
-    "save": "Save",
     "updated": {
-      "success": "Account settings updated sucessfully!",
-      "error": "Failed to updated account settings."
+      "success": "Account settings updated successfully!",
+      "error": "Failed to update account settings."
     },
     "changed": {
-      "success": "Passphrase changed sucessfully!",
+      "success": "Passphrase changed successfully!",
       "error": "Failed to change passphrase."
     },
     "passphrase": {
@@ -70,26 +80,232 @@
     },
     "username": {
       "label": "username",
-      "minlen": "Username must be atleast 4 characters in length and only contain lowercase (a-z)."
-    },
-    "save": "Save"
+      "minlen": "Username must be at least 4 characters in length and only contain lowercase (a-z)."
+    }
   },
   "networks": {
+    "mainnet": "Mainnet",
+    "testnet": "Testnet",
     "name": "network name",
-    "type": "type",
     "engine": "consensus engine",
     "networkId": "networkId",
     "chainId": "chainId",
     "explorer": "block explorer",
     "stats": "network stats",
-    "mainnet": "mainnet",
-    "testnet": "testnet",
     "clients": "supported clients"
   },
-  "packages": {
-    "id": "packageId",
+  "clients": {
+    "available": "release available | releases available"
+  },
+  "server": {
+    "instances": "Instances",
     "name": "name",
-    "type": "type",
-    "version": "version"
+    "network": "network",
+    "client": "client",
+    "version": "version",
+    "status": "status",
+    "uptime": "uptime",
+    "stoppedAt": "stopped at",
+    "stopped": "stopped",
+    "starting": "starting",
+    "running": "running",
+    "stopping": "stopping",
+    "creating": "creating",
+    "error": "error",
+    "details": "Details",
+    "day": "day | days",
+    "noResults": "Create an instance with the + button above.."
+  },
+  "logs": {
+    "title": "Logs",
+    "stdout": "stdout",
+    "stderr": "stderr"
+  },
+  "controls": {
+    "start": "Start",
+    "stop": "Stop"
+  },
+  "destroy": {
+    "title": "Destroy",
+    "question": "Are you sure you want to destroy {n}?",
+    "confirmation": "Enter '{n}' to confirm.",
+    "confirm": "confirm",
+    "rmDatadir": "Remove datadir?"
+  },
+  "download": {
+    "downloading": "Downloading...",
+    "complete": "Download complete"
+  },
+  "geth": {
+    "dashboard": {
+      "title": "Dashboard",
+      "network": "Network",
+      "testnet": "testnet",
+      "mainnet": "mainnet",
+      "connections": "Connections",
+      "peers": "{n} peer | {n} peers",
+      "countries": "in {n} country | spanning {n} countries",
+      "country": "Country",
+      "client": "Client",
+      "version": "Version",
+      "tag": "Tag",
+      "build": "Build",
+      "os": "OS",
+      "arch": "Arch",
+      "peersPerPage": "Peers per page:",
+      "difficulty": "Difficulty",
+      "blocktime": "Blocktime",
+      "activity": "Activity",
+      "esthashrate": "est.",
+      "lastBlock": "Last Block",
+      "ago": "{n}s ago",
+      "previous": "prev. {n}s",
+      "bestBlock": "Best Block",
+      "hash": "Hash",
+      "from": "From",
+      "to": "To",
+      "value": "Value",
+      "gas": "Gas",
+      "gasPrice": "Gas Price",
+      "maxFee": "Max. Fee",
+      "txnsPerPage": "Txns per page:",
+      "noPending": "No pending transactions",
+      "averageBlocks": "Average - {n} blocks: ",
+      "hashrate": "Hashrate: {n}/s",
+      "txnCount": "Txns: {n}",
+      "gasUsed": "Gas Used: {n}",
+      "gasLimit": "Gas Limit: {n}",
+      "size": "Size: {n}",
+      "syncingFrom": "syncing from #{n}",
+      "syncingCurrent": "{current} of {highest}",
+      "syncingMessage": "block info will load once syncing is complete"
+    },
+    "overview": {
+      "title": "Overview",
+      "details": "Details",
+      "name": "name",
+      "id": "id",
+      "network": "network",
+      "client": "client",
+      "binpath": "binpath",
+      "datadir": "datadir",
+      "created": "created",
+      "supervisor": "Supervisor",
+      "state": "state",
+      "uptime": "uptime",
+      "stoppedAt": "stopped at",
+      "pid": "pid",
+      "exitStatus": "exit status",
+      "group": "group",
+      "stderr": "stderr",
+      "stdout": "stdout"
+    },
+    "settings": {
+      "title": "Settings",
+      "configure": "Configure your client",
+      "showAdvanced": "show advanced",
+      "downloads": "Go to client downloads..",
+      "name": {
+        "title": "Instance Name",
+        "info": "Name for this instance"
+      },
+      "datadir": {
+        "title": "Data Directory",
+        "info": "Data directory for the databases and keystore"
+      },
+      "fullSync": {
+        "title": "Full Sync",
+        "info": "Perform full validation on blockchain data"
+      },
+      "archive": {
+        "title": "Archive",
+        "info": "Set blockchain garbage collection mode to 'archive'"
+      },
+      "port": {
+        "title": "Port",
+        "info": "Network listening port"
+      },
+      "maxPeers": {
+        "title": "Max. Peers",
+        "info": "Maximum number of network peers (network disabled if set to 0)"
+      },
+      "nat": {
+        "title": "NAT",
+        "info": "NAT port mapping mechanism"
+      },
+      "noDiscover": {
+        "title": "Nodiscover",
+        "info": "Disables the peer discovery mechanism (manual peer addition)"
+      },
+      "ethstats": {
+        "title": "Ethstats",
+        "info": "Relay node statistics",
+        "label": "nodename:secret@host"
+      },
+      "http": {
+        "title": "HTTP-RPC",
+        "info": "Enable the HTTP-RPC server",
+        "address": {
+          "title": "ADDRESS",
+          "info": "HTTP-RPC server listening interface"
+        },
+        "port": {
+          "title": "PORT",
+          "info": "HTTP-RPC server listening port"
+        },
+        "corsdomain": {
+          "title": "CORS DOMAIN",
+          "info": "Comma separated list of domains from which to accept cross origin requests (browser enforced)"
+        },
+        "vhosts": {
+          "title": "VHOSTS",
+          "info": "Comma separated list of virtual hostnames from which to accept requests (server enforced)"
+        },
+        "apis": {
+          "title": "API's",
+          "info": "API's offered over the HTTP-RPC interface"
+        }
+      },
+      "ws": {
+        "title": "WS-RPC",
+        "info": "Enable the WS-RPC server",
+        "address": {
+          "title": "ADDRESS",
+          "info": "WS-RPC server listening interface"
+        },
+        "port": {
+          "title": "PORT",
+          "info": "WS-RPC server listening port"
+        },
+        "origins": {
+          "title": "ORIGINS",
+          "info": "Origins from which to accept websockets requests"
+        },
+        "apis": {
+          "title": "API's",
+          "info": "API's offered over the WS-RPC interface."
+        }
+      },
+      "graphql": {
+        "title": "GraphQL",
+        "info": "Enable the GraphQL server",
+        "address": {
+          "title": "ADDRESS",
+          "info": "GraphQL server listening interface"
+        },
+        "port": {
+          "title": "PORT",
+          "info": "GraphQL server listening port"
+        },
+        "corsdomain": {
+          "title": "CORS DOMAIN",
+          "info": "Comma separated list of domains from which to accept cross origin requests (browser enforced)"
+        },
+        "vhosts": {
+          "title": "VHOSTS",
+          "info": "Comma separated list of virtual hostnames from which to accept requests (server enforced)"
+        }
+      }
+    }
   }
 }
