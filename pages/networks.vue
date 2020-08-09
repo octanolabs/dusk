@@ -1,18 +1,18 @@
 <template>
   <v-container>
     <v-tabs>
-      <v-tab :key="0">Mainnet</v-tab>
-      <v-tab :key="1">Testnet</v-tab>
+      <v-tab :key="0">{{ $t('networks.mainnet') }}</v-tab>
+      <v-tab :key="1">{{ $t('networks.testnet') }}</v-tab>
       <v-tab-item :key="0">
         <v-card>
-          <v-card-text>
+          <v-card-text class="pa-0">
             <networks-table :networks="mainnet" />
           </v-card-text>
         </v-card>
       </v-tab-item>
       <v-tab-item :key="1">
         <v-card>
-          <v-card-text>
+          <v-card-text class="pa-0">
             <networks-table :networks="testnet" />
           </v-card-text>
         </v-card>
