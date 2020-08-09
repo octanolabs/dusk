@@ -9,10 +9,10 @@
                 <v-list-item>
                   <v-list-item-content>
                     <v-list-item-title>
-                      Instance Name
+                      {{ $t('geth.settings.name.title') }}
                     </v-list-item-title>
                     <v-list-item-subtitle>
-                      Identifier for this instance.
+                      {{ $t('geth.settings.name.info') }}
                     </v-list-item-subtitle>
                     <v-text-field
                       v-model="instance.name"
@@ -35,10 +35,10 @@
                 <v-list-item>
                   <v-list-item-content>
                     <v-list-item-title>
-                      Data Directory
+                      {{ $t('geth.settings.datadir.title') }}
                     </v-list-item-title>
                     <v-list-item-subtitle>
-                      Data directory for the databases and keystore
+                      {{ $t('geth.settings.datadir.info') }}
                     </v-list-item-subtitle>
                     <v-text-field
                       v-model="config.datadir"
@@ -61,10 +61,10 @@
                 <v-list-item>
                   <v-list-item-content>
                     <v-list-item-title>
-                      Full sync
+                      {{ $t('geth.settings.fullSync.title') }}
                     </v-list-item-title>
                     <v-list-item-subtitle>
-                      Perform full validation on blockchain data
+                      {{ $t('geth.settings.fullSync.info') }}
                     </v-list-item-subtitle>
                   </v-list-item-content>
                   <v-list-item-action>
@@ -80,10 +80,10 @@
                 <v-list-item>
                   <v-list-item-content>
                     <v-list-item-title>
-                      Archive
+                      {{ $t('geth.settings.archive.title') }}
                     </v-list-item-title>
                     <v-list-item-subtitle>
-                      Set blockchain garbage collection mode to 'archive'
+                      {{ $t('geth.settings.archive.info') }}
                     </v-list-item-subtitle>
                   </v-list-item-content>
                   <v-list-item-action>
@@ -98,9 +98,11 @@
               <v-list two-line class="w-100">
                 <v-list-item>
                   <v-list-item-content>
-                    <v-list-item-title>Port</v-list-item-title>
+                    <v-list-item-title>
+                      {{ $t('geth.settings.port.title') }}
+                    </v-list-item-title>
                     <v-list-item-subtitle>
-                      Network listening port
+                      {{ $t('geth.settings.port.info') }}
                     </v-list-item-subtitle>
                   </v-list-item-content>
                   <v-list-item-action>
@@ -122,10 +124,11 @@
               <v-list two-line class="w-100">
                 <v-list-item>
                   <v-list-item-content>
-                    <v-list-item-title>Max. Peers</v-list-item-title>
+                    <v-list-item-title>
+                      {{ $t('geth.settings.maxPeers.title') }}
+                    </v-list-item-title>
                     <v-list-item-subtitle>
-                      Maximum number of network peers (network disabled if set
-                      to 0)
+                      {{ $t('geth.settings.maxPeers.info') }}
                     </v-list-item-subtitle>
                   </v-list-item-content>
                   <v-list-item-action>
@@ -148,10 +151,10 @@
                 <v-list-item>
                   <v-list-item-content>
                     <v-list-item-title>
-                      NAT
+                      {{ $t('geth.settings.nat.title') }}
                     </v-list-item-title>
                     <v-list-item-subtitle>
-                      NAT port mapping mechanism
+                      {{ $t('geth.settings.nat.info') }}
                     </v-list-item-subtitle>
                   </v-list-item-content>
                   <v-list-item-action>
@@ -173,11 +176,10 @@
                 <v-list-item>
                   <v-list-item-content>
                     <v-list-item-title>
-                      Nodiscover
+                      {{ $t('geth.settings.noDiscover.title') }}
                     </v-list-item-title>
                     <v-list-item-subtitle>
-                      Disables the peer discovery mechanism (manual peer
-                      addition)
+                      {{ $t('geth.settings.noDiscover.info') }}
                     </v-list-item-subtitle>
                   </v-list-item-content>
                   <v-list-item-action>
@@ -194,9 +196,11 @@
               <v-list two-line class="w-100">
                 <v-list-item>
                   <v-list-item-content>
-                    <v-list-item-title>Ethstats</v-list-item-title>
+                    <v-list-item-title>
+                      {{ $t('geth.settings.ethstats.title') }}
+                    </v-list-item-title>
                     <v-list-item-subtitle>
-                      Relay node statistics
+                      {{ $t('geth.settings.ethstats.info') }}
                     </v-list-item-subtitle>
                   </v-list-item-content>
                   <v-list-item-action>
@@ -207,7 +211,7 @@
                   <v-text-field
                     v-model="config.ethstats.value"
                     class="input-group--focused"
-                    label="nodename:secret@host"
+                    :label="$t('geth.settings.ethstats.label')"
                     name="ethstats"
                     outlined
                     dense
@@ -223,9 +227,11 @@
               <v-list two-line class="w-100">
                 <v-list-item>
                   <v-list-item-content>
-                    <v-list-item-title>HTTP-RPC</v-list-item-title>
+                    <v-list-item-title>
+                      {{ $t('geth.settings.http.title') }}
+                    </v-list-item-title>
                     <v-list-item-subtitle>
-                      Enable the HTTP RPC server
+                      {{ $t('geth.settings.http.info') }}
                     </v-list-item-subtitle>
                   </v-list-item-content>
                   <v-list-item-action>
@@ -234,9 +240,11 @@
                 </v-list-item>
                 <v-list-item v-if="config.http.enable">
                   <v-list-item-content>
-                    <v-list-item-title>ADDRESS</v-list-item-title>
+                    <v-list-item-title>
+                      {{ $t('geth.settings.http.address.title') }}
+                    </v-list-item-title>
                     <v-list-item-subtitle>
-                      HTTP-RPC server listening interface
+                      {{ $t('geth.settings.http.address.info') }}
                     </v-list-item-subtitle>
                     <v-text-field
                       v-model="config.http.addr"
@@ -251,10 +259,10 @@
                 <v-list-item v-if="config.http.enable">
                   <v-list-item-content>
                     <v-list-item-title>
-                      PORT
+                      {{ $t('geth.settings.http.port.title') }}
                     </v-list-item-title>
                     <v-list-item-subtitle>
-                      HTTP-RPC server listening port
+                      {{ $t('geth.settings.http.port.info') }}
                     </v-list-item-subtitle>
                     <v-spacer />
                     <v-text-field
@@ -269,10 +277,11 @@
                 </v-list-item>
                 <v-list-item v-if="showAdvanced && config.http.enable">
                   <v-list-item-content>
-                    <v-list-item-title>CORS DOMAIN</v-list-item-title>
+                    <v-list-item-title>
+                      {{ $t('geth.settings.http.corsdomain.title') }}
+                    </v-list-item-title>
                     <v-list-item-subtitle>
-                      Comma separated list of domains from which to accept cross
-                      origin requests (browser enforced)
+                      {{ $t('geth.settings.http.corsdomain.info') }}
                     </v-list-item-subtitle>
                     <v-text-field
                       v-model="config.http.corsdomain"
@@ -285,10 +294,11 @@
                 </v-list-item>
                 <v-list-item v-if="showAdvanced && config.http.enable">
                   <v-list-item-content>
-                    <v-list-item-title>VHOSTS</v-list-item-title>
+                    <v-list-item-title>
+                      {{ $t('geth.settings.http.vhosts.title') }}
+                    </v-list-item-title>
                     <v-list-item-subtitle>
-                      Comma separated list of virtual hostnames from which to
-                      accept requests (server enforced).
+                      {{ $t('geth.settings.http.vhosts.info') }}
                     </v-list-item-subtitle>
                     <v-text-field
                       v-model="config.http.vhosts"
@@ -301,9 +311,11 @@
                 </v-list-item>
                 <v-list-item v-if="config.http.enable">
                   <v-list-item-content>
-                    <v-list-item-title>API's</v-list-item-title>
+                    <v-list-item-title>
+                      {{ $t('geth.settings.http.apis.title') }}
+                    </v-list-item-title>
                     <v-list-item-subtitle>
-                      API's offered over the HTTP-RPC interface
+                      {{ $t('geth.settings.http.apis.info') }}
                     </v-list-item-subtitle>
                     <v-checkbox
                       v-for="mod in rpcModules"
@@ -324,9 +336,11 @@
               <v-list two-line class="w-100">
                 <v-list-item>
                   <v-list-item-content>
-                    <v-list-item-title>WS-RPC</v-list-item-title>
+                    <v-list-item-title>
+                      {{ $t('geth.settings.ws.title') }}
+                    </v-list-item-title>
                     <v-list-item-subtitle>
-                      Enable the WS-RPC server
+                      {{ $t('geth.settings.ws.info') }}
                     </v-list-item-subtitle>
                   </v-list-item-content>
                   <v-list-item-action>
@@ -335,9 +349,11 @@
                 </v-list-item>
                 <v-list-item v-if="config.ws.enable">
                   <v-list-item-content>
-                    <v-list-item-title>ADDRESS</v-list-item-title>
+                    <v-list-item-title>
+                      {{ $t('geth.settings.ws.address.title') }}
+                    </v-list-item-title>
                     <v-list-item-subtitle>
-                      WS-RPC server listening interface
+                      {{ $t('geth.settings.ws.address.info') }}
                     </v-list-item-subtitle>
                     <v-text-field
                       v-model="config.ws.addr"
@@ -352,10 +368,10 @@
                 <v-list-item v-if="config.ws.enable">
                   <v-list-item-content>
                     <v-list-item-title>
-                      PORT
+                      {{ $t('geth.settings.ws.port.title') }}
                     </v-list-item-title>
                     <v-list-item-subtitle>
-                      WS-RPC server listening port
+                      {{ $t('geth.settings.ws.port.info') }}
                     </v-list-item-subtitle>
                     <v-spacer />
                     <v-text-field
@@ -370,9 +386,11 @@
                 </v-list-item>
                 <v-list-item v-if="showAdvanced && config.ws.enable">
                   <v-list-item-content>
-                    <v-list-item-title>ORIGINS</v-list-item-title>
+                    <v-list-item-title>
+                      {{ $t('geth.settings.ws.origins.title') }}
+                    </v-list-item-title>
                     <v-list-item-subtitle>
-                      Origins from which to accept websockets requests
+                      {{ $t('geth.settings.ws.origins.info') }}
                     </v-list-item-subtitle>
                     <v-text-field
                       v-model="config.ws.origins"
@@ -385,9 +403,11 @@
                 </v-list-item>
                 <v-list-item v-if="config.ws.enable">
                   <v-list-item-content>
-                    <v-list-item-title>API's</v-list-item-title>
+                    <v-list-item-title>
+                      {{ $t('geth.settings.ws.apis.title') }}
+                    </v-list-item-title>
                     <v-list-item-subtitle>
-                      API's offered over the WS-RPC interface
+                      {{ $t('geth.settings.ws.apis.info') }}
                     </v-list-item-subtitle>
                     <v-checkbox
                       v-for="mod in rpcModules"
@@ -419,9 +439,11 @@
                 </v-list-item>
                 <v-list-item v-if="config.graphql.enable">
                   <v-list-item-content>
-                    <v-list-item-title>ADDRESS</v-list-item-title>
+                    <v-list-item-title>
+                      {{ $t('geth.settings.graphql.address.title') }}
+                    </v-list-item-title>
                     <v-list-item-subtitle>
-                      GraphQL server listening interface
+                      {{ $t('geth.settings.graphql.address.info') }}
                     </v-list-item-subtitle>
                     <v-text-field
                       v-model="config.graphql.addr"
@@ -436,10 +458,10 @@
                 <v-list-item v-if="config.graphql.enable">
                   <v-list-item-content>
                     <v-list-item-title>
-                      PORT
+                      {{ $t('geth.settings.graphql.port.title') }}
                     </v-list-item-title>
                     <v-list-item-subtitle>
-                      GraphQL server listening port
+                      {{ $t('geth.settings.graphql.port.info') }}
                     </v-list-item-subtitle>
                     <v-spacer />
                     <v-text-field
@@ -454,10 +476,11 @@
                 </v-list-item>
                 <v-list-item v-if="showAdvanced && config.graphql.enable">
                   <v-list-item-content>
-                    <v-list-item-title>CORS DOMAIN</v-list-item-title>
+                    <v-list-item-title>
+                      {{ $t('geth.settings.graphql.corsdomain.title') }}
+                    </v-list-item-title>
                     <v-list-item-subtitle>
-                      Comma separated list of domains from which to accept cross
-                      origin requests (browser enforced)
+                      {{ $t('geth.settings.graphql.corsdomain.info') }}
                     </v-list-item-subtitle>
                     <v-text-field
                       v-model="config.graphql.corsdomain"
@@ -470,10 +493,11 @@
                 </v-list-item>
                 <v-list-item v-if="showAdvanced && config.graphql.enable">
                   <v-list-item-content>
-                    <v-list-item-title>VHOSTS</v-list-item-title>
+                    <v-list-item-title>
+                      {{ $t('geth.settings.graphql.vhosts.title') }}
+                    </v-list-item-title>
                     <v-list-item-subtitle>
-                      Comma separated list of virtual hostnames from which to
-                      accept requests (server enforced).
+                      {{ $t('geth.settings.graphql.vhosts.info') }}
                     </v-list-item-subtitle>
                     <v-text-field
                       v-model="config.graphql.vhosts"
@@ -568,7 +592,7 @@ export default {
       formError: null,
       snackbar: false,
       rules: {
-        required: (value) => !!value || this.$t('login.required'),
+        required: (value) => !!value || this.$t('common.required'),
         minlen: (value) =>
           this.testInstanceName.test(value) ||
           this.$t('account.username.minlen')
@@ -786,7 +810,7 @@ export default {
         this.spin = false
         this.$router.push({ path: '/' })
       } catch (e) {
-        this.formError = this.$t('login.error')
+        this.formError = e
         this.snackbar = true
         this.formPassword = ''
         this.spin = false
