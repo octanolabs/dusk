@@ -1,27 +1,321 @@
 {
+  "common": {
+    "required": "necesario",
+    "close": "Cerca",
+    "save": "Guardar",
+    "yes": "Si",
+    "no": "No",
+    "table": {
+      "all": "Todas",
+      "itemsPerPage": "Elementos por página:"
+    }
+  },
   "login": {
     "login": "Iniciar sesión",
-    "username": "username",
+    "username": "nombre de usuario",
     "passphrase": "contraseña",
-    "error": "contraseña invalida",
-    "required": "necesario"
+    "error": "contraseña invalida"
   },
   "menu": {
     "server": "Servidor",
+    "networks": "Redes",
+    "clients": "Descargas",
     "settings": "Configuraciones",
     "logout": "Cerrar sesión"
   },
   "system": {
+    "system": "Sistema",
+    "interfaces": "Interfaces de red",
     "cpu": "CPU",
     "memory": "Memoria",
-    "swap": "Swap",
-    "storage": "Storage",
-    "loadavg": "Load Average",
+    "swap": "Intercambiar",
+    "storage": "Almacenamiento de disco",
+    "loadavg": "Promedio de carga",
     "1minute": "1m",
     "5minutes": "5m",
     "15minutes": "15m",
-    "available": "Available",
+    "available": "Disponible",
     "total": "Total",
-    "used": "Used"
+    "used": "utilizado"
+  },
+  "account": {
+    "account": "Cuenta",
+    "changePassphrase": "Cambia la contraseña",
+    "updated": {
+      "success": "¡La configuración de la cuenta se actualizó correctamente!",
+      "error": "No se pudo actualizar la configuración de la cuenta."
+    },
+    "changed": {
+      "success": "¡Contraseña cambiada con éxito!",
+      "error": "No se pudo cambiar la contraseña."
+    },
+    "passphrase": {
+      "passphrase": "contraseña",
+      "current": "contraseña actual",
+      "new": "Nueva contraseña",
+      "confirm": "Confirmar nueva contraseña",
+      "enter": "Introducir la contraseña actual",
+      "validation": "La contraseña debe contener al menos: \n* 1 número \n* 2 caracteres especiales, \n* 1 minúscula, \n* 1 mayúscula \n* tener más de 8 caracteres de longitud",
+      "mustmatch": "Las contraseñas no coinciden."
+    },
+    "bcrypt": {
+      "label": "rondas de expansión clave",
+      "info": "Número de rondas de bcrypt que se utilizarán al aplicar hash a la contraseña.",
+      "title": "Rondas de sal (bcrypt)"
+    },
+    "attempts": {
+      "label": "intentos máximos",
+      "info": "Número máximo de intentos fallidos de inicio de sesión antes de iniciar el bloqueo de la cuenta.",
+      "title": "Intentos máximos de inicio de sesión"
+    },
+    "locktime": {
+      "label": "tiempo de bloqueo (s)",
+      "info": "Tiempo (en segundos) para bloquear la cuenta si se activan los intentos máximos.",
+      "title": "Tiempo de bloqueo de cuenta"
+    },
+    "locale": {
+      "label": "idioma",
+      "info": "Seleccionar idioma (anular el idioma del navegador)",
+      "title": "Idioma"
+    },
+    "username": {
+      "label": "nombre de usuario",
+      "minlen": "El nombre de usuario debe tener al menos 4 caracteres y solo contener minúsculas (a-z)."
+    }
+  },
+  "networks": {
+    "mainnet": "Mainnet",
+    "testnet": "Testnet",
+    "name": "nombre",
+    "engine": "motor de consenso",
+    "networkId": "networkId",
+    "chainId": "chainId",
+    "explorer": "explorador de bloques",
+    "stats": "estadísticas de red",
+    "clients": "software compatible"
+  },
+  "clients": {
+    "title": "Software",
+    "releases": "Versiones",
+    "available": "versión disponible | versiones disponibles"
+  },
+  "server": {
+    "instances": "Instancias",
+    "name": "nombre",
+    "network": "red",
+    "client": "software",
+    "version": "version",
+    "status": "estado",
+    "uptime": "tiempo de actividad",
+    "stoppedAt": "se detuvo en",
+    "stopped": "detenido",
+    "starting": "comenzando",
+    "running": "corriendo",
+    "stopping": "parada",
+    "creating": "creando",
+    "error": "error",
+    "details": "Detalles",
+    "day": "día | dias",
+    "noResults": "Crea una instancia con el botón + arriba."
+  },
+  "create": {
+    "title": "Crear",
+    "selectNetwork": "Seleccione una red",
+    "selectClient": "Seleccione un software",
+    "mainnet": "MAINNET",
+    "testnet": "TESTNET",
+    "showTestnets": "mostrar testnets"
+  },
+  "logs": {
+    "title": "Registros",
+    "stdout": "stdout",
+    "stderr": "stderr"
+  },
+  "controls": {
+    "start": "Comienzo",
+    "stop": "Detener"
+  },
+  "destroy": {
+    "title": "Destruir",
+    "question": "¿Estás seguro de que quieres destruir {n}?",
+    "confirmation": "Ingrese '{n}' para confirmar.",
+    "confirm": "confirmar",
+    "rmDatadir": "¿Eliminar datadir?"
+  },
+  "download": {
+    "downloading": "Descargando...",
+    "complete": "Descarga completa"
+  },
+  "geth": {
+    "dashboard": {
+      "title": "Tablero",
+      "network": "Red",
+      "testnet": "testnet",
+      "mainnet": "mainnet",
+      "connections": "Conexiones",
+      "peers": "{n} par | {n} compañeros",
+      "countries": "en {n} país | abarcando {n} países",
+      "country": "País",
+      "client": "Software",
+      "version": "Versión",
+      "tag": "Etiqueta",
+      "build": "Construir",
+      "os": "OS",
+      "arch": "Arch",
+      "peersPerPage": "Compañeros por página:",
+      "difficulty": "Dificultad",
+      "blocktime": "Tiempo de bloque",
+      "activity": "Actividad",
+      "esthashrate": "estimado",
+      "lastBlock": "Último bloque",
+      "ago": "hace {n}s",
+      "previous": "Previo {n}s",
+      "bestBlock": "Mejor bloque",
+      "hash": "Hash",
+      "from": "Desde",
+      "to": "Para",
+      "value": "Valor",
+      "gas": "Gas",
+      "gasPrice": "Precio del gas",
+      "maxFee": "Max. Cuota",
+      "txnsPerPage": "Txns por página:",
+      "noPending": "Sin transacciones pendientes",
+      "averageBlocks": "Promedio - {n} bloques: ",
+      "hashrate": "Hashrate: {n}/s",
+      "txnCount": "Txns: {n}",
+      "gasUsed": "Gas utilizado: {n}",
+      "gasLimit": "Límite de gas: {n}",
+      "size": "Talla: {n}",
+      "syncingFrom": "sincronizando desde #{n}",
+      "syncingCurrent": "{current} de {highest}",
+      "syncingMessage": "la información del bloque se cargará una vez que se complete la sincronización"
+    },
+    "overview": {
+      "title": "Visión general",
+      "details": "Detalles",
+      "name": "nombre",
+      "id": "id",
+      "network": "red",
+      "client": "software",
+      "binpath": "binpath",
+      "datadir": "datadir",
+      "created": "creado",
+      "supervisor": "Supervisor",
+      "state": "estado",
+      "uptime": "tiempo de actividad",
+      "stoppedAt": "se detuvo en",
+      "pid": "pid",
+      "exitStatus": "estado de salida",
+      "group": "grupo",
+      "stderr": "stderr",
+      "stdout": "stdout"
+    },
+    "settings": {
+      "title": "Configuraciones",
+      "configure": "Configura tu cliente",
+      "showAdvanced": "Mostrar avanzado",
+      "downloads": "Ir a descargas de software..",
+      "name": {
+        "title": "Nombre de instancia",
+        "info": "Nombre de esta instancia"
+      },
+      "datadir": {
+        "title": "Directorio de datos",
+        "info": "Directorio de datos para las bases de datos y el almacén de claves"
+      },
+      "fullSync": {
+        "title": "Sincronización completa",
+        "info": "Realice una validación completa en los datos de blockchain"
+      },
+      "archive": {
+        "title": "Archivo",
+        "info": "Establecer el modo de recolección de basura de blockchain en archivar"
+      },
+      "port": {
+        "title": "Puerto",
+        "info": "Puerto de escucha de red"
+      },
+      "maxPeers": {
+        "title": "Max. Compañeros",
+        "info": "Número máximo de pares de la red (red deshabilitada si se establece en 0)"
+      },
+      "nat": {
+        "title": "NAT",
+        "info": "Mecanismo de mapeo de puertos NAT"
+      },
+      "noDiscover": {
+        "title": "Nodiscover",
+        "info": "Deshabilita el mecanismo de descubrimiento de pares (adición manual de pares)"
+      },
+      "ethstats": {
+        "title": "Ethstats",
+        "info": "Estadísticas del nodo de retransmisión",
+        "label": "nodename:secret@host"
+      },
+      "http": {
+        "title": "HTTP-RPC",
+        "info": "Habilite el servidor HTTP-RPC",
+        "address": {
+          "title": "ADDRESS",
+          "info": "Interfaz de escucha del servidor HTTP-RPC"
+        },
+        "port": {
+          "title": "PORT",
+          "info": "Puerto de escucha del servidor HTTP-RPC"
+        },
+        "corsdomain": {
+          "title": "CORS DOMAIN",
+          "info": "Lista de dominios separados por comas desde los que aceptar solicitudes de origen cruzado (forzado por el navegador)"
+        },
+        "vhosts": {
+          "title": "VHOSTS",
+          "info": "Lista separada por comas de nombres de host virtuales desde los que aceptar solicitudes (impuesto por el servidor)"
+        },
+        "apis": {
+          "title": "API's",
+          "info": "API ofrecidas a través de la interfaz HTTP-RPC"
+        }
+      },
+      "ws": {
+        "title": "WS-RPC",
+        "info": "Habilite el servidor WS-RPC",
+        "address": {
+          "title": "ADDRESS",
+          "info": "Interfaz de escucha del servidor WS-RPC"
+        },
+        "port": {
+          "title": "PORT",
+          "info": "Puerto de escucha del servidor WS-RPC"
+        },
+        "origins": {
+          "title": "ORIGINS",
+          "info": "Orígenes desde los que aceptar solicitudes de websockets"
+        },
+        "apis": {
+          "title": "API's",
+          "info": "API ofrecidas a través de la interfaz WS-RPC"
+        }
+      },
+      "graphql": {
+        "title": "GraphQL",
+        "info": "Habilite el servidor GraphQL",
+        "address": {
+          "title": "ADDRESS",
+          "info": "Interfaz de escucha del servidor GraphQL"
+        },
+        "port": {
+          "title": "PORT",
+          "info": "Puerto de escucha del servidor GraphQL"
+        },
+        "corsdomain": {
+          "title": "CORS DOMAIN",
+          "info": "Lista de dominios separados por comas desde los que aceptar solicitudes de origen cruzado (forzado por el navegador)"
+        },
+        "vhosts": {
+          "title": "VHOSTS",
+          "info": "Lista separada por comas de nombres de host virtuales desde los que aceptar solicitudes (impuesto por el servidor)"
+        }
+      }
+    }
   }
 }
