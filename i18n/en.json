@@ -116,6 +116,12 @@
     "day": "day | days",
     "noResults": "Create an instance with the + button above.."
   },
+  "create": {
+    "selectNetwork": "Select a network",
+    "selectClient": "Select a client",
+    "mainnet": "MAINNET",
+    "testnet": "TESTNET"
+  },
   "logs": {
     "title": "Logs",
     "stdout": "stdout",

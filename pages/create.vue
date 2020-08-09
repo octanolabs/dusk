@@ -6,13 +6,13 @@
     <v-card class="px-1 py-2">
       <v-card-title class="py-1">
         <v-icon class="mx-1">mdi-lan</v-icon>
-        Select a network
+        {{ $t('create.selectNetwork') }}
         <v-spacer />
         <v-list>
           <v-list-item>
             <v-list-item-content>
               <v-list-item-subtitle>
-                show testnets
+                {{ $t('geth.settings.showTestnets') }}
               </v-list-item-subtitle>
             </v-list-item-content>
             <v-list-item-action>
@@ -65,7 +65,7 @@
               style="position:absolute;top:5px;left:5px;"
               small
             >
-              MAINNET
+              {{ $t('create.mainnet') }}
             </v-chip>
             <v-chip
               v-if="showTestnets"
@@ -123,7 +123,7 @@
                     style="position:absolute;top:5px;left:5px;"
                     small
                   >
-                    TESTNET
+                    {{ $t('create.testnet') }}
                   </v-chip>
                   <v-chip
                     color="default"
@@ -148,7 +148,7 @@
         <v-card v-show="!!selectedNetwork" class="px-1 py-2 mt-2">
           <v-card-title class="py-1">
             <v-icon class="mx-1">mdi-cloud</v-icon>
-            Select a client
+            {{ $t('create.selectClient') }}
           </v-card-title>
           <v-card-text>
             <v-row no-gutters>
@@ -217,7 +217,7 @@
                     <v-list-item @click="$router.push({ path: '/clients' })">
                       <v-list-item-content>
                         <v-list-item-subtitle>
-                          Go to client downloads..
+                          {{ $t('geth.settings.downloads') }}
                         </v-list-item-subtitle>
                       </v-list-item-content>
                     </v-list-item>
