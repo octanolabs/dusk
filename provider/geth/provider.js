@@ -39,14 +39,16 @@ class GethProvider extends Provider {
                 self.peerCache.setLocalhost(localhost)
                 self.web3.eth.isSyncing(function(err, isSyncing) {
                   self.syncing = isSyncing
-                  self.web3.eth.getBlock('pending', true, function(err, head) {
-                    if (err || !head) {
+                  self.web3.eth.getBlock('pending', true, function(err, pending) {
+                    if (err || !pending) {
                       consola.fatal(new Error(err))
                       return
                     } else {
                       const cache = []
-                      self.blockCache.pending = head
-                      const blockNumber = head.number - self.blockCache.maxlen * 2
+                      self.blockCache.pending = pending
+                      const blockNumber =
+                        pending.number -
+                        self.blockCache.maxlen * 2
                       Loop.sync(
                         self.blockCache.maxlen * 2 + 1,
                         function(loop) {
@@ -65,6 +67,7 @@ class GethProvider extends Provider {
                           })
                         },
                         function() {
+                          cache.push(pending)
                           self.blockCache.setBlocks(cache, function() {
                             return
                           })

@@ -6,8 +6,30 @@ class BlockCache {
     this.cache = new LRU(maxlen)
     this._pending = {}
     this.maxlen = maxlen
+    this.push = function(block) {
+      const self = this
+      calcBlockValues(this.cache, block, this.pending, function(calc) {
+        self.cache.set(block.number, {
+          number: block.number,
+          blocktime: calc.blocktime,
+          avgblocktime10: calc.avgblocktime10,
+          avgblocktime25: calc.avgblocktime25,
+          avgblocktime50: calc.avgblocktime50,
+          hashrate: calc.hashrate,
+          timestamp: block.timestamp,
+          txns: block.transactions.length,
+          gasLimit: block.gasLimit,
+          gasUsed: block.gasUsed,
+          size: block.size,
+          miner: block.miner,
+          difficulty: block.difficulty,
+          hash: block.hash,
+          parent: block.parentHash
+        })
+      })
+    }
   }
-
+  
   getBlocks() {
     return this.cache.values().reverse()
   }
@@ -56,28 +78,6 @@ class BlockCache {
         return cb()
       }
     )
-  }
-
-  push(block) {
-    calcBlockValues(this.cache, block, this.pending, function(calc) {
-      this.cache.set(block.number, {
-        number: block.number,
-        blocktime: calc.blocktime,
-        avgblocktime10: calc.avgblocktime10,
-        avgblocktime25: calc.avgblocktime25,
-        avgblocktime50: calc.avgblocktime50,
-        hashrate: calc.hashrate,
-        timestamp: block.timestamp,
-        txns: block.transactions.length,
-        gasLimit: block.gasLimit,
-        gasUsed: block.gasUsed,
-        size: block.size,
-        miner: block.miner,
-        difficulty: block.difficulty,
-        hash: block.hash,
-        parent: block.parentHash
-      })
-    })
   }
 }
 
