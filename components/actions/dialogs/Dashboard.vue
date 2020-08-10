@@ -74,14 +74,12 @@
             <dashboard-blocks v-if="provider.blocks" :provider="provider" />
           </v-col>
         </v-row>
-        <v-row
-          v-else
-          no-gutters
-          style="height:100%;padding-top:calc(100vh / 2 - 50px - 64px)"
-        >
-          <v-icon class="ma-auto" style="font-size:100px;" color="primary">
-            mdi-loading mdi-spin
-          </v-icon>
+        <v-row v-else no-gutters class="pa-0 h-100">
+          <v-flex class="d-flex flex-column align-center align-self-center">
+            <v-icon class="ma-auto" style="font-size:100px;" color="primary">
+              mdi-loading mdi-spin
+            </v-icon>
+          </v-flex>
         </v-row>
       </v-col>
     </v-card>
