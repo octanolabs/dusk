@@ -39,7 +39,9 @@
           <v-card>
             <v-list-item three-line>
               <v-list-item-content>
-                <div class="overline mb-4">Connections</div>
+                <div class="overline mb-4">
+                  {{ $t('geth.dashboard.connections') }}
+                </div>
                 <v-list-item-title class="headline mb-1">
                   {{ $tc('geth.dashboard.peers', peers.length - 1) }}
                 </v-list-item-title>

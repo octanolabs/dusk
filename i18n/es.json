@@ -104,7 +104,7 @@
     "name": "nombre",
     "network": "red",
     "client": "software",
-    "version": "version",
+    "version": "versión",
     "status": "estado",
     "uptime": "tiempo de actividad",
     "stoppedAt": "se detuvo en",

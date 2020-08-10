@@ -86,7 +86,7 @@
   "networks": {
     "mainnet": "Mainnet",
     "testnet": "Testnet",
-    "name": "network name",
+    "name": "network",
     "engine": "consensus engine",
     "networkId": "networkId",
     "chainId": "chainId",
@@ -293,7 +293,7 @@
         },
         "apis": {
           "title": "API's",
-          "info": "API's offered over the WS-RPC interface."
+          "info": "API's offered over the WS-RPC interface"
         }
       },
       "graphql": {

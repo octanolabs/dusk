@@ -267,7 +267,7 @@ export default {
       testUsername: new RegExp(/^([a-z]{4,32})$/),
       spin: false,
       rules: {
-        required: (value) => !!value || this.$t('login.required'),
+        required: (value) => !!value || this.$t('common.required'),
         minlen: (value) =>
           this.testUsername.test(value) || this.$t('account.username.minlen'),
         mustContain: (value) =>
