@@ -211,9 +211,9 @@ export default {
       }
     }
   },
-  data() {
-    return {
-      headers: [
+  computed: {
+    headers() {
+      return [
         { text: this.$t('geth.dashboard.country'), value: 'countryName' },
         { text: this.$t('geth.dashboard.client'), value: 'client' },
         { text: this.$t('geth.dashboard.version'), value: 'version' },
@@ -221,15 +221,15 @@ export default {
         { text: this.$t('geth.dashboard.build'), value: 'build' },
         { text: this.$t('geth.dashboard.os'), value: 'os' },
         { text: this.$t('geth.dashboard.arch'), value: 'arch' }
-      ],
-      footerProps: {
+      ]
+    },
+    footerProps() {
+      return {
         itemsPerPageAllText: this.$t('common.table.all'),
         itemsPerPageText: this.$t('geth.dashboard.peersPerPage'),
         itemsPerPageOptions: [5, 10, 25, -1]
       }
-    }
-  },
-  computed: {
+    },
     peers() {
       return this.provider.peers
     },

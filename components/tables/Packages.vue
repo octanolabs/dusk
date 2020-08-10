@@ -25,8 +25,12 @@ export default {
   },
   data() {
     return {
-      expanded: [],
-      headers: [
+      expanded: []
+    }
+  },
+  computed: {
+    headers() {
+      return [
         {
           text: this.$t('packages.name'),
           align: 'start',

@@ -205,8 +205,12 @@ export default {
   },
   data() {
     return {
-      seconds: 0,
-      headers: [
+      seconds: 0
+    }
+  },
+  computed: {
+    headers() {
+      return [
         { text: this.$t('geth.dashboard.hash'), value: 'hash' },
         { text: this.$t('geth.dashboard.from'), value: 'from' },
         { text: this.$t('geth.dashboard.to'), value: 'to' },
@@ -214,15 +218,15 @@ export default {
         { text: this.$t('geth.dashboard.gas'), value: 'gas' },
         { text: this.$t('geth.dashboard.gasPrice'), value: 'gasPrice' },
         { text: this.$t('geth.dashboard.maxFee'), value: 'r' }
-      ],
-      footerProps: {
+      ]
+    },
+    footerProps() {
+      return {
         itemsPerPageAllText: this.$t('common.table.all'),
         itemsPerPageText: this.$t('geth.dashboard.txnsPerPage'),
         itemsPerPageOptions: [5, 10, 25, -1]
       }
-    }
-  },
-  computed: {
+    },
     blocks() {
       return this.provider.blocks
     },

@@ -133,9 +133,12 @@ export default {
     DestroyInstance,
     InstanceLogs
   },
-  data() {
-    return {
-      headers: [
+  computed: {
+    instances() {
+      return this.$store.state.instances
+    },
+    headers() {
+      return [
         { text: this.$t('server.name'), value: 'name' },
         { text: this.$t('server.network'), value: 'network' },
         { text: this.$t('server.client'), value: 'client.name' },
@@ -145,11 +148,6 @@ export default {
         { text: this.$t('server.stoppedAt'), value: 'stopped' },
         { text: '', align: 'end', value: 'menu' }
       ]
-    }
-  },
-  computed: {
-    instances() {
-      return this.$store.state.instances
     }
   },
   methods: {

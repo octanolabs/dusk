@@ -45,9 +45,9 @@ export default {
       }
     }
   },
-  data() {
-    return {
-      headers: [
+  computed: {
+    headers() {
+      return [
         {
           text: this.$t('networks.name'),
           align: 'start',
