@@ -37,9 +37,7 @@ module.exports = {
       cookie: { maxAge: 60000 }
     }),
     // Api middleware
-    // We add /api/login & /api/logout routes
-    '~/api',
-    '~/session'
+    '~/api'
   ],
   /*
    ** Customize the progress-bar color
@@ -83,15 +81,15 @@ module.exports = {
       local: {
         endpoints: {
           login: {
-            url: '/session/login',
+            url: '/api/session/login',
             method: 'post',
             propertyName: 'token'
           },
-          logout: { url: '/session/logout', method: 'post' },
-          user: { url: '/session/user', method: 'get', propertyName: 'user' }
-        }
-        // tokenRequired: true,
-        // tokenType: 'bearer'
+          logout: { url: '/api/session/logout', method: 'post' },
+          user: { url: '/api/session/user', method: 'get', propertyName: 'user' }
+        },
+        tokenRequired: true,
+        tokenType: 'Bearer'
       }
     }
   },
@@ -175,9 +173,5 @@ module.exports = {
   pageTransition: {
     name: 'page',
     mode: 'out-in'
-  },
-
-  router: {
-    middleware: ['auth']
   }
 }

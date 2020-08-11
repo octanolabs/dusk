@@ -26,9 +26,6 @@ export const state = () => ({
 })
 
 export const mutations = {
-  SET_USER(state, authed) {
-    state.authenticated = authed
-  },
   SET_INSTANCES(state, data) {
     state.instances = data
   },
