@@ -78,13 +78,13 @@ export default {
     async login() {
       try {
         this.spin = true
-        await this.$auth.loginWith('local', {
+        const { data } = await this.$auth.loginWith('local', {
           data: { username: this.formUsername, password: this.formPassword }
         })
+        console.log(data)
         this.formPassword = ''
         this.formError = null
         this.spin = false
-        this.$router.push({ path: '/' })
       } catch (e) {
         this.formError = this.$t('login.error')
         this.snackbar = true

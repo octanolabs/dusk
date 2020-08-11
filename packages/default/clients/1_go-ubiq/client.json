@@ -20,11 +20,6 @@
         "sha256": "f30b43367915965b72642804f3f44bdca4bc0e88a2159780a44e2a07d7581cc8",
         "size": 27723016
       },
-      "linux-arm-7": {
-        "url": "https://github.com/ubiq/go-ubiq/releases/download/v3.1.0/gubiq-linux-arm-7",
-        "sha256": "5978700da6087fd78ffe913d90c48530e3d5f7f7927653020263b12649308194",
-        "size": 24558708
-      },
       "linux-arm64": {
         "url": "https://github.com/ubiq/go-ubiq/releases/download/v3.1.0/gubiq-linux-arm64",
         "sha256": "f733349c34e466e30abf340e4ee677dd7c462df0b7c0bf0c75c9cd0dbb15faf1",
@@ -47,11 +42,6 @@
         "sha256": "5bb82c6a8f1b1fb441ff6d72e7114104263c4461ad7dddf7ef18cb5763d10455",
         "size": 25775528
       },
-      "linux-arm-7": {
-        "url": "https://github.com/ubiq/go-ubiq/releases/download/v3.0.1/gubiq-linux-arm-7",
-        "sha256": "06d105485aae819ba3f510d8d5916a63c34953770e277b80a78d71fe42848a67",
-        "size": 22774548
-      },
       "linux-arm64": {
         "url": "https://github.com/ubiq/go-ubiq/releases/download/v3.0.1/gubiq-linux-arm64",
         "sha256": "cc03df2fedd4e02f4c15705deed36308e119c877b0ee158d8cf05c57b7fea5aa",
@@ -73,11 +63,6 @@
         "url": "https://github.com/ubiq/go-ubiq/releases/download/v3.0.0/gubiq-linux-amd64",
         "sha256": "5a50f79e893f87a6db5958bca7a626251eaa113e9aee077b59184521b40c6f72",
         "size": 25849384
-      },
-      "linux-arm-7": {
-        "url": "https://github.com/ubiq/go-ubiq/releases/download/v3.0.0/gubiq-linux-arm-7",
-        "sha256": "b666eba8fdf8323255b585e71fa1a7c05184267cb4fa9bba06ddcfc675c6de7f",
-        "size": 22831948
       },
       "linux-arm64": {
         "url": "https://github.com/ubiq/go-ubiq/releases/download/v3.0.0/gubiq-linux-arm64",

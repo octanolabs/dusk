@@ -303,7 +303,7 @@ export default {
       this.spin = true
       const self = this
       axios
-        .post('/session/update-settings', {
+        .post('/api/session/update-settings', {
           username: this.account.username,
           maxAttempts: this.account.attempts,
           locktime: this.account.locktime,
@@ -335,7 +335,7 @@ export default {
       this.spin = true
       const self = this
       axios
-        .post('/session/change-passphrase', {
+        .post('/api/session/change-passphrase', {
           new: this.passphrase.new,
           password: this.passphrase.current,
           bcrypt: this.passphrase.bcrypt
