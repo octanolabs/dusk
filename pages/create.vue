@@ -145,7 +145,7 @@
     </v-card>
     <v-flex shrink>
       <v-slide-y-transition>
-        <v-card v-show="!!selectedNetwork" class="px-1 py-2 mt-2">
+        <v-card v-show="selectedNetwork.id != -1" class="px-1 py-2 mt-2">
           <v-card-title class="py-1">
             <v-icon class="mx-1">mdi-cloud</v-icon>
             {{ $t('create.selectClient') }}
@@ -297,7 +297,7 @@ export default {
       defaultOptions: null,
       breadcrumbs: [
         {
-          text: this.$t('server.title'),
+          text: this.$t('server.instances'),
           disabled: false,
           to: '/'
         },
