@@ -12,7 +12,7 @@
               :headers="headers"
               :items="instances"
               :items-per-page="-1"
-              :no-results-text="$t('server.noResults')"
+              :no-data-text="$t('server.noResults')"
               hide-default-footer
               flat
             >
