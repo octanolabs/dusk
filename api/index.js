@@ -83,7 +83,7 @@ const createToken = function(hash, rounds, cb) {
   bcrypt.hash(seed, rounds, function(err, _token) {
     if (err) consola.log(new Error(err))
     const hexed = utf8ToHex(_token)
-    const token = hexed.substr(hexed.length - 30)
+    const token = hexed.substr(hexed.length - 64)
     return cb(token)
   })
 }
@@ -183,7 +183,8 @@ router.post('/session/login', async (req, res) => {
 })
 
 // Add POST - /session/logout
-router.post('/session/logout', (req, res) => {
+router.post('/session/logout', isAuthed, (req, res) => {
+  AUTH_TOKEN = null
   delete req.session.user
   res.json({ ok: true })
 })
@@ -193,7 +194,7 @@ router.get('/session/user', (req, res) => {
   res.json({ user: req.session.user })
 })
 
-router.post('/session/update-settings', async (req, res) => {
+router.post('/session/update-settings', isAuthed, async (req, res) => {
   try {
     const user = await storage.getItem('user')
     if (!user || !req.session.user || user.username !== req.session.user.username || req.body.username.length < 4) {
@@ -232,7 +233,7 @@ router.post('/session/update-settings', async (req, res) => {
   }
 })
 
-router.post('/session/change-passphrase', async (req, res) => {
+router.post('/session/change-passphrase', isAuthed, async (req, res) => {
   try {
     const user = await storage.getItem('user')
     if (!user || !req.session.user || user.username !== req.session.user.username) {
