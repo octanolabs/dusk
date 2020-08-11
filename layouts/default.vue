@@ -42,6 +42,13 @@ export default {
     }
   },
   watch: {
+    authed() {
+      if (this.$auth.loggedIn === false) {
+        this.$router.push({ path: '/login' })
+      } else {
+        this.$store.dispatch('packages')
+      }
+    },
     $route(to, from) {
       // react to route changes...
       // start/stop instances sync (index: /)
@@ -73,9 +80,6 @@ export default {
         this.stopSync('system')
       }
     }
-  },
-  created() {
-    this.$store.dispatch('packages')
   },
   methods: {
     async logout() {
