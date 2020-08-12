@@ -132,6 +132,9 @@ export default {
       return this.instance.network
     },
     showSyncing() {
+      if (this.provider.blocks.length < 1) {
+        return true
+      }
       if (this.provider.syncing) {
         if (
           this.provider.syncing.highestBlock -

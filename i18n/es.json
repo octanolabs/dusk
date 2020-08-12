@@ -188,7 +188,8 @@
       "size": "Talla: {n}",
       "syncingFrom": "sincronizando desde #{n}",
       "syncingCurrent": "{current} de {highest}",
-      "syncingMessage": "la información del bloque se cargará una vez que se complete la sincronización"
+      "syncingMessage": "la información del bloque se cargará una vez que se complete la sincronización",
+      "noPeersMessage": "esperando conexiones"
     },
     "overview": {
       "title": "Visión general",

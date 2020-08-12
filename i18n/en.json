@@ -188,7 +188,8 @@
       "size": "Size: {n}",
       "syncingFrom": "syncing from #{n}",
       "syncingCurrent": "{current} of {highest}",
-      "syncingMessage": "block info will load once syncing is complete"
+      "syncingMessage": "block info will load once syncing is complete",
+      "noPeersMessage": "waiting for connections"
     },
     "overview": {
       "title": "Overview",

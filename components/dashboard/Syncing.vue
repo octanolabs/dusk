@@ -21,7 +21,7 @@
             {{ percent.toFixed(2) }}%
           </v-progress-circular>
         </v-row>
-        <v-row no-gutters>
+        <v-row v-if="currentBlock && highestBlock" no-gutters>
           <v-subheader>
             {{
               $tc('geth.dashboard.syncingCurrent', 0, {
@@ -31,8 +31,11 @@
             }}
           </v-subheader>
         </v-row>
-        <v-row no-gutters>
+        <v-row v-if="currentBlock && highestBlock" no-gutters>
           {{ $t('geth.dashboard.syncingMessage') }}
+        </v-row>
+        <v-row v-else no-gutters>
+          {{ $t('geth.dashboard.noPeersMessage') }}
         </v-row>
       </v-flex>
     </v-col>
@@ -60,7 +63,7 @@ export default {
       return this.provider?.syncing?.startingBlock
     },
     percent() {
-      return (this.currentBlock / this.highestBlock) * 100
+      return (this.currentBlock / this.highestBlock) * 100 || 0
     }
   }
 }

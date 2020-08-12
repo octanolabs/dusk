@@ -188,7 +188,8 @@
       "size": "Размер: {n}",
       "syncingFrom": "синхронизация с #{n}",
       "syncingCurrent": "{current} из {highest}",
-      "syncingMessage": "информация о блоке загрузится после завершения синхронизации"
+      "syncingMessage": "информация о блоке загрузится после завершения синхронизации",
+      "noPeersMessage": "ждем подключения"
     },
     "overview": {
       "title": "обзор",
