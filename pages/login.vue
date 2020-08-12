@@ -78,7 +78,7 @@ export default {
     async login() {
       try {
         this.spin = true
-        const { data } = await this.$auth.loginWith('local', {
+        await this.$auth.loginWith('local', {
           data: { username: this.formUsername, password: this.formPassword }
         })
         this.formPassword = ''
