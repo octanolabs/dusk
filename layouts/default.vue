@@ -81,6 +81,13 @@ export default {
       }
     }
   },
+  created() {
+    if (this.authed) {
+      // re-init packages and instances incase of page refresh.
+      this.$store.dispatch('packages')
+      this.$store.dispatch('instances')
+    }
+  },
   methods: {
     async logout() {
       try {
