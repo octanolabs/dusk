@@ -94,7 +94,12 @@ export default {
       clearInterval(this.timer[store])
       this.timer[store] = null
       this.timer[store] = setInterval(function() {
-        self.$store.dispatch(store)
+        if (self.authed) {
+          self.$store.dispatch(store)
+        } else {
+          clearInterval(self.timer[store])
+          self.timer[store] = null
+        }
       }, this.interval[store])
     },
     stopSync(store) {
