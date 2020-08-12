@@ -3,7 +3,7 @@ import consola from 'consola'
 import sha256 from 'crypto-js/sha256'
 
 export const state = () => ({
-  version: '0.0.1',
+  version: '0.1.0',
   system: {},
   packages: {},
   instances: [],
