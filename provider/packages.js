@@ -325,8 +325,7 @@ export default {
         } else {
           consola.error('default clients path not found: ' + defaultPath)
         }
-
-        const customPath = path.join(rootPath, 'custom')
+        /* const customPath = path.join(rootPath, 'custom')
         // check packages/custom directory exists
         const custom = await stat(customPath)
         if (custom.isDirectory()) {
@@ -334,7 +333,7 @@ export default {
           await loadPackages(customPath)
         } else {
           consola.error('custom packages path not found: ' + customPath)
-        }
+        }*/
       } else {
         consola.error('packages path not found: ' + rootPath)
       }
