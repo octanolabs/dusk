@@ -258,15 +258,16 @@ export default {
               units: 'kBytes'
             }
           : { percent: 0, kBytes: 0, total: 0, used: 0 },
-        swap: this.meminfo
-          ? {
-              percent: (this.meminfo.SwapFree / this.meminfo.SwapTotal) * 100,
-              available: this.meminfo.SwapFree,
-              total: this.meminfo.SwapTotal,
-              used: this.meminfo.SwapTotal - this.meminfo.SwapFree,
-              units: 'kBytes'
-            }
-          : { percent: 0, kBytes: 0, total: 0 },
+        swap:
+          this.meminfo && this.meminfo.SwapTotal !== '0'
+            ? {
+                percent: (this.meminfo.SwapFree / this.meminfo.SwapTotal) * 100,
+                available: this.meminfo.SwapFree,
+                total: this.meminfo.SwapTotal,
+                used: this.meminfo.SwapTotal - this.meminfo.SwapFree,
+                units: 'kBytes'
+              }
+            : { percent: 0, kBytes: 0, total: 0 },
         storage: this.diskusage
           ? {
               percent: (this.diskusage.available / this.diskusage.total) * 100,
