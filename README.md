@@ -1,6 +1,6 @@
 # dusk
 
-> Dashboard for managing a node
+> Dashboard for managing Ubiq, Ethereum, and Ethereum Classic nodes.
 
 ## Default Credentials
 
@@ -79,3 +79,7 @@ $ npm run generate
 ```
 
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
+
+## Deployment
+
+See [docs](https://github.com/octanolabs/dusk/docs) for guides.
