@@ -6,35 +6,38 @@
   "ipc": "geth.ipc",
   "releases": [
     {
-      "version": "1.11.8",
-      "maxHeight": 0,
-      "tag": "Fructose Sweet Drink",
-      "note": "Merges ethereum/go-ethereum through bcb3087.",
-      "info": "https://github.com/etclabscore/core-geth/releases/tag/v1.11.8",
-      "darwin-amd64": {
-        "url": "https://github.com/etclabscore/core-geth/releases/download/v1.11.8/core-geth-osx-v1.11.8.zip",
-        "sha256": "826fd197e4e135e1c9ba265eb784a872cdd2ce94723b9ccf82e76e2616df3f6c",
-        "size": 12499356,
-        "extract": true,
-        "bin": "geth"
-      },
+      "version": "1.11.16",
+      "tag": "Iberian Sun",
+      "note": "Fixes an issue where downloader syncronizations would temporarily halt mining operation.",
+      "info": "https://github.com/etclabscore/core-geth/releases/tag/v1.11.16",
       "linux-amd64": {
-        "url": "https://github.com/etclabscore/core-geth/releases/download/v1.11.8/core-geth-linux-v1.11.8.zip",
-        "sha256": "197f91e0ebf58806128a8a512dc7d2e602af0db686724c4b6339e66fd09e468d",
-        "size": 18873566,
+        "url": "https://github.com/etclabscore/core-geth/releases/download/v1.11.16/core-geth-linux-v1.11.16.zip",
+        "sha256": "5422458fe069735770851814511a97cea4708cd7dc2912ecf96ee9a249b1712f",
+        "size": 18745039,
         "extract": true,
         "bin": "geth"
       },
       "linux-arm64": {
-        "url": "https://github.com/etclabscore/core-geth/releases/download/v1.11.8/core-geth-arm-v1.11.8.zip",
-        "sha256": "6239ed0d7390de0c74160574929f98601c02fb1c49fd57989103f1d72ada1d02",
-        "size": 17738368,
+        "url": "https://github.com/etclabscore/core-geth/releases/download/v1.11.16/core-geth-arm-v1.11.16.zip",
+        "sha256": "ba5127e8f4b1e6d4976b2270e2012e22e4224b3cf2199916c98f46e049aa98f5",
+        "size": 17488250,
         "extract": true,
         "bin": "geth"
       }
     }
   ],
   "networks": [
+    {
+      "id": "eth",
+      "networkId": 1,
+      "chainId": 1,
+      "testnet": false,
+      "name": "Ethereum",
+      "icon": "static/networks/ethereum.png",
+      "engine": "ethash",
+      "explorer": "https://etherscan.io",
+      "ethstats": "https://ethstats.net"
+    },
     {
       "id": "etc",
       "networkId": 1,
@@ -69,6 +72,42 @@
       "icon": "static/networks/etc.svg",
       "engine": "ethash",
       "explorer": "https://blockscout.com/etc/mordor",
+      "ethstats": ""
+    },
+    {
+      "id": "ropsten",
+      "networkId": 3,
+      "chainId": 3,
+      "flag": "--ropsten",
+      "testnet": true,
+      "name": "Ropsten",
+      "icon": "static/networks/ethereum.png",
+      "engine": "ethash",
+      "explorer": "",
+      "ethstats": ""
+    },
+    {
+      "id": "rinkeby",
+      "networkId": 4,
+      "chainId": 4,
+      "flag": "--rinkeby",
+      "testnet": true,
+      "name": "Rinkeby",
+      "icon": "static/networks/ethereum.png",
+      "engine": "clique",
+      "explorer": "",
+      "ethstats": ""
+    },
+    {
+      "id": "goerli",
+      "networkId": 5,
+      "chainId": 5,
+      "flag": "--goerli",
+      "testnet": true,
+      "name": "Görli",
+      "icon": "static/networks/ethereum.png",
+      "engine": "clique",
+      "explorer": "",
       "ethstats": ""
     }
   ],
